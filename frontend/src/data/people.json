@@ -1,0 +1,280 @@
+[
+    {
+        "id": "duong",
+        "name": "NGUYỄN NHẬT DƯƠNG",
+        "title": "Managing Partner",
+        "photo": "/people/duong.jpg",
+
+        "biography": [
+        "Mr. Duong has extensive experience advising clients on foreign investment, mergers and acquisitions, international trade, corporate governance, and personal data protection. Prior to founding AD Legal, he served as in-house legal counsel for several multinational corporations in the tourism, real estate, and construction sectors, including HIS WORLD and Hoa Binh Construction Group. During this time, he developed substantial practical expertise in addressing complex legal issues arising from business operations and corporate governance.",
+        "Before establishing AD Legal, Mr. Duong also held the position of Senior Associate at one of Vietnam's leading law firms, where he advised clients on high-value commercial transactions and represented them in complex commercial disputes before Vietnamese courts and arbitration centers. In addition to his legal practice, he regularly delivers training programs and professional seminars for businesses, particularly in the areas of labor law and personal data protection."
+        ],
+
+        "expertise": [
+        "Foreign Investment",
+        "Mergers & Acquisitions (M&A)",
+        "Corporate Governance",
+        "Employment & Labor",
+        "Personal Data Protection"
+        ],
+
+        "education": [
+        "LL.B. in International Commercial Law, University of Economics and Law (UEL)",
+        "Practising Certificate for Lawyers"
+        ],
+
+        "languages": [
+        "Vietnamese",
+        "English"
+        ],
+
+        "contact": {
+        "phone": "(+84) 969 451 906",
+        "email": "duong.nguyen@adlegal.vn"
+        }
+    },
+    {
+        "id": "mai-anh",
+        "name": "BÙI MAI ANH",
+        "title": "Partner",
+        "photo": "/people/mai-anh.jpg",
+
+        "biography": [
+            "Ms. Mai Anh has extensive experience providing legal advisory services in the construction and real estate sectors. Throughout her career, she has managed construction contract matters for leading law firms, contractors, and real estate developers in Vietnam, including CNC Counsel, Hoa Binh Construction Group, Kim Oanh Group, and Novaland Group. This experience has enabled her to develop in-depth practical expertise in resolving legal issues arising throughout the lifecycle of construction and development projects.",
+            "With a strong focus on construction law, Ms. Mai Anh has advised clients on a wide range of legal matters, including reviewing and negotiating construction contracts, international sale of goods agreements, contract administration and performance, project finance issues, and legal risk management throughout project execution. In addition to her advisory practice, she has represented clients in complex construction and real estate disputes before the Vietnam International Arbitration Centre (VIAC)."
+        ],
+
+        "expertise": [
+            "Construction",
+            "Real Estate",
+            "Commercial Contracts",
+            "Dispute Resolution",
+            "Personal Data Protection"
+        ],
+
+        "education": [
+            "LL.B. in International Commercial Law, University of Economics and Law (UEL)",
+            "Practising Certificate for Lawyers"
+        ],
+
+        "languages": [
+            "Vietnamese",
+            "English"
+        ],
+
+        "contact": {
+            "phone": "(+84) 969 451 906",
+            "email": "anh.bui@adlegal.vn"
+        }
+    },
+    {
+        "id": "loc",
+        "name": "NGUYỄN TIẾN LỘC",
+        "title": "Senior Associate",
+        "photo": "/people/loc.jpg",
+
+        "biography": [
+            "Mr. Loc has nearly 15 years of experience serving as in-house legal counsel within public sector organizations, including television broadcasters and hospitals. Throughout his career, he has advised on a broad range of legal matters relating to technology, media and telecommunications (TMT), advertising, healthcare, intellectual property, and employment law.",
+            "Drawing on his extensive experience in the public sector, Mr. Loc possesses a thorough understanding of governmental regulatory frameworks, administrative procedures, and the practical operation of public authorities at various levels. At AD Legal, in addition to providing legal advisory services, he plays an active role in designing and delivering internal compliance training programs for organizations with stringent governance and regulatory compliance requirements."
+        ],
+
+        "expertise": [
+            "Technology, Media & Telecommunications (TMT)",
+            "Healthcare",
+            "Intellectual Property",
+            "Employment & Labor",
+            "Personal Data Protection"
+        ],
+
+        "education": [
+            "LL.B. in Business Law, University of Economics and Law (UEL)",
+            "Lawyer Training Program, Ministry of Justice",
+            "LL.M. in Economic Law, University of Economics and Law (UEL)",
+            "Industrial Design Intellectual Property Certification",
+            "University Teaching Certificate"
+        ],
+
+        "languages": [
+            "Vietnamese",
+            "English"
+        ],
+
+        "contact": {
+            "phone": "(+84) 969 451 906",
+            "email": "loc.nguyen@adlegal.vn"
+        }
+    },
+    {
+        "id": "minh",
+        "name": "NGUYỄN HOÀNG MINH",
+        "title": "Senior Advisor",
+        "photo": "/people/minh.jpg",
+
+        "biography": [
+            "Mr. Minh has over 15 years of experience in finance, accounting, and taxation. Throughout his career, he has held senior positions as Chief Accountant and Chief Financial Officer at multinational corporations operating in the logistics, tourism, and financial services sectors, including Vinatrans, HIS WORLD, and Welcome.",
+            "Leveraging his extensive professional expertise and practical business perspective, Mr. Minh advises clients on complex tax matters, financial due diligence, and the design of efficient financial structures for mergers and acquisitions as well as corporate restructuring transactions. His multidisciplinary approach enables AD Legal to provide a true one-stop professional service, seamlessly integrating legal and financial expertise to deliver comprehensive solutions for clients' business and operational needs."
+        ],
+
+        "expertise": [
+            "Finance",
+            "Taxation",
+            "Mergers & Acquisitions (M&A)",
+            "Corporate Restructuring",
+            "Logistics"
+        ],
+
+        "education": [
+            "B.A. in Accounting, Ho Chi Minh City University of Economics",
+            "Chief Accountant Certification",
+            "IFRS (International Financial Reporting Standards) Certification",
+            "Certified Management Accountant (CMA)"
+        ],
+
+        "languages": [
+            "Vietnamese",
+            "English"
+        ],
+
+        "contact": {
+            "phone": "(+84) 969 451 906",
+            "email": "minh.nguyen@adlegal.vn"
+        }
+    },
+    {
+        "id": "khoa",
+        "name": "TRỊNH MINH KHOA",
+        "title": "Senior Advisor",
+        "photo": "/people/khoa.jpg",
+
+        "biography": [
+            "Mr. Khoa has more than 15 years of experience in finance, accounting, and taxation. Throughout his career, he has served as Chief Accountant and Chief Financial Officer for multinational corporations in the e-commerce, tourism, and manufacturing sectors, including VinCommerce, HIS WORLD, and AK Food. His hands-on experience in financial management at large enterprises has provided him with a comprehensive understanding of corporate operations, risk management, and financial compliance.",
+            "At AD Legal, Mr. Khoa works closely with the firm's lawyers on complex international commercial transactions, integrating legal, tax, and financial expertise to ensure commercially effective and legally sound transaction structures. He also plays a key role in advising corporate clients on sophisticated tax matters, resolving complex tax issues, and developing sustainable tax compliance strategies."
+        ],
+
+        "expertise": [
+            "Finance",
+            "Taxation",
+            "Mergers & Acquisitions (M&A)",
+            "Corporate Restructuring",
+            "Logistics"
+        ],
+
+        "education": [
+            "B.A. in Accounting, Ho Chi Minh City University of Economics",
+            "Chief Accountant Certification"
+        ],
+
+        "languages": [
+            "Vietnamese",
+            "English"
+        ],
+
+        "contact": {
+            "phone": "(+84) 969 451 906",
+            "email": "khoa.trinh@adlegal.vn"
+        }
+    },
+    {
+        "id": "tan",
+        "name": "ĐOÀN NGỌC TÂN",
+        "title": "Senior Associate",
+        "photo": "/people/tan.jpg",
+
+        "biography": [
+            "Mr. Tan possesses extensive experience in legal advisory, business management, and finance. Throughout his career, he has held a variety of professional roles in legal services, securities brokerage, investment banking, and corporate financial advisory at multinational corporations and leading financial institutions in Vietnam, including HIS WORLD, SSI Securities, OCBS Securities, and KAFI Securities.",
+            "Combining a strong legal foundation with practical expertise in finance and investment, Mr. Tan provides comprehensive advice on corporate restructuring, capital raising transactions—including bond issuances and equity offerings—and financial model analysis to assess project feasibility and risk. During his career, he has advised on and directly participated in numerous successful bond issuance transactions with an aggregate value of tens of trillions of Vietnamese Dong."
+        ],
+
+        "expertise": [
+            "Capital Markets",
+            "Mergers & Acquisitions (M&A)",
+            "Corporate Restructuring",
+            "Banking & Finance",
+            "Corporate Governance"
+        ],
+
+        "education": [
+            "LL.B. in Commercial Law, Ho Chi Minh City University of Law",
+            "B.B.A. in Business Administration, Ho Chi Minh City University of Law",
+            "CFA Level I",
+            "Financial Analyst Practising Certificate (State Securities Commission of Vietnam)",
+            "Securities Brokerage Practising Certificate (State Securities Commission of Vietnam)"
+        ],
+
+        "languages": [
+            "Vietnamese",
+            "English"
+        ],
+
+        "contact": {
+            "phone": "(+84) 969 451 906",
+            "email": "tan.doan@adlegal.vn"
+        }
+    },
+    {
+        "id": "nhung",
+        "name": "LẠI THỊ PHƯƠNG NHUNG",
+        "title": "Associate",
+        "photo": "/people/nhung.jpg",
+
+        "biography": [
+            "Ms. Nhung has more than seven years of experience practicing at leading law firms and reputable real estate developers in Vietnam. Throughout her career, she has advised on and reviewed numerous high-value commercial contracts, particularly those relating to corporate investment and business operations. She also represents clients in handling intellectual property matters and obtaining the licenses and regulatory approvals required for business activities.",
+            "In addition to her advisory practice, Ms. Nhung has extensive experience representing clients in complex commercial and civil litigation before Vietnamese courts. Combining both advisory and dispute resolution experience, she approaches each matter from a comprehensive and practical perspective, with a strong commitment to protecting her clients' legitimate rights and interests."
+        ],
+
+        "expertise": [
+            "Real Estate",
+            "Intellectual Property",
+            "Commercial Contracts",
+            "Employment & Labor",
+            "Dispute Resolution"
+        ],
+
+        "education": [
+            "LL.B. in Business Law, University of Economics and Law (UEL)",
+            "Lawyer Training Program, Ministry of Justice"
+        ],
+
+        "languages": [
+            "Vietnamese",
+            "English"
+        ],
+
+        "contact": {
+            "phone": "(+84) 969 451 906",
+            "email": "nhung.lai@adlegal.vn"
+        }
+    },
+    {
+        "id": "nhat-tan",
+        "name": "NGUYỄN NHẬT TÂN",
+        "title": "Software & Data Engineer",
+        "photo": "/people/nhat-tan.jpg",
+
+        "biography": [
+            "Mr. Tan is a software and data engineer specializing in enterprise technology solutions and data management. He has extensive experience advising organizations on the design and implementation of technology-driven governance solutions, particularly in the area of personal data protection. His work includes developing data governance frameworks, conducting risk assessments, and implementing technical safeguards to ensure compliance with data protection regulations.",
+            "In addition to data protection consulting, Mr. Tan develops customized enterprise software tailored to clients' operational needs. Combining strong technical expertise with a deep understanding of business processes, he delivers practical technology solutions that help organizations enhance operational efficiency, strengthen governance, and effectively manage business risks."
+        ],
+
+        "expertise": [
+            "Personal Data Protection",
+            "Technology Solutions",
+            "Digital Transformation"
+        ],
+
+        "education": [
+            "B.Eng. in Software Engineering & Data Science, Ho Chi Minh City University of Science (HCMUS)"
+        ],
+
+        "languages": [
+            "Vietnamese",
+            "English",
+            "Japanese"
+        ],
+
+        "contact": {
+            "phone": "(+84) 969 451 906",
+            "email": "tan.nguyen@adlegal.vn"
+        }
+    }
+]
