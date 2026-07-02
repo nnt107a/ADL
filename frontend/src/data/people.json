@@ -3,7 +3,7 @@
         "id": "duong",
         "name": "NGUYỄN NHẬT DƯƠNG",
         "title": "Managing Partner",
-        "photo": "/people/duong.jpg",
+        "photo": "/people/duong.png",
 
         "biography": [
         "Mr. Duong has extensive experience advising clients on foreign investment, mergers and acquisitions, international trade, corporate governance, and personal data protection. Prior to founding AD Legal, he served as in-house legal counsel for several multinational corporations in the tourism, real estate, and construction sectors, including HIS WORLD and Hoa Binh Construction Group. During this time, he developed substantial practical expertise in addressing complex legal issues arising from business operations and corporate governance.",
@@ -37,7 +37,7 @@
         "id": "mai-anh",
         "name": "BÙI MAI ANH",
         "title": "Partner",
-        "photo": "/people/mai-anh.jpg",
+        "photo": "/people/mai-anh.png",
 
         "biography": [
             "Ms. Mai Anh has extensive experience providing legal advisory services in the construction and real estate sectors. Throughout her career, she has managed construction contract matters for leading law firms, contractors, and real estate developers in Vietnam, including CNC Counsel, Hoa Binh Construction Group, Kim Oanh Group, and Novaland Group. This experience has enabled her to develop in-depth practical expertise in resolving legal issues arising throughout the lifecycle of construction and development projects.",
@@ -71,7 +71,7 @@
         "id": "loc",
         "name": "NGUYỄN TIẾN LỘC",
         "title": "Senior Associate",
-        "photo": "/people/loc.jpg",
+        "photo": "/people/loc.png",
 
         "biography": [
             "Mr. Loc has nearly 15 years of experience serving as in-house legal counsel within public sector organizations, including television broadcasters and hospitals. Throughout his career, he has advised on a broad range of legal matters relating to technology, media and telecommunications (TMT), advertising, healthcare, intellectual property, and employment law.",
@@ -108,7 +108,7 @@
         "id": "minh",
         "name": "NGUYỄN HOÀNG MINH",
         "title": "Senior Advisor",
-        "photo": "/people/minh.jpg",
+        "photo": "/people/minh.png",
 
         "biography": [
             "Mr. Minh has over 15 years of experience in finance, accounting, and taxation. Throughout his career, he has held senior positions as Chief Accountant and Chief Financial Officer at multinational corporations operating in the logistics, tourism, and financial services sectors, including Vinatrans, HIS WORLD, and Welcome.",
@@ -144,7 +144,7 @@
         "id": "khoa",
         "name": "TRỊNH MINH KHOA",
         "title": "Senior Advisor",
-        "photo": "/people/khoa.jpg",
+        "photo": "/people/khoa.png",
 
         "biography": [
             "Mr. Khoa has more than 15 years of experience in finance, accounting, and taxation. Throughout his career, he has served as Chief Accountant and Chief Financial Officer for multinational corporations in the e-commerce, tourism, and manufacturing sectors, including VinCommerce, HIS WORLD, and AK Food. His hands-on experience in financial management at large enterprises has provided him with a comprehensive understanding of corporate operations, risk management, and financial compliance.",
@@ -178,7 +178,7 @@
         "id": "tan",
         "name": "ĐOÀN NGỌC TÂN",
         "title": "Senior Associate",
-        "photo": "/people/tan.jpg",
+        "photo": "/people/tan.png",
 
         "biography": [
             "Mr. Tan possesses extensive experience in legal advisory, business management, and finance. Throughout his career, he has held a variety of professional roles in legal services, securities brokerage, investment banking, and corporate financial advisory at multinational corporations and leading financial institutions in Vietnam, including HIS WORLD, SSI Securities, OCBS Securities, and KAFI Securities.",
@@ -215,7 +215,7 @@
         "id": "nhung",
         "name": "LẠI THỊ PHƯƠNG NHUNG",
         "title": "Associate",
-        "photo": "/people/nhung.jpg",
+        "photo": "/people/nhung.png",
 
         "biography": [
             "Ms. Nhung has more than seven years of experience practicing at leading law firms and reputable real estate developers in Vietnam. Throughout her career, she has advised on and reviewed numerous high-value commercial contracts, particularly those relating to corporate investment and business operations. She also represents clients in handling intellectual property matters and obtaining the licenses and regulatory approvals required for business activities.",
@@ -249,7 +249,7 @@
         "id": "nhat-tan",
         "name": "NGUYỄN NHẬT TÂN",
         "title": "Software & Data Engineer",
-        "photo": "/people/nhat-tan.jpg",
+        "photo": "/people/nhat-tan.png",
 
         "biography": [
             "Mr. Tan is a software and data engineer specializing in enterprise technology solutions and data management. He has extensive experience advising organizations on the design and implementation of technology-driven governance solutions, particularly in the area of personal data protection. His work includes developing data governance frameworks, conducting risk assessments, and implementing technical safeguards to ensure compliance with data protection regulations.",

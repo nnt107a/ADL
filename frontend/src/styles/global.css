@@ -322,7 +322,7 @@ img {
   color: #f8f8f4;
   background:
     linear-gradient(180deg, rgba(12, 40, 57, 0.42) 0%, rgba(20, 56, 77, 0.52) 100%),
-    url('/adl-bg.svg');
+    url('/adl-bg.png');
   background-repeat: no-repeat, no-repeat;
   background-position: center center, center center;
   background-size: cover, cover;

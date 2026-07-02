@@ -6,7 +6,7 @@ export default function Footer() {
     <footer className="site-footer">
       <div className="container footer-inner">
         <div className="footer-brand">
-          <img className="brand-logo brand-logo-footer" src="/adl-logo.svg" alt="AD LEGAL – Law, Finance & More" />
+          <img className="brand-logo brand-logo-footer" src="/adl-logo.png" alt="AD LEGAL – Law, Finance & More" />
         </div>
 
         <div className="footer-links">

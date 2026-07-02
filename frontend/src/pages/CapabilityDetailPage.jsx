@@ -24,9 +24,11 @@ export default function CapabilityDetailPage() {
                 title={service.title}
                 summary={service.shortDescription}
             >
-                <Link className="back-link" to="/services">
-                    ← Back to Services
-                </Link>
+                <div className="page-header-action">
+                    <Link className="card-link" to="/services">
+                        ← Back to Services
+                    </Link>
+                </div>
             </PageHeader>
 
             <section className="section section-light">
