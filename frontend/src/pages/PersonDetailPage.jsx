@@ -96,10 +96,10 @@ export default function PersonDetailPage() {
                         </section>
 
                         <section className="person-section">
-                            <h2>Education</h2>
+                            <h2>Education & Qualifications</h2>
 
                             <ul className="person-list">
-                                {person.education.map((item) => (
+                                {person['education & qualifications'].map((item) => (
                                     <li key={item}>{item}</li>
                                 ))}
                             </ul>

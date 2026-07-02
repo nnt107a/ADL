@@ -43,7 +43,7 @@ export default function CapabilityDetailPage() {
                     </section>
 
                     <section className="service-section">
-                        <h2>Representative Services</h2>
+                        <h2>Our Core Services</h2>
 
                         <ul className="service-list">
                             {service.services.map((item) => (
@@ -53,24 +53,13 @@ export default function CapabilityDetailPage() {
                     </section>
 
                     <section className="service-section">
-                        <h2>Representative Projects</h2>
+                        <h2>Selected Projects</h2>
 
-                        <div className="project-list">
-                            {service.representativeProjects.map((project, index) => (
-                                <div
-                                    className="project-item"
-                                    key={project}
-                                >
-                                    <span className="project-number">
-                                        {(index + 1)
-                                            .toString()
-                                            .padStart(2, "0")}
-                                    </span>
-
-                                    <p>{project}</p>
-                                </div>
+                        <ul className="project-list">
+                            {service.representativeProjects.map((project) => (
+                                <li key={project}>{project}</li>
                             ))}
-                        </div>
+                        </ul>
                     </section>
 
                 </div>

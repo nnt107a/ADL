@@ -476,8 +476,8 @@ img {
 .section-kicker {
   margin: 0 0 0.9rem ;
   color: var(--accent);
-  font-size: 1rem;
-  letter-spacing: 0.24em;
+  font-size: 3rem;
+  letter-spacing: 0.05em;
   text-transform: uppercase;
   font-weight: 800;
 }
@@ -904,6 +904,37 @@ img {
 
 .service-card.service-detail {
   overflow: visible;
+}
+
+.service-detail {
+  display: grid;
+  gap: 2rem;
+}
+
+.service-section {
+  display: grid;
+  gap: 0.85rem;
+}
+
+.service-section h2 {
+  margin: 0;
+}
+
+.service-section p {
+  margin: 0;
+}
+
+.service-list,
+.project-list {
+  margin: 0;
+  padding-left: 1.25rem;
+  color: var(--muted);
+}
+
+.service-list li,
+.project-list li {
+  margin: 0.45rem 0;
+  padding-left: 0.25rem;
 }
 
 .person-cover {
