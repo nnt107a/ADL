@@ -1,9 +1,10 @@
-import { Fragment } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Fragment, useState } from 'react';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import PageHeader from '../components/PageHeader';
 import LoadingState from '../components/LoadingState';
 import ErrorState from '../components/ErrorState';
 import useApiResource from '../hooks/useApiResource';
+import useAdminSession from '../hooks/useAdminSession';
 
 function formatPublishedAt(value) {
   if (!value) {
@@ -62,10 +63,48 @@ function looksLikeHtml(value) {
 
 export default function NewsDetailPage() {
   const { slug } = useParams();
+  const navigate = useNavigate();
+  const { isAdmin } = useAdminSession();
+  const [deleting, setDeleting] = useState(false);
+  const [deleteError, setDeleteError] = useState('');
   const { data: item, loading, error } = useApiResource(slug ? `/api/news/${slug}` : '', {
     initialData: null,
     enabled: Boolean(slug),
   });
+
+  async function handleDelete() {
+    if (!slug) {
+      return;
+    }
+
+    const confirmed = window.confirm(`Delete "${item?.title || 'this news item'}"? This cannot be undone.`);
+
+    if (!confirmed) {
+      return;
+    }
+
+    try {
+      setDeleting(true);
+      setDeleteError('');
+
+      const response = await fetch(`/api/admin/news/${slug}`, {
+        method: 'DELETE',
+        credentials: 'same-origin',
+      });
+
+      const body = await response.json().catch(() => null);
+
+      if (!response.ok) {
+        throw new Error(body?.message || `Request failed with status ${response.status}`);
+      }
+
+      navigate('/news');
+    } catch (deleteFailure) {
+      setDeleteError(deleteFailure.message || 'Failed to delete news item.');
+    } finally {
+      setDeleting(false);
+    }
+  }
 
   return (
     <>
@@ -77,10 +116,32 @@ export default function NewsDetailPage() {
             ? `Published ${formatPublishedAt(item.publishedAt)}`
             : 'News items are served from the backend API.'
         }
+        rightAlignedSummary={true}
       >
-        <Link className="card-link" to="/news">
-          Back to news
-        </Link>
+        <div className="page-header-action page-header-action-detail">
+            <Link className="page-header-back-link" to="/news">
+                ← Back to News
+            </Link>
+            {slug && isAdmin ? (
+              <div className="page-header-admin-actions">
+                <Link
+                  className="page-header-admin-link page-header-admin-link-edit"
+                  to={`/news/edit?slug=${encodeURIComponent(slug)}`}
+                >
+                  Edit article
+                </Link>
+                <button
+                  className="page-header-admin-link page-header-admin-link-delete"
+                  type="button"
+                  onClick={handleDelete}
+                  disabled={deleting}
+                >
+                  {deleting ? 'Deleting...' : 'Delete article'}
+                </button>
+              </div>
+            ) : null}
+            {deleteError ? <p className="form-feedback">{deleteError}</p> : null}
+        </div>
       </PageHeader>
 
       <section className="section section-light reveal">
@@ -111,7 +172,7 @@ export default function NewsDetailPage() {
 
               {item.contentFileUrl ? (
                 <p className="state-copy">
-                  <a className="card-link" href={item.contentFileUrl} target="_blank" rel="noreferrer">
+                  <a className="page-header-admin-link page-header-admin-link-edit" href={item.contentFileUrl} target="_blank" rel="noreferrer">
                     Open attached file{item.contentFileName ? `: ${item.contentFileName}` : ''}
                   </a>
                 </p>

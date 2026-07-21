@@ -1,6 +1,8 @@
 import { Router } from 'express';
 import adminNewsRoutes from './adminNewsRoutes.js';
+import adminInsightRoutes from './adminInsightRoutes.js';
 import adminPeopleRoutes from './adminPeopleRoutes.js';
+import insightRoutes from './insightRoutes.js';
 import newsRoutes from './newsRoutes.js';
 import peopleRoutes from './peopleRoutes.js';
 import sessionRoutes from './sessionRoutes.js';
@@ -13,7 +15,9 @@ router.get('/health', (_req, res) => {
 
 router.use(sessionRoutes);
 router.use('/admin/news', adminNewsRoutes);
+router.use('/admin/insights', adminInsightRoutes);
 router.use('/admin/people', adminPeopleRoutes);
+router.use('/insights', insightRoutes);
 router.use('/news', newsRoutes);
 router.use('/people', peopleRoutes);
 

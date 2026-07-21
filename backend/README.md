@@ -1,6 +1,6 @@
 # ADL Backend
 
-Express API for the ADL site. It stores people and news in MongoDB, accepts admin uploads, serves files from `uploads/`, and can also serve a built frontend from `backend/public/` in production.
+Express API for the ADL site. It stores people, news, and insight articles in MongoDB, accepts admin uploads, serves files from `uploads/`, and can also serve a built frontend from `backend/public/` in production.
 
 ## Requirements
 
@@ -126,6 +126,8 @@ Public routes:
 - `GET /api/session`
 - `GET /api/news`
 - `GET /api/news/:slug`
+- `GET /api/insights`
+- `GET /api/insights/:slug`
 - `GET /api/people`
 - `GET /api/people/:id`
 - `POST /api/grant-admin`
@@ -140,6 +142,12 @@ Protected routes:
 - `POST /api/admin/news`
 - `POST /api/admin/news/preview`
 - `POST /api/admin/news/assets/image`
+- `PUT /api/admin/news/:slug`
+- `DELETE /api/admin/news/:slug`
+- `POST /api/admin/insights`
+- `POST /api/admin/insights/assets/image`
+- `PUT /api/admin/insights/:slug`
+- `DELETE /api/admin/insights/:slug`
 - `POST /api/admin/people/assets/avatar`
 - `POST /api/admin/people/assets/cover`
 

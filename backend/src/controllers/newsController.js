@@ -12,7 +12,7 @@ function slugify(value) {
     .replace(/(^-|-$)+/g, '');
 }
 
-async function ensureUniqueSlug(baseSlug) {
+async function ensureUniqueSlug(baseSlug, excludeId = null) {
   const normalizedBase = slugify(baseSlug);
 
   if (!normalizedBase) {
@@ -21,11 +21,12 @@ async function ensureUniqueSlug(baseSlug) {
 
   let candidate = normalizedBase;
   let suffix = 2;
+  const filter = excludeId ? { _id: { $ne: excludeId } } : {};
 
   // eslint-disable-next-line no-constant-condition
   while (true) {
     // eslint-disable-next-line no-await-in-loop
-    const existing = await News.findOne({ slug: candidate }).select('_id').lean();
+    const existing = await News.findOne({ slug: candidate, ...filter }).select('_id').lean();
 
     if (!existing) {
       return candidate;
@@ -255,5 +256,130 @@ export async function createNews(req, res, next) {
     }
 
     next(error);
+  }
+}
+
+export async function updateNewsBySlug(req, res, next) {
+  try {
+    const currentSlug = String(req.params?.slug || '')
+      .trim()
+      .toLowerCase();
+
+    if (!currentSlug) {
+      return res.status(400).json({ message: 'Slug is required.' });
+    }
+
+    const existing = await News.findOne({ slug: currentSlug });
+
+    if (!existing) {
+      return res.status(404).json({ message: 'News item not found.' });
+    }
+
+    const { title, slug, type, excerpt, content, publishedAt } = req.body || {};
+    const uploadedImage = getSingleUploadedFile(req.files, 'image');
+    const uploadedContentFile = getSingleUploadedFile(req.files, 'contentFile');
+
+    const resolvedTitle = String(title || existing.title || '').trim();
+
+    if (!resolvedTitle) {
+      return res.status(400).json({ message: 'Title is required.' });
+    }
+
+    const desiredSlugInput = String(slug || '').trim();
+    const desiredSlug = desiredSlugInput ? desiredSlugInput : existing.slug;
+    const uniqueSlug = slugify(desiredSlug) === existing.slug
+      ? existing.slug
+      : await ensureUniqueSlug(desiredSlug, existing._id);
+
+    if (!uniqueSlug) {
+      return res.status(400).json({ message: 'Slug could not be generated.' });
+    }
+
+    let resolvedContent = String(content || '').trim();
+    let contentFileToCleanupPath = '';
+
+    if (!resolvedContent && uploadedContentFile) {
+      const original = String(uploadedContentFile.originalname || '').toLowerCase();
+      const ext = path.extname(original);
+      const isSupported =
+        ext === '.docx' ||
+        uploadedContentFile.mimetype?.startsWith('text/') ||
+        ['.txt', '.md', '.markdown', '.html', '.htm'].includes(ext);
+
+      if (!isSupported) {
+        return res.status(400).json({
+          message: 'Unsupported content file type. Use docx, html, md, or txt.',
+        });
+      }
+
+      contentFileToCleanupPath = uploadedContentFile.path;
+      resolvedContent = await extractHtmlFromUploadedContentFile(uploadedContentFile);
+    }
+
+    if (!resolvedContent && !existing.contentFileUrl) {
+      return res.status(400).json({ message: 'Provide content text or keep an attached content file.' });
+    }
+
+    let resolvedPublishedAt = existing.publishedAt;
+
+    if (publishedAt !== undefined && publishedAt !== null && String(publishedAt).trim() !== '') {
+      const date = new Date(publishedAt);
+
+      if (Number.isNaN(date.getTime())) {
+        return res.status(400).json({ message: 'publishedAt must be a valid date.' });
+      }
+
+      resolvedPublishedAt = date;
+    }
+
+    const updatedNews = await News.findOneAndUpdate(
+      { _id: existing._id },
+      {
+        title: resolvedTitle,
+        slug: uniqueSlug,
+        type: type !== undefined ? String(type).trim() : existing.type,
+        excerpt: excerpt !== undefined && String(excerpt).trim() ? String(excerpt).trim() : existing.excerpt,
+        content: resolvedContent || existing.content || '',
+        imageUrl: uploadedImage ? uploadedNewsFileUrl(uploadedImage) : existing.imageUrl,
+        contentFileUrl: existing.contentFileUrl,
+        contentFileName: existing.contentFileName,
+        publishedAt: resolvedPublishedAt,
+      },
+      { new: true, runValidators: true }
+    ).lean();
+
+    if (contentFileToCleanupPath) {
+      fs.unlink(contentFileToCleanupPath).catch(() => undefined);
+    }
+
+    return res.json(updatedNews);
+  } catch (error) {
+    if (error?.code === 11000 && error?.keyPattern?.slug) {
+      return res.status(409).json({ message: 'A news item with that slug already exists.' });
+    }
+
+    return next(error);
+  }
+}
+
+export async function deleteNewsBySlug(req, res, next) {
+  try {
+    const slug = String(req.params?.slug || '')
+      .trim()
+      .toLowerCase();
+
+    if (!slug) {
+      return res.status(400).json({ message: 'Slug is required.' });
+    }
+
+    const deleted = await News.findOneAndDelete({ slug }).lean();
+
+    if (!deleted) {
+      return res.status(404).json({ message: 'News item not found.' });
+    }
+
+    return res.json({ message: 'News item deleted successfully.' });
+  } catch (error) {
+    return next(error);
   }
 }

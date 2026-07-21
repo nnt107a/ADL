@@ -4,20 +4,24 @@ import navigation from '../data/navigation';
 
 export default function Header() {
   const [isOpen, setIsOpen] = useState(false);
+  const [openDropdownPath, setOpenDropdownPath] = useState('');
   const location = useLocation();
 
   useEffect(() => {
     setIsOpen(false);
+    setOpenDropdownPath('');
 
     const closeOnEscape = (event) => {
       if (event.key === 'Escape') {
         setIsOpen(false);
+        setOpenDropdownPath('');
       }
     };
 
     const closeOnResize = () => {
       if (window.innerWidth > 900) {
         setIsOpen(false);
+        setOpenDropdownPath('');
       }
     };
 
@@ -30,7 +34,10 @@ export default function Header() {
     };
   }, [location.pathname]);
 
-  const closeMenu = () => setIsOpen(false);
+  const closeMenu = () => {
+    setIsOpen(false);
+    setOpenDropdownPath('');
+  };
 
   return (
     <header className="site-header" aria-label="Site header">
@@ -54,28 +61,56 @@ export default function Header() {
 
         <div className="header-nav-wrap">
           <nav id="site-nav" className={`site-nav ${isOpen ? 'is-open' : ''}`} aria-label="Primary navigation">
-            {navigation.map((item) => (
-              <div className={`nav-item ${item.children ? 'nav-dropdown' : ''}`} key={item.path}>
-                <NavLink
-                  to={item.path}
-                  end
-                  onClick={closeMenu}
-                  className={({ isActive }) => (isActive ? 'is-active nav-link' : 'nav-link')}
-                >
-                  {item.label}
-                </NavLink>
+            {navigation.map((item) => {
+              const hasChildren = Boolean(item.children?.length);
+              const isDropdownOpen = openDropdownPath === item.path;
 
-                {item.children ? (
-                  <div className="nav-submenu" aria-label={`${item.label} submenu`}>
-                    {item.children.map((child) => (
-                      <Link key={child.path} to={child.path} onClick={closeMenu}>
-                        {child.label}
-                      </Link>
-                    ))}
-                  </div>
-                ) : null}
-              </div>
-            ))}
+              return (
+                <div
+                  className={`nav-item ${hasChildren ? 'nav-dropdown' : ''} ${isDropdownOpen ? 'is-open' : ''}`}
+                  key={item.path}
+                  onMouseEnter={() => {
+                    if (hasChildren) {
+                      setOpenDropdownPath(item.path);
+                    }
+                  }}
+                  onMouseLeave={() => {
+                    if (hasChildren) {
+                      setOpenDropdownPath('');
+                    }
+                  }}
+                  onFocus={() => {
+                    if (hasChildren) {
+                      setOpenDropdownPath(item.path);
+                    }
+                  }}
+                  onBlur={(event) => {
+                    if (hasChildren && !event.currentTarget.contains(event.relatedTarget)) {
+                      setOpenDropdownPath('');
+                    }
+                  }}
+                >
+                  <NavLink
+                    to={item.path}
+                    end
+                    onClick={closeMenu}
+                    className={({ isActive }) => (isActive ? 'is-active nav-link' : 'nav-link')}
+                  >
+                    {item.label}
+                  </NavLink>
+
+                  {hasChildren ? (
+                    <div className={`nav-submenu ${item.submenuClassName || ''}`} aria-label={`${item.label} submenu`}>
+                      {item.children.map((child) => (
+                        <Link key={child.path} to={child.path} onClick={closeMenu}>
+                          {child.label}
+                        </Link>
+                      ))}
+                    </div>
+                  ) : null}
+                </div>
+              );
+            })}
           </nav>
         </div>
       </div>

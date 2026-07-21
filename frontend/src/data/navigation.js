@@ -1,3 +1,5 @@
+import services from './services.json';
+
 const navigation = [
   {
     label: 'About Us',
@@ -9,9 +11,16 @@ const navigation = [
     ],
   },
   { label: 'Our People', path: '/people' },
-  { label: 'Our Services', path: '/services' },
+  {
+    label: 'Our Services',
+    path: '/services',
+    submenuClassName: 'nav-submenu-services',
+    children: services.map((service) => ({
+      label: service.title,
+      path: `/services/${service.id}`,
+    })),
+  },
   { label: 'Insight', path: '/insight' },
-  { label: 'Careers', path: '/careers' },
   { label: 'Contact', path: '/contact' },
 ];
 

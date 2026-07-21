@@ -18,7 +18,7 @@ export default function PersonDetailPage() {
 
                 <section className="section">
                     <div className="container">
-                        <Link className="card-link" to="/people">
+                        <Link className="page-header-back-link" to="/people">
                             ← Back to People
                         </Link>
                     </div>
@@ -35,7 +35,7 @@ export default function PersonDetailPage() {
                 summary=""
             >
                 <div className="page-header-action">
-                    <Link className="card-link" to="/people">
+                    <Link className="page-header-back-link" to="/people">
                         ← Back to People
                     </Link>
                 </div>

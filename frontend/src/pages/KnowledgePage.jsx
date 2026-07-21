@@ -1,50 +1,72 @@
 import PageHeader from '../components/PageHeader';
 import { Link } from 'react-router-dom';
+import LoadingState from '../components/LoadingState';
+import ErrorState from '../components/ErrorState';
+import useApiResource from '../hooks/useApiResource';
 
-const articles = [
-  {
-    type: 'Insight',
-    date: '20 Mar 2026',
-    title: 'Three questions to ask before your next partnership.',
-    text: 'A simple checklist for aligning commercial expectations, accountability, and exit options.',
-  },
-  {
-    type: 'Update',
-    date: '18 Mar 2026',
-    title: 'How to prepare for a review without slowing the business down.',
-    text: 'Keep the process focused by organizing information, ownership, and response timing early.',
-  },
-  {
-    type: 'Guide',
-    date: '12 Mar 2026',
-    title: 'Turning policy updates into practical action for your team.',
-    text: 'The best update is one that people can understand, follow, and apply in their work.',
-  },
-];
+function formatPublishedAt(value) {
+  if (!value) {
+    return '';
+  }
+
+  const date = new Date(value);
+
+  if (Number.isNaN(date.getTime())) {
+    return '';
+  }
+
+  return date.toLocaleDateString(undefined, {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+  });
+}
 
 export default function KnowledgePage() {
+  const { data: articles, loading, error } = useApiResource('/api/insights', {
+    initialData: [],
+  });
+
   return (
     <>
       <PageHeader
         kicker="Insight"
         title="Short reads with practical takeaways."
-        summary="Use this area for insights, announcements, and updates that help clients stay ahead of change."
-      />
+        summary="Timely legal insights to help you make informed business decisions."
+      >
+        <div className="page-header-action">
+          <Link className="page-header-admin-link page-header-admin-link-edit" to="/insight/add">
+            Add insight
+          </Link>
+        </div>
+      </PageHeader>
 
       <section className="section section-alt reveal">
-        <div className="container cards-grid insights-grid">
-          {articles.map((article) => (
-            <article className="insight-card" key={article.title}>
-              <div className="insight-meta">
-                <span>{article.type}</span>
-                <time>{article.date}</time>
-              </div>
-              <h3>{article.title}</h3>
-              <p>{article.text}</p>
-              <Link to="/contact">Read more</Link>
-            </article>
-          ))}
-        </div>
+        {loading ? <LoadingState label="Loading insights" /> : null}
+        {error ? <ErrorState title="Unable to load insights" message={error} /> : null}
+
+        {!loading && !error ? (
+          articles.length > 0 ? (
+            <div className="container cards-grid insights-grid">
+              {articles.map((article) => (
+                <article className="insight-card" key={article._id}>
+                  <div className="insight-meta">
+                    <span>{article.type || 'Insight'}</span>
+                    <time>{formatPublishedAt(article.publishedAt)}</time>
+                  </div>
+                  <h3>{article.title}</h3>
+                  <p>{article.excerpt}</p>
+                  <Link to={`/insight/${article.slug}`}>Read more</Link>
+                </article>
+              ))}
+            </div>
+          ) : (
+            <div className="container state-panel">
+              <p className="state-label">No insights yet</p>
+              <p className="state-copy">Published insight articles will appear here.</p>
+            </div>
+          )
+        ) : null}
       </section>
     </>
   );

@@ -1,4 +1,4 @@
-export default function PageHeader({ kicker, title, summary, children }) {
+export default function PageHeader({ kicker, title, summary, children, rightAlignedSummary = false }) {
   return (
     <header className="section page-header">
       <div className="container">
@@ -9,7 +9,11 @@ export default function PageHeader({ kicker, title, summary, children }) {
             <h1 className="page-title">{title}</h1>
           </div>
 
-          <div className="page-summary-wrap">
+          <div
+            className={`page-summary-wrap ${
+              rightAlignedSummary ? "page-summary-wrap--right" : ""
+            }`}
+          >
             <p className="section-lead">{summary}</p>
             {children}
           </div>

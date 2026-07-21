@@ -15,10 +15,14 @@ export default function AdminUnlockGate() {
     let pressCount = 0;
 
     async function grantAdmin() {
-      await fetch('/api/grant-admin', {
+      const response = await fetch('/api/grant-admin', {
         method: 'POST',
         credentials: 'same-origin',
       }).catch(() => undefined);
+
+      if (response?.ok) {
+        window.dispatchEvent(new CustomEvent('adl-admin-session-granted'));
+      }
     }
 
     function handleKeyDown(event) {

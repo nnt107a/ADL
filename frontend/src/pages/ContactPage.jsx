@@ -4,21 +4,21 @@ import PageHeader from '../components/PageHeader';
 const contactDetails = [
   {
     label: 'General enquiries',
-    value: 'hello@adl.vn',
-    href: 'mailto:hello@adl.vn',
+    value: 'counsel@adlegal.vn',
+    href: 'mailto:counsel@adlegal.vn',
   },
   {
     label: 'Phone',
-    value: '+84 000 000 000',
-    href: 'tel:+84000000000',
+    value: '+84 878 447 664',
+    href: 'tel:+84878447664',
   },
   {
     label: 'Office',
-    value: 'Ho Chi Minh City, Vietnam',
+    value: '428/4 Hoang Ngan St, Phu Dinh Ward, Ho Chi Minh City, Vietnam',
   },
   {
     label: 'Working hours',
-    value: 'Monday to Friday • 8:30am to 5:30pm',
+    value: 'Monday to Friday • 9am to 6pm',
   },
 ];
 
@@ -45,7 +45,7 @@ export default function ContactPage() {
             {contactDetails.map((item) => (
               <article className="contact-card" key={item.label}>
                 <span className="contact-label">{item.label}</span>
-                {item.href ? <a href={item.href}>{item.value}</a> : <p>{item.value}</p>}
+                {item.href ? <a href={item.href}> {item.value}</a> : <p>{item.value}</p>}
               </article>
             ))}
           </div>
@@ -79,7 +79,7 @@ export default function ContactPage() {
             </label>
 
             <div className="form-footer">
-              <button className="button button-primary" type="submit">
+              <button className="page-header-admin-link page-header-admin-link-edit" type="submit">
                 Send message
               </button>
               <p className="form-feedback" aria-live="polite">

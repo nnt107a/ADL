@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import PageHeader from '../components/PageHeader';
 import LoadingState from '../components/LoadingState';
 import ErrorState from '../components/ErrorState';
@@ -34,7 +34,13 @@ export default function NewsPage() {
         kicker="News"
         title="Latest updates"
         summary="News items are stored in MongoDB and served from the backend API."
-      />
+      >
+        <div className="page-header-action">
+          <Link className="page-header-admin-link page-header-admin-link-edit" to="/news/add">
+            Add news
+          </Link>
+        </div>
+      </PageHeader>
 
       <section className="section section-light reveal">
         {loading ? <LoadingState label="Loading news" /> : null}

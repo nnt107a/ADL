@@ -1,6 +1,6 @@
 # ADL Frontend
 
-Vite + React frontend for the ADL site. It renders public pages and reads people and news from the backend API. Admin writes are API-only; there are no routed admin screens in the web app.
+Vite + React frontend for the ADL site. It renders public pages and reads people, news, and insights from the backend API. Admin publishing routes are hidden behind the session unlock flow.
 
 ## Requirements
 
@@ -69,9 +69,20 @@ The frontend includes a hidden session unlock listener. While focused on the web
 POST /api/grant-admin
 ```
 
-The backend responds by setting an HTTP-only signed admin session cookie. There is no alert, prompt, redirect, button, or admin page in the UI.
+The backend responds by setting an HTTP-only signed admin session cookie. There is no alert, prompt, or redirect.
 
-After that session is active, access admin functionality directly through the API. For example:
+After that session is active, admins can open the publishing and management routes:
+
+```text
+http://localhost:5173/news/add
+http://localhost:5173/news/edit
+http://localhost:5173/insight/add
+http://localhost:5173/insight/edit
+```
+
+Those routes let admins create and edit news and insight articles in MongoDB. Delete actions are available directly from the article detail pages for admins.
+
+Admin functionality is also available through the API. For example:
 
 ```text
 GET /api/admin/session
@@ -81,6 +92,8 @@ DELETE /api/people/:id
 POST /api/admin/news
 POST /api/admin/news/preview
 POST /api/admin/news/assets/image
+POST /api/admin/insights
+POST /api/admin/insights/assets/image
 POST /api/admin/people/assets/avatar
 POST /api/admin/people/assets/cover
 ```
@@ -123,11 +136,16 @@ Public routes:
 - `/`
 - `/about`
 - `/news`
+- `/news/add` admin only
+- `/news/edit` admin only
 - `/news/:slug`
 - `/people`
 - `/people/:id`
 - `/services`
 - `/insight`
+- `/insight/add` admin only
+- `/insight/edit` admin only
+- `/insight/:slug`
 - `/careers`
 - `/contact`
 - `/mission`
