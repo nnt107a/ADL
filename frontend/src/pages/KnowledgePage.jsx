@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import LoadingState from '../components/LoadingState';
 import ErrorState from '../components/ErrorState';
 import useApiResource from '../hooks/useApiResource';
+import useAdminSession from '../hooks/useAdminSession';
 
 function formatPublishedAt(value) {
   if (!value) {
@@ -23,6 +24,7 @@ function formatPublishedAt(value) {
 }
 
 export default function KnowledgePage() {
+  const { isAdmin, checking } = useAdminSession();
   const { data: articles, loading, error } = useApiResource('/api/insights', {
     initialData: [],
   });
@@ -34,11 +36,13 @@ export default function KnowledgePage() {
         title="Short reads with practical takeaways."
         summary="Timely legal insights to help you make informed business decisions."
       >
-        <div className="page-header-action">
-          <Link className="page-header-admin-link page-header-admin-link-edit" to="/insight/add">
-            Add insight
-          </Link>
-        </div>
+        {checking ? null : isAdmin ? (
+          <div className="page-header-action">
+            <Link className="page-header-admin-link page-header-admin-link-edit" to="/insight/add">
+              Add insight
+            </Link>
+          </div>
+        ) : null}
       </PageHeader>
 
       <section className="section section-alt reveal">

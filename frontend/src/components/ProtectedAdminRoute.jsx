@@ -1,45 +1,19 @@
-import { useEffect, useState } from 'react';
-import ErrorState from './ErrorState';
+import AccessDeniedState from './AccessDeniedState';
 import LoadingState from './LoadingState';
+import useAdminSession from '../hooks/useAdminSession';
 
 export default function ProtectedAdminRoute({ children }) {
-  const [status, setStatus] = useState('checking');
+  const { isAdmin, checking } = useAdminSession();
 
-  async function checkAdminSession() {
-    try {
-      setStatus('checking');
-      const response = await fetch('/api/admin/session', {
-        credentials: 'same-origin',
-      });
-
-      setStatus(response.ok ? 'allowed' : 'denied');
-    } catch {
-      setStatus('denied');
-    }
-  }
-
-  useEffect(() => {
-    checkAdminSession();
-
-    window.addEventListener('adl-admin-session-granted', checkAdminSession);
-
-    return () => {
-      window.removeEventListener('adl-admin-session-granted', checkAdminSession);
-    };
-  }, []);
-
-  if (status === 'checking') {
+  if (checking) {
     return <LoadingState label="Checking admin session" />;
   }
 
-  if (status === 'denied') {
+  if (!isAdmin) {
     return (
       <section className="section section-light">
         <div className="container">
-          <ErrorState
-            title="Admin access required"
-            message="Press L five times within 10 seconds while focused on the website, then this route will unlock for the current browser session."
-          />
+          <AccessDeniedState />
         </div>
       </section>
     );

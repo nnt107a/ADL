@@ -3,6 +3,7 @@ import PageHeader from '../components/PageHeader';
 import LoadingState from '../components/LoadingState';
 import ErrorState from '../components/ErrorState';
 import useApiResource from '../hooks/useApiResource';
+import useAdminSession from '../hooks/useAdminSession';
 
 function formatPublishedAt(value) {
   if (!value) {
@@ -24,6 +25,7 @@ function formatPublishedAt(value) {
 
 export default function NewsPage() {
   const navigate = useNavigate();
+  const { isAdmin, checking } = useAdminSession();
   const { data: items, loading, error } = useApiResource('/api/news', {
     initialData: [],
   });
@@ -35,11 +37,13 @@ export default function NewsPage() {
         title="Latest updates"
         summary="News items are stored in MongoDB and served from the backend API."
       >
-        <div className="page-header-action">
-          <Link className="page-header-admin-link page-header-admin-link-edit" to="/news/add">
-            Add news
-          </Link>
-        </div>
+        {checking ? null : isAdmin ? (
+          <div className="page-header-action">
+            <Link className="page-header-admin-link page-header-admin-link-edit" to="/news/add">
+              Add news
+            </Link>
+          </div>
+        ) : null}
       </PageHeader>
 
       <section className="section section-light reveal">
