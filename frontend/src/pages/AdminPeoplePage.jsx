@@ -2,31 +2,20 @@ import { useMemo, useRef, useState } from 'react';
 import { useEditor, EditorContent } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import PageHeader from '../components/PageHeader';
+import { useLocale } from '../context/LocaleContext';
 
 function coerceBoolean(value) {
   return value === true || value === 'true' || value === 'on' || value === '1';
 }
 
 export default function AdminPeoplePage() {
+  const { copy } = useLocale();
+  const page = copy.admin.unlock;
   const fileAvatarRef = useRef(null);
   const fileCoverRef = useRef(null);
 
   const expertiseOptions = useMemo(
-    () => [
-      'Strategy',
-      'Transactions',
-      'Leadership',
-      'Commercial',
-      'Negotiation',
-      'Operations',
-      'Compliance',
-      'Controls',
-      'Policy',
-      'Delivery',
-      'Support',
-      'Governance',
-      'Risk',
-    ],
+    () => ['Strategy', 'Transactions', 'Leadership', 'Commercial', 'Negotiation', 'Operations', 'Compliance', 'Controls', 'Policy', 'Delivery', 'Support', 'Governance', 'Risk'],
     []
   );
 
@@ -34,15 +23,12 @@ export default function AdminPeoplePage() {
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
-
   const [selectedExpertise, setSelectedExpertise] = useState([]);
   const [customExpertise, setCustomExpertise] = useState('');
-
   const [avatarUrl, setAvatarUrl] = useState('');
   const [coverUrl, setCoverUrl] = useState('');
   const [uploadingAvatar, setUploadingAvatar] = useState(false);
   const [uploadingCover, setUploadingCover] = useState(false);
-
   const [experienceHtml, setExperienceHtml] = useState('');
 
   const experienceEditor = useEditor({
@@ -74,32 +60,16 @@ export default function AdminPeoplePage() {
 
     return (
       <div className="editor-toolbar" role="toolbar" aria-label="Experience editor toolbar">
-        <button
-          type="button"
-          className={experienceEditor.isActive('bold') ? 'tool-button is-active' : 'tool-button'}
-          onClick={() => experienceEditor.chain().focus().toggleBold().run()}
-        >
+        <button type="button" className={experienceEditor.isActive('bold') ? 'tool-button is-active' : 'tool-button'} onClick={() => experienceEditor.chain().focus().toggleBold().run()}>
           Bold
         </button>
-        <button
-          type="button"
-          className={experienceEditor.isActive('italic') ? 'tool-button is-active' : 'tool-button'}
-          onClick={() => experienceEditor.chain().focus().toggleItalic().run()}
-        >
+        <button type="button" className={experienceEditor.isActive('italic') ? 'tool-button is-active' : 'tool-button'} onClick={() => experienceEditor.chain().focus().toggleItalic().run()}>
           Italic
         </button>
-        <button
-          type="button"
-          className={experienceEditor.isActive('bulletList') ? 'tool-button is-active' : 'tool-button'}
-          onClick={() => experienceEditor.chain().focus().toggleBulletList().run()}
-        >
+        <button type="button" className={experienceEditor.isActive('bulletList') ? 'tool-button is-active' : 'tool-button'} onClick={() => experienceEditor.chain().focus().toggleBulletList().run()}>
           Bullets
         </button>
-        <button
-          type="button"
-          className={experienceEditor.isActive('orderedList') ? 'tool-button is-active' : 'tool-button'}
-          onClick={() => experienceEditor.chain().focus().toggleOrderedList().run()}
-        >
+        <button type="button" className={experienceEditor.isActive('orderedList') ? 'tool-button is-active' : 'tool-button'} onClick={() => experienceEditor.chain().focus().toggleOrderedList().run()}>
           Numbered
         </button>
       </div>
@@ -112,10 +82,7 @@ export default function AdminPeoplePage() {
       .map((item) => item.trim())
       .filter(Boolean);
 
-    const merged = [...selectedExpertise, ...fromCustom]
-      .map((item) => String(item).trim())
-      .filter(Boolean);
-
+    const merged = [...selectedExpertise, ...fromCustom].map((item) => String(item).trim()).filter(Boolean);
     return Array.from(new Set(merged));
   }
 
@@ -147,47 +114,37 @@ export default function AdminPeoplePage() {
 
   async function handleAvatarFile(event) {
     const file = event.target.files?.[0];
-    if (!file) {
-      return;
-    }
+    if (!file) return;
 
     try {
       setUploadingAvatar(true);
       setError('');
       setSuccess('');
-
       const url = await uploadImage(file, 'avatar');
       setAvatarUrl(url);
     } catch (uploadError) {
       setError(uploadError.message || 'Failed to upload avatar.');
     } finally {
       setUploadingAvatar(false);
-      if (event.target) {
-        event.target.value = '';
-      }
+      if (event.target) event.target.value = '';
     }
   }
 
   async function handleCoverFile(event) {
     const file = event.target.files?.[0];
-    if (!file) {
-      return;
-    }
+    if (!file) return;
 
     try {
       setUploadingCover(true);
       setError('');
       setSuccess('');
-
       const url = await uploadImage(file, 'cover');
       setCoverUrl(url);
     } catch (uploadError) {
       setError(uploadError.message || 'Failed to upload cover image.');
     } finally {
       setUploadingCover(false);
-      if (event.target) {
-        event.target.value = '';
-      }
+      if (event.target) event.target.value = '';
     }
   }
 
@@ -196,9 +153,7 @@ export default function AdminPeoplePage() {
 
     const form = event.currentTarget;
     const data = new FormData(form);
-
     const expertise = buildExpertiseArray();
-
     const experience = getExperiencePayload();
 
     const payload = {
@@ -214,25 +169,11 @@ export default function AdminPeoplePage() {
       featured: coerceBoolean(data.get('featured')),
     };
 
-    if (!payload.experience) {
-      delete payload.experience;
-    }
-
-    if (!payload.coverImage) {
-      delete payload.coverImage;
-    }
-
-    if (!payload.email) {
-      delete payload.email;
-    }
-
-    if (!payload.avatar) {
-      delete payload.avatar;
-    }
-
-    if (!Number.isFinite(payload.order)) {
-      delete payload.order;
-    }
+    if (!payload.experience) delete payload.experience;
+    if (!payload.coverImage) delete payload.coverImage;
+    if (!payload.email) delete payload.email;
+    if (!payload.avatar) delete payload.avatar;
+    if (!Number.isFinite(payload.order)) delete payload.order;
 
     try {
       setSubmitting(true);
@@ -241,9 +182,7 @@ export default function AdminPeoplePage() {
 
       const response = await fetch('/api/people', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
       });
 
@@ -253,7 +192,7 @@ export default function AdminPeoplePage() {
         throw new Error(body?.message || `Request failed with status ${response.status}`);
       }
 
-      setSuccess('Person created successfully.');
+      setSuccess(page.createPersonSuccess);
       form.reset();
       setSelectedExpertise([]);
       setCustomExpertise('');
@@ -264,7 +203,7 @@ export default function AdminPeoplePage() {
         experienceEditor.commands.setContent('');
       }
     } catch (submitError) {
-      setError(submitError.message || 'Failed to create person.');
+      setError(submitError.message || page.createPersonError);
     } finally {
       setSubmitting(false);
     }
@@ -272,18 +211,14 @@ export default function AdminPeoplePage() {
 
   return (
     <>
-      <PageHeader
-        kicker="Admin"
-        title="Add a person"
-        summary="Create a new team member record. Upload a cover + profile photo, then choose expertise tags."
-      />
+      <PageHeader kicker="Admin" title={page.addPeople} summary={page.peopleSummary} />
 
       <section className="section section-light reveal">
         <div className="container">
           <form className="contact-form" onSubmit={handleSubmit}>
             <div className="field-grid">
               <label className="field">
-                <span>Admin key (optional)</span>
+                <span>{page.adminKey}</span>
                 <input
                   type="password"
                   name="adminKey"
@@ -297,48 +232,19 @@ export default function AdminPeoplePage() {
             </div>
 
             <div className="profile-uploader">
-              <button
-                className="cover-uploader"
-                type="button"
-                onClick={() => fileCoverRef.current?.click()}
-                disabled={uploadingCover}
-              >
-                {coverUrl ? (
-                  <img src={coverUrl} alt="Cover preview" loading="lazy" />
-                ) : (
-                  <span>{uploadingCover ? 'Uploading cover…' : 'Click to upload cover image'}</span>
-                )}
+              <button className="cover-uploader" type="button" onClick={() => fileCoverRef.current?.click()} disabled={uploadingCover}>
+                {coverUrl ? <img src={coverUrl} alt="Cover preview" loading="lazy" /> : <span>{uploadingCover ? 'Uploading cover...' : 'Click to upload cover image'}</span>}
               </button>
 
-              <button
-                className="avatar-uploader"
-                type="button"
-                onClick={() => fileAvatarRef.current?.click()}
-                disabled={uploadingAvatar}
-                aria-label="Upload profile photo"
-              >
+              <button className="avatar-uploader" type="button" onClick={() => fileAvatarRef.current?.click()} disabled={uploadingAvatar} aria-label="Upload profile photo">
                 <div className="avatar avatar-lg" aria-hidden="true">
                   {avatarUrl ? <img src={avatarUrl} alt="" loading="lazy" /> : <span>+</span>}
                 </div>
-                <span className="avatar-uploader-label">
-                  {uploadingAvatar ? 'Uploading photo…' : 'Click to upload profile photo'}
-                </span>
+                <span className="avatar-uploader-label">{uploadingAvatar ? 'Uploading photo...' : 'Click to upload profile photo'}</span>
               </button>
 
-              <input
-                ref={fileCoverRef}
-                type="file"
-                accept="image/*"
-                onChange={handleCoverFile}
-                style={{ display: 'none' }}
-              />
-              <input
-                ref={fileAvatarRef}
-                type="file"
-                accept="image/*"
-                onChange={handleAvatarFile}
-                style={{ display: 'none' }}
-              />
+              <input ref={fileCoverRef} type="file" accept="image/*" onChange={handleCoverFile} style={{ display: 'none' }} />
+              <input ref={fileAvatarRef} type="file" accept="image/*" onChange={handleAvatarFile} style={{ display: 'none' }} />
             </div>
 
             <div className="field-grid">
@@ -394,12 +300,7 @@ export default function AdminPeoplePage() {
 
             <label className="field">
               <span>Custom expertise (optional)</span>
-              <input
-                type="text"
-                placeholder="Comma-separated tags"
-                value={customExpertise}
-                onChange={(event) => setCustomExpertise(event.target.value)}
-              />
+              <input type="text" placeholder="Comma-separated tags" value={customExpertise} onChange={(event) => setCustomExpertise(event.target.value)} />
             </label>
 
             <label className="field">
@@ -422,7 +323,7 @@ export default function AdminPeoplePage() {
 
             <div className="form-footer">
               <button className="button button-primary" type="submit" disabled={submitting}>
-                {submitting ? 'Creating…' : 'Create person'}
+                {submitting ? 'Creating...' : page.createPerson}
               </button>
               <p className="form-feedback" aria-live="polite">
                 {error ? error : success}

@@ -7,6 +7,12 @@ import { Link as RouterLink, useSearchParams } from 'react-router-dom';
 import PageHeader from '../components/PageHeader';
 import LoadingState from '../components/LoadingState';
 import ErrorState from '../components/ErrorState';
+import { useLocale } from '../context/LocaleContext';
+
+const LANGUAGES = [
+  { id: 'en', label: 'ENG' },
+  { id: 'vi', label: 'VIE' },
+];
 
 const editorModes = [
   { id: 'editor', label: 'Editor' },
@@ -76,66 +82,16 @@ function Toolbar({ editor, onPickImage }) {
   }
 
   const tools = [
-    {
-      label: 'B',
-      title: 'Bold',
-      active: editor.isActive('bold'),
-      action: () => editor.chain().focus().toggleBold().run(),
-    },
-    {
-      label: 'I',
-      title: 'Italic',
-      active: editor.isActive('italic'),
-      action: () => editor.chain().focus().toggleItalic().run(),
-    },
-    {
-      label: 'H2',
-      title: 'Heading',
-      active: editor.isActive('heading', { level: 2 }),
-      action: () => editor.chain().focus().toggleHeading({ level: 2 }).run(),
-    },
-    {
-      label: 'List',
-      title: 'Bullet list',
-      active: editor.isActive('bulletList'),
-      action: () => editor.chain().focus().toggleBulletList().run(),
-    },
-    {
-      label: '1.',
-      title: 'Numbered list',
-      active: editor.isActive('orderedList'),
-      action: () => editor.chain().focus().toggleOrderedList().run(),
-    },
-    {
-      label: 'Quote',
-      title: 'Quote',
-      active: editor.isActive('blockquote'),
-      action: () => editor.chain().focus().toggleBlockquote().run(),
-    },
-    {
-      label: 'Link',
-      title: 'Add or remove link',
-      active: editor.isActive('link'),
-      action: setLink,
-    },
-    {
-      label: 'Image',
-      title: 'Upload image',
-      active: false,
-      action: onPickImage,
-    },
-    {
-      label: 'Undo',
-      title: 'Undo',
-      active: false,
-      action: () => editor.chain().focus().undo().run(),
-    },
-    {
-      label: 'Redo',
-      title: 'Redo',
-      active: false,
-      action: () => editor.chain().focus().redo().run(),
-    },
+    { label: 'B', title: 'Bold', active: editor.isActive('bold'), action: () => editor.chain().focus().toggleBold().run() },
+    { label: 'I', title: 'Italic', active: editor.isActive('italic'), action: () => editor.chain().focus().toggleItalic().run() },
+    { label: 'H2', title: 'Heading', active: editor.isActive('heading', { level: 2 }), action: () => editor.chain().focus().toggleHeading({ level: 2 }).run() },
+    { label: 'List', title: 'Bullet list', active: editor.isActive('bulletList'), action: () => editor.chain().focus().toggleBulletList().run() },
+    { label: '1.', title: 'Numbered list', active: editor.isActive('orderedList'), action: () => editor.chain().focus().toggleOrderedList().run() },
+    { label: 'Quote', title: 'Quote', active: editor.isActive('blockquote'), action: () => editor.chain().focus().toggleBlockquote().run() },
+    { label: 'Link', title: 'Add or remove link', active: editor.isActive('link'), action: setLink },
+    { label: 'Image', title: 'Upload image', active: false, action: onPickImage },
+    { label: 'Undo', title: 'Undo', active: false, action: () => editor.chain().focus().undo().run() },
+    { label: 'Redo', title: 'Redo', active: false, action: () => editor.chain().focus().redo().run() },
   ];
 
   return (
@@ -155,11 +111,42 @@ function Toolbar({ editor, onPickImage }) {
   );
 }
 
+function emptyDraft() {
+  return { title: '', excerpt: '', content: '', contentFileUrl: '', contentFileName: '' };
+}
+
+function createDraftsFromArticle(article) {
+  return {
+    en: {
+      ...emptyDraft(),
+      title: article?.translations?.en?.title || article?.title || '',
+      excerpt: article?.translations?.en?.excerpt || article?.excerpt || '',
+      content: article?.translations?.en?.content || article?.content || '',
+      contentFileUrl: article?.translations?.en?.contentFileUrl || article?.contentFileUrl || '',
+      contentFileName: article?.translations?.en?.contentFileName || article?.contentFileName || '',
+    },
+    vi: {
+      ...emptyDraft(),
+      title: article?.translations?.vi?.title || '',
+      excerpt: article?.translations?.vi?.excerpt || '',
+      content: article?.translations?.vi?.content || '',
+      contentFileUrl: article?.translations?.vi?.contentFileUrl || '',
+      contentFileName: article?.translations?.vi?.contentFileName || '',
+    },
+  };
+}
+
+function buildFileFieldName(language) {
+  return `contentFile_${language}`;
+}
+
 export default function ArticleEditorPage({ kind, action = 'create' }) {
+  const { locale } = useLocale();
   const config = editorConfigs[kind];
   const fileInputRef = useRef(null);
   const [searchParams] = useSearchParams();
   const [mode, setMode] = useState('editor');
+  const [activeLanguage, setActiveLanguage] = useState(locale);
   const [submitting, setSubmitting] = useState(false);
   const [uploadingImage, setUploadingImage] = useState(false);
   const [error, setError] = useState('');
@@ -168,8 +155,15 @@ export default function ArticleEditorPage({ kind, action = 'create' }) {
   const [existingArticle, setExistingArticle] = useState(null);
   const [loadingExisting, setLoadingExisting] = useState(action === 'edit');
   const [existingError, setExistingError] = useState('');
+  const [drafts, setDrafts] = useState({ en: emptyDraft(), vi: emptyDraft() });
+  const [files, setFiles] = useState({ en: null, vi: null });
+  const [filePreviews, setFilePreviews] = useState({ en: '', vi: '' });
+  const [fileNames, setFileNames] = useState({ en: '', vi: '' });
   const articleSlug = String(searchParams.get('slug') || '').trim();
   const isEditMode = action === 'edit';
+  const isNews = kind === 'news';
+  const languageTabs = useMemo(() => LANGUAGES.map((tab) => ({ ...tab, isActive: tab.id === activeLanguage })), [activeLanguage]);
+  const activeDraft = drafts[activeLanguage];
 
   const editor = useEditor({
     extensions: [
@@ -178,9 +172,14 @@ export default function ArticleEditorPage({ kind, action = 'create' }) {
           autolink: true,
           openOnClick: false,
           protocols: ['http', 'https', 'mailto'],
-        }
+        },
       }),
-      Image.configure({ inline: false })
+      Image.configure({ inline: false }),
+      Link.configure({
+        autolink: true,
+        openOnClick: false,
+        protocols: ['http', 'https', 'mailto'],
+      }),
     ],
     content: '',
     editorProps: {
@@ -188,9 +187,18 @@ export default function ArticleEditorPage({ kind, action = 'create' }) {
         'aria-label': `${config.title} content editor`,
       },
     },
+    onUpdate({ editor: tiptapEditor }) {
+      setDrafts((current) => ({
+        ...current,
+        [activeLanguage]: {
+          ...current[activeLanguage],
+          content: tiptapEditor.getHTML(),
+        },
+      }));
+    },
   });
 
-  const previewHtml = useMemo(() => editor?.getHTML() || '', [editor, mode]);
+  const previewHtml = useMemo(() => editor?.getHTML() || '', [editor, mode, activeLanguage, drafts]);
   const pageTitle = isEditMode ? config.editTitle : config.title;
   const pageSummary = isEditMode ? config.editSummary : config.summary;
 
@@ -246,14 +254,26 @@ export default function ArticleEditorPage({ kind, action = 'create' }) {
   }, [articleSlug, config, isEditMode]);
 
   useEffect(() => {
-    if (!editor || !isEditMode) {
+    if (!existingArticle) {
       return;
     }
 
-    if (existingArticle?.content !== undefined) {
-      editor.commands.setContent(existingArticle.content || '');
+    setDrafts(createDraftsFromArticle(existingArticle));
+    setActiveLanguage(locale);
+  }, [existingArticle, locale]);
+
+  useEffect(() => {
+    if (!editor) {
+      return undefined;
     }
-  }, [editor, existingArticle?.content, isEditMode]);
+
+    editor.commands.setContent(activeDraft.content || '');
+    return undefined;
+  }, [editor, activeLanguage, activeDraft.content]);
+
+  useEffect(() => {
+    setCoverImage(null);
+  }, [existingArticle?._id]);
 
   async function uploadImage(file) {
     const data = new FormData();
@@ -312,17 +332,82 @@ export default function ArticleEditorPage({ kind, action = 'create' }) {
     setCoverImage(file);
   }
 
+  function updateActiveDraft(field, value) {
+    setDrafts((current) => ({
+      ...current,
+      [activeLanguage]: {
+        ...current[activeLanguage],
+        [field]: value,
+      },
+    }));
+  }
+
+  async function handlePreviewFile(event) {
+    const file = event.target.files?.[0];
+
+    if (!file) {
+      setFiles((current) => ({ ...current, [activeLanguage]: null }));
+      setFilePreviews((current) => ({ ...current, [activeLanguage]: '' }));
+      setFileNames((current) => ({ ...current, [activeLanguage]: '' }));
+      return;
+    }
+
+    try {
+      setError('');
+      setFiles((current) => ({ ...current, [activeLanguage]: file }));
+      setFileNames((current) => ({ ...current, [activeLanguage]: file.name }));
+
+      const data = new FormData();
+      data.append('contentFile', file);
+
+      const response = await fetch('/api/admin/news/preview', {
+        method: 'POST',
+        credentials: 'same-origin',
+        body: data,
+      });
+
+      const body = await response.json().catch(() => null);
+
+      if (!response.ok) {
+        throw new Error(body?.message || `Preview failed with status ${response.status}`);
+      }
+
+      setFilePreviews((current) => ({ ...current, [activeLanguage]: String(body?.html || '') }));
+      setDrafts((current) => ({
+        ...current,
+        [activeLanguage]: {
+          ...current[activeLanguage],
+          content: String(body?.html || ''),
+        },
+      }));
+    } catch (previewError) {
+      setFilePreviews((current) => ({ ...current, [activeLanguage]: '' }));
+      setError(previewError.message || 'Failed to preview file.');
+    } finally {
+      event.target.value = '';
+    }
+  }
+
   async function handleSubmit(event) {
     event.preventDefault();
 
     const form = event.currentTarget;
     const data = new FormData(form);
-    const content = editor?.getHTML() || '';
 
-    data.set('content', content);
+    for (const lang of LANGUAGES.map((item) => item.id)) {
+      data.set(`title_${lang}`, drafts[lang].title || '');
+      data.set(`excerpt_${lang}`, drafts[lang].excerpt || '');
+      data.set(`content_${lang}`, drafts[lang].content || '');
 
-    if (!String(data.get('type') || '').trim()) {
-      data.set('type', config.typeDefault);
+      if (isNews && files[lang]) {
+        data.set(buildFileFieldName(lang), files[lang]);
+      } else {
+        data.delete(buildFileFieldName(lang));
+      }
+    }
+
+    if (editor) {
+      data.set(`content_${activeLanguage}`, drafts[activeLanguage].content || editor.getHTML() || '');
     }
 
     if (coverImage) {
@@ -355,6 +440,10 @@ export default function ArticleEditorPage({ kind, action = 'create' }) {
       });
       form.reset();
       setCoverImage(null);
+      setFiles({ en: null, vi: null });
+      setFilePreviews({ en: '', vi: '' });
+      setFileNames({ en: '', vi: '' });
+      setDrafts({ en: emptyDraft(), vi: emptyDraft() });
       editor?.commands.setContent('');
     } catch (submitError) {
       setError(submitError.message || 'Failed to publish.');
@@ -377,133 +466,155 @@ export default function ArticleEditorPage({ kind, action = 'create' }) {
           {existingError ? <ErrorState title={`Unable to load ${kind}`} message={existingError} /> : null}
 
           {!loadingExisting && !existingError ? (
-          <form className="contact-form admin-editor-form" onSubmit={handleSubmit}>
-            <div className="field-grid">
+            <form className="contact-form admin-editor-form" onSubmit={handleSubmit}>
+              <div className="admin-language-tabs" role="tablist" aria-label="Article languages">
+                {languageTabs.map((tab) => (
+                  <button
+                    key={tab.id}
+                    type="button"
+                    className={tab.isActive ? 'tab-button is-active' : 'tab-button'}
+                    onClick={() => setActiveLanguage(tab.id)}
+                  >
+                    {tab.label}
+                  </button>
+                ))}
+              </div>
+
+              <div className="field-grid">
+                <label className="field">
+                  <span>Title</span>
+                  <input
+                    type="text"
+                    placeholder="Article title"
+                    value={activeDraft.title}
+                    onChange={(event) => updateActiveDraft('title', event.target.value)}
+                    required
+                  />
+                </label>
+                <label className="field">
+                  <span>Slug (optional)</span>
+                  <input
+                    type="text"
+                    name="slug"
+                    placeholder="leave blank to auto-generate"
+                    defaultValue={existingArticle?.slug || ''}
+                  />
+                </label>
+              </div>
+
+              <div className="field-grid">
+                <label className="field">
+                  <span>Type</span>
+                  <input type="text" name="type" defaultValue={existingArticle?.type || config.typeDefault} />
+                </label>
+                <label className="field">
+                  <span>Published at</span>
+                  <input
+                    type="datetime-local"
+                    name="publishedAt"
+                    defaultValue={
+                      existingArticle?.publishedAt
+                        ? new Date(existingArticle.publishedAt).toISOString().slice(0, 16)
+                        : ''
+                    }
+                  />
+                </label>
+              </div>
+
               <label className="field">
-                <span>Title</span>
-                <input
-                  type="text"
-                  name="title"
-                  placeholder="Article title"
-                  defaultValue={existingArticle?.title || ''}
-                  required
+                <span>Excerpt</span>
+                <textarea
+                  rows="3"
+                  placeholder="Short summary for listing pages. Leave blank to infer from content."
+                  value={activeDraft.excerpt}
+                  onChange={(event) => updateActiveDraft('excerpt', event.target.value)}
                 />
               </label>
-              <label className="field">
-                <span>Slug (optional)</span>
-                <input
-                  type="text"
-                  name="slug"
-                  placeholder="leave blank to auto-generate"
-                  defaultValue={existingArticle?.slug || ''}
-                />
-              </label>
-            </div>
 
-            <div className="field-grid">
-              <label className="field">
-                <span>Type</span>
-                <input type="text" name="type" defaultValue={existingArticle?.type || config.typeDefault} />
-              </label>
-              <label className="field">
-                <span>Published at</span>
-                <input
-                  type="datetime-local"
-                  name="publishedAt"
-                  defaultValue={
-                    existingArticle?.publishedAt
-                      ? new Date(existingArticle.publishedAt).toISOString().slice(0, 16)
-                      : ''
-                  }
-                />
-              </label>
-            </div>
+              {isNews ? (
+                <label className="field">
+                  <span>Content file ({activeLanguage.toUpperCase()})</span>
+                  <input type="file" accept=".docx,.html,.htm,.txt,.md" onChange={handlePreviewFile} />
+                  {fileNames[activeLanguage] ? <p className="state-copy">Selected: {fileNames[activeLanguage]}</p> : null}
+                </label>
+              ) : null}
 
-            <label className="field">
-              <span>Excerpt</span>
-              <textarea
-                name="excerpt"
-                rows="3"
-                placeholder="Short summary for listing pages. Leave blank to infer from content."
-                defaultValue={existingArticle?.excerpt || ''}
-              />
-            </label>
+              {!isNews || activeDraft.content ? (
+                <>
+                  <div className="admin-editor-tabs" role="tablist" aria-label="Editor mode">
+                    {editorModes.map((tab) => (
+                      <button
+                        key={tab.id}
+                        className={mode === tab.id ? 'tab-button is-active' : 'tab-button'}
+                        type="button"
+                        role="tab"
+                        aria-selected={mode === tab.id}
+                        onClick={() => setMode(tab.id)}
+                      >
+                        {tab.label}
+                      </button>
+                    ))}
+                  </div>
 
-            <label className="field">
-              <span>Cover image (optional)</span>
-              <input type="file" name="image" accept="image/*" onChange={handleCoverImage} />
-            </label>
+                  <input ref={fileInputRef} type="file" accept="image/*" onChange={handleEditorImage} hidden />
 
-            <div className="admin-editor-tabs" role="tablist" aria-label="Editor view mode">
-              {editorModes.map((tab) => (
-                <button
-                  key={tab.id}
-                  className={mode === tab.id ? 'tab-button is-active' : 'tab-button'}
-                  type="button"
-                  role="tab"
-                  aria-selected={mode === tab.id}
-                  onClick={() => setMode(tab.id)}
-                >
-                  {tab.label}
-                </button>
-              ))}
-            </div>
-
-            <input ref={fileInputRef} type="file" accept="image/*" onChange={handleEditorImage} hidden />
-
-            {mode === 'editor' ? (
-              <div className="field">
-
-                <Toolbar
-                  editor={editor}
-                  onPickImage={() => fileInputRef.current?.click()}
-                />
-
-                <div
-                  className="rich-editor pro-rich-editor"
-                  style={{
-                    border: '1px solid #d0d7de',
-                    borderRadius: 8,
-                    background: '#fff',
-                    minHeight: 350,
-                    padding: 16,
-                  }}
-                >
-                  <EditorContent editor={editor} />
+                  {mode === 'editor' ? (
+                    <div className="field">
+                      <Toolbar editor={editor} onPickImage={() => fileInputRef.current?.click()} />
+                      <div className="rich-editor pro-rich-editor">
+                        <EditorContent editor={editor} />
+                      </div>
+                      <p className="state-copy">
+                        {uploadingImage
+                          ? 'Uploading image...'
+                          : isEditMode
+                            ? 'Update the article content, then save your changes.'
+                            : 'Use headings, lists, quotes, links, and images to structure the article.'}
+                      </p>
+                    </div>
+                  ) : (
+                    <article className="content-card admin-editor-preview">
+                      <p className="content-label">Preview</p>
+                      <div className="news-content" dangerouslySetInnerHTML={{ __html: previewHtml }} />
+                    </article>
+                  )}
+                </>
+              ) : (
+                <div className="state-panel">
+                  <p className="state-label">No content yet</p>
+                  <p className="state-copy">Upload a file or switch to the other language tab to continue.</p>
                 </div>
+              )}
 
-                <p className="state-copy">
-                  {uploadingImage
-                    ? 'Uploading image...'
-                    : isEditMode
-                      ? 'Update the article content, then save your changes.'
-                      : 'Use headings, lists, quotes, links, and images to structure the article.'}
+              {isNews && filePreviews[activeLanguage] ? (
+                <article className="content-card">
+                  <p className="content-label">File preview</p>
+                  <div className="news-content" dangerouslySetInnerHTML={{ __html: filePreviews[activeLanguage] }} />
+                </article>
+              ) : null}
+
+              <label className="field">
+                <span>Cover image (optional)</span>
+                <input type="file" name="image" accept="image/*" onChange={handleCoverImage} />
+              </label>
+
+              <div className="form-footer">
+                <button className="button button-primary" type="submit" disabled={submitting}>
+                  {submitting ? (isEditMode ? 'Saving...' : 'Publishing...') : isEditMode ? config.updateLabel : config.submitLabel}
+                </button>
+                <p className="form-feedback" aria-live="polite">
+                  {error ? `Error: ${error}` : success?.message}
+                  {success ? (
+                    <>
+                      {' '}
+                      <RouterLink className="page-header-back-link" to={success.path}>
+                        View it
+                      </RouterLink>
+                    </>
+                  ) : null}
                 </p>
               </div>
-            ) : (
-              <article className="content-card admin-editor-preview">
-                <p className="content-label">Preview</p>
-                <div className="news-content" dangerouslySetInnerHTML={{ __html: previewHtml }} />
-              </article>
-            )}
-
-            <div className="form-footer">
-              <button className="button button-primary" type="submit" disabled={submitting}>
-                {submitting ? (isEditMode ? 'Saving...' : 'Publishing...') : isEditMode ? config.updateLabel : config.submitLabel}
-              </button>
-              <p className="form-feedback" aria-live="polite">
-                {error ? `Error: ${error}` : success?.message}
-                {success ? (
-                  <>
-                    {' '}
-                    <RouterLink className="page-header-back-link" to={success.path}>
-                      View it
-                    </RouterLink>
-                  </>
-                ) : null}
-              </p>
-            </div>
-          </form>
+            </form>
           ) : null}
         </div>
       </section>

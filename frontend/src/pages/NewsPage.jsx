@@ -4,6 +4,7 @@ import LoadingState from '../components/LoadingState';
 import ErrorState from '../components/ErrorState';
 import useApiResource from '../hooks/useApiResource';
 import useAdminSession from '../hooks/useAdminSession';
+import { useLocale } from '../context/LocaleContext';
 
 function formatPublishedAt(value) {
   if (!value) {
@@ -26,29 +27,33 @@ function formatPublishedAt(value) {
 export default function NewsPage() {
   const navigate = useNavigate();
   const { isAdmin, checking } = useAdminSession();
-  const { data: items, loading, error } = useApiResource('/api/news', {
+  const { copy, locale } = useLocale();
+  const page = copy.pages.news;
+  const listUrl = `/api/news?lang=${locale}`;
+  const { data: items, loading, error } = useApiResource(listUrl, {
     initialData: [],
   });
 
   return (
     <>
       <PageHeader
-        kicker="News"
-        title="Latest updates"
-        summary="News items are stored in MongoDB and served from the backend API."
+        kicker={page.kicker}
+        title={page.title}
+        summary={page.summary}
+        featured
       >
         {checking ? null : isAdmin ? (
           <div className="page-header-action">
             <Link className="page-header-admin-link page-header-admin-link-edit" to="/news/add">
-              Add news
+              {page.add}
             </Link>
           </div>
         ) : null}
       </PageHeader>
 
       <section className="section section-light reveal">
-        {loading ? <LoadingState label="Loading news" /> : null}
-        {error ? <ErrorState title="Unable to load news" message={error} /> : null}
+        {loading ? <LoadingState label={page.loading} /> : null}
+        {error ? <ErrorState title={page.error} message={error} /> : null}
 
         {!loading && !error ? (
           items.length > 0 ? (
@@ -69,17 +74,15 @@ export default function NewsPage() {
                 >
                   <p className="content-label">{item.type || 'News'}</p>
                   <h3>{item.title}</h3>
-                  {item.publishedAt ? (
-                    <p className="state-copy">Published {formatPublishedAt(item.publishedAt)}</p>
-                  ) : null}
+                  {item.publishedAt ? <p className="state-copy">{`${page.publishedPrefix} ${formatPublishedAt(item.publishedAt)}`}</p> : null}
                   <p>{item.excerpt}</p>
                 </article>
               ))}
             </div>
           ) : (
             <div className="container state-panel">
-              <p className="state-label">No news yet</p>
-              <p className="state-copy">Create a news item via the admin endpoint to see it here.</p>
+              <p className="state-label">{page.emptyTitle}</p>
+              <p className="state-copy">{page.emptyCopy}</p>
             </div>
           )
         ) : null}

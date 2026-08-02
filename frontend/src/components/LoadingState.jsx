@@ -1,8 +1,12 @@
-export default function LoadingState({ label = 'Loading content' }) {
+import { useLocale } from '../context/LocaleContext';
+
+export default function LoadingState({ label }) {
+  const { copy } = useLocale();
+
   return (
     <div className="container state-panel">
-      <p className="state-label">{label}</p>
-      <p className="state-copy">Please wait a moment while the page data loads.</p>
+      <p className="state-label">{label || copy.ui.loading}</p>
+      <p className="state-copy">{copy.ui.loadingWait}</p>
     </div>
   );
 }

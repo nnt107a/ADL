@@ -3,27 +3,21 @@ import { useEditor, EditorContent } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import Image from '@tiptap/extension-image';
 import PageHeader from '../components/PageHeader';
+import { useLocale } from '../context/LocaleContext';
 
-function TabBar({ value, onChange }) {
+function TabBar({ value, onChange, labels }) {
   const tabs = useMemo(
     () => [
-      { id: 'editor', label: 'Editor' },
-      { id: 'file', label: 'From file' },
+      { id: 'editor', label: labels.editor },
+      { id: 'file', label: labels.file },
     ],
-    []
+    [labels]
   );
 
   return (
     <div className="tabs" role="tablist" aria-label="News input mode">
       {tabs.map((tab) => (
-        <button
-          key={tab.id}
-          className={tab.id === value ? 'tab-button is-active' : 'tab-button'}
-          type="button"
-          role="tab"
-          aria-selected={tab.id === value}
-          onClick={() => onChange(tab.id)}
-        >
+        <button key={tab.id} className={tab.id === value ? 'tab-button is-active' : 'tab-button'} type="button" role="tab" aria-selected={tab.id === value} onClick={() => onChange(tab.id)}>
           {tab.label}
         </button>
       ))}
@@ -32,67 +26,33 @@ function TabBar({ value, onChange }) {
 }
 
 function Toolbar({ editor }) {
-  if (!editor) {
-    return null;
-  }
+  if (!editor) return null;
 
   return (
     <div className="editor-toolbar" role="toolbar" aria-label="Editor toolbar">
-      <button
-        type="button"
-        className={editor.isActive('bold') ? 'tool-button is-active' : 'tool-button'}
-        onClick={() => editor.chain().focus().toggleBold().run()}
-      >
-        Bold
-      </button>
-      <button
-        type="button"
-        className={editor.isActive('italic') ? 'tool-button is-active' : 'tool-button'}
-        onClick={() => editor.chain().focus().toggleItalic().run()}
-      >
-        Italic
-      </button>
-      <button
-        type="button"
-        className={editor.isActive('bulletList') ? 'tool-button is-active' : 'tool-button'}
-        onClick={() => editor.chain().focus().toggleBulletList().run()}
-      >
-        Bullets
-      </button>
-      <button
-        type="button"
-        className={editor.isActive('orderedList') ? 'tool-button is-active' : 'tool-button'}
-        onClick={() => editor.chain().focus().toggleOrderedList().run()}
-      >
-        Numbered
-      </button>
-      <button
-        type="button"
-        className={editor.isActive('heading', { level: 2 }) ? 'tool-button is-active' : 'tool-button'}
-        onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
-      >
-        Heading
-      </button>
+      <button type="button" className={editor.isActive('bold') ? 'tool-button is-active' : 'tool-button'} onClick={() => editor.chain().focus().toggleBold().run()}>Bold</button>
+      <button type="button" className={editor.isActive('italic') ? 'tool-button is-active' : 'tool-button'} onClick={() => editor.chain().focus().toggleItalic().run()}>Italic</button>
+      <button type="button" className={editor.isActive('bulletList') ? 'tool-button is-active' : 'tool-button'} onClick={() => editor.chain().focus().toggleBulletList().run()}>Bullets</button>
+      <button type="button" className={editor.isActive('orderedList') ? 'tool-button is-active' : 'tool-button'} onClick={() => editor.chain().focus().toggleOrderedList().run()}>Numbered</button>
+      <button type="button" className={editor.isActive('heading', { level: 2 }) ? 'tool-button is-active' : 'tool-button'} onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}>Heading</button>
     </div>
   );
 }
 
 export default function AdminNewsPage() {
+  const { copy } = useLocale();
+  const page = copy.admin.unlock;
   const [mode, setMode] = useState('editor');
   const [adminKey, setAdminKey] = useState('');
   const adminKeyRef = useRef('');
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
-
   const [filePreviewHtml, setFilePreviewHtml] = useState('');
   const [filePreviewLoading, setFilePreviewLoading] = useState(false);
 
   const editor = useEditor({
-    extensions: [
-      StarterKit,
-      Image.configure({ inline: false }),
-    ],
+    extensions: [StarterKit, Image.configure({ inline: false })],
     content: '',
     editorProps: {
       handlePaste(view, event) {
@@ -101,9 +61,7 @@ export default function AdminNewsPage() {
         const items = Array.from(clipboard?.items || []);
         const imageItems = items.filter((item) => item.kind === 'file' && item.type?.startsWith('image/'));
 
-        if (files.length === 0 && imageItems.length === 0) {
-          return false;
-        }
+        if (files.length === 0 && imageItems.length === 0) return false;
 
         event.preventDefault();
 
@@ -114,14 +72,11 @@ export default function AdminNewsPage() {
 
             for (const item of imageItems) {
               const file = item.getAsFile();
-              if (!file) {
-                continue;
-              }
+              if (!file) continue;
 
               const data = new FormData();
               data.append('image', file);
 
-              // eslint-disable-next-line no-await-in-loop
               const response = await fetch('/api/admin/news/assets/image', {
                 method: 'POST',
                 headers: {
@@ -130,17 +85,11 @@ export default function AdminNewsPage() {
                 body: data,
               });
 
-              // eslint-disable-next-line no-await-in-loop
               const body = await response.json().catch(() => null);
-
-              if (!response.ok) {
-                throw new Error(body?.message || `Image upload failed with status ${response.status}`);
-              }
+              if (!response.ok) throw new Error(body?.message || `Image upload failed with status ${response.status}`);
 
               const url = String(body?.url || '');
-              if (!url) {
-                throw new Error('Image upload did not return a URL.');
-              }
+              if (!url) throw new Error('Image upload did not return a URL.');
 
               editor.chain().focus().setImage({ src: url }).run();
             }
@@ -149,7 +98,6 @@ export default function AdminNewsPage() {
               const data = new FormData();
               data.append('image', file);
 
-              // eslint-disable-next-line no-await-in-loop
               const response = await fetch('/api/admin/news/assets/image', {
                 method: 'POST',
                 headers: {
@@ -158,17 +106,11 @@ export default function AdminNewsPage() {
                 body: data,
               });
 
-              // eslint-disable-next-line no-await-in-loop
               const body = await response.json().catch(() => null);
-
-              if (!response.ok) {
-                throw new Error(body?.message || `Image upload failed with status ${response.status}`);
-              }
+              if (!response.ok) throw new Error(body?.message || `Image upload failed with status ${response.status}`);
 
               const url = String(body?.url || '');
-              if (!url) {
-                throw new Error('Image upload did not return a URL.');
-              }
+              if (!url) throw new Error('Image upload did not return a URL.');
 
               editor.chain().focus().setImage({ src: url }).run();
             }
@@ -187,7 +129,6 @@ export default function AdminNewsPage() {
 
   async function handleFileChange(event) {
     const file = event.target.files?.[0];
-
     if (!file) {
       setFilePreviewHtml('');
       return;
@@ -210,10 +151,7 @@ export default function AdminNewsPage() {
       });
 
       const body = await response.json().catch(() => null);
-
-      if (!response.ok) {
-        throw new Error(body?.message || `Preview failed with status ${response.status}`);
-      }
+      if (!response.ok) throw new Error(body?.message || `Preview failed with status ${response.status}`);
 
       setFilePreviewHtml(String(body?.html || ''));
     } catch (previewError) {
@@ -236,8 +174,7 @@ export default function AdminNewsPage() {
       setSuccess('');
 
       if (isEditor) {
-        const html = editor?.getHTML() || '';
-        data.set('content', html);
+        data.set('content', editor?.getHTML() || '');
         data.delete('contentFile');
       }
 
@@ -256,19 +193,14 @@ export default function AdminNewsPage() {
       });
 
       const body = await response.json().catch(() => null);
+      if (!response.ok) throw new Error(body?.message || `Request failed with status ${response.status}`);
 
-      if (!response.ok) {
-        throw new Error(body?.message || `Request failed with status ${response.status}`);
-      }
-
-      setSuccess('News item created successfully.');
+      setSuccess(page.createNewsSuccess);
       form.reset();
       setFilePreviewHtml('');
-      if (editor) {
-        editor.commands.setContent('');
-      }
+      if (editor) editor.commands.setContent('');
     } catch (submitError) {
-      setError(submitError.message || 'Failed to create news item.');
+      setError(submitError.message || page.createNewsError);
     } finally {
       setSubmitting(false);
     }
@@ -276,27 +208,16 @@ export default function AdminNewsPage() {
 
   return (
     <>
-      <PageHeader
-        kicker="Admin"
-        title="Upload news"
-        summary="Use Editor to type like Word and paste images directly. Use From file to load a document into the page content."
-      />
+      <PageHeader kicker="Admin" title={page.newsTitle} summary={page.newsSummary} />
 
       <section className="section section-light reveal">
         <div className="container">
-          <TabBar
-            value={mode}
-            onChange={(nextMode) => {
-              setMode(nextMode);
-              setError('');
-              setSuccess('');
-            }}
-          />
+          <TabBar value={mode} labels={{ editor: page.editor, file: 'Từ tệp' }} onChange={(nextMode) => { setMode(nextMode); setError(''); setSuccess(''); }} />
 
           <form className="contact-form" onSubmit={handleSubmit}>
             <div className="field-grid">
               <label className="field">
-                <span>Admin key (optional)</span>
+                <span>{page.adminKey}</span>
                 <input
                   type="password"
                   name="adminKey"
@@ -310,14 +231,14 @@ export default function AdminNewsPage() {
                 />
               </label>
               <label className="field">
-                <span>Type (optional)</span>
+                <span>{page.type}</span>
                 <input type="text" name="type" placeholder="News" />
               </label>
             </div>
 
             <div className="field-grid">
               <label className="field">
-                <span>Published at (optional)</span>
+                <span>{page.publishedAt}</span>
                 <input type="datetime-local" name="publishedAt" />
               </label>
             </div>
@@ -326,22 +247,22 @@ export default function AdminNewsPage() {
               <>
                 <div className="field-grid">
                   <label className="field">
-                    <span>Title</span>
+                    <span>{page.title}</span>
                     <input type="text" name="title" placeholder="Title" required />
                   </label>
                   <label className="field">
-                    <span>Slug (optional)</span>
+                    <span>{page.slug}</span>
                     <input type="text" name="slug" placeholder="leave blank to auto-generate" />
                   </label>
                 </div>
 
                 <label className="field">
-                  <span>Content</span>
+                  <span>{page.content}</span>
                   <Toolbar editor={editor} />
                   <div className="rich-editor">
                     <EditorContent editor={editor} />
                   </div>
-                  <p className="state-copy">Tip: paste images directly into the document.</p>
+                  <p className="state-copy">{page.tip}</p>
                 </label>
               </>
             ) : null}
@@ -350,25 +271,25 @@ export default function AdminNewsPage() {
               <>
                 <div className="field-grid">
                   <label className="field">
-                    <span>Title</span>
+                    <span>{page.title}</span>
                     <input type="text" name="title" placeholder="Title" required />
                   </label>
                   <label className="field">
-                    <span>Slug (optional)</span>
+                    <span>{page.slug}</span>
                     <input type="text" name="slug" placeholder="leave blank to auto-generate" />
                   </label>
                 </div>
 
                 <label className="field">
-                  <span>Choose file</span>
+                  <span>{page.chooseFile}</span>
                   <input type="file" name="contentFile" required onChange={handleFileChange} accept=".docx,.html,.htm,.txt,.md" />
-                  <p className="state-copy">Supported: docx, html, md, txt.</p>
+                  <p className="state-copy">{page.supportedFiles}</p>
                 </label>
 
                 {filePreviewLoading ? (
                   <div className="state-panel">
                     <p className="state-label">Preview</p>
-                    <p className="state-copy">Generating preview…</p>
+                    <p className="state-copy">Generating preview...</p>
                   </div>
                 ) : null}
 
@@ -383,7 +304,7 @@ export default function AdminNewsPage() {
 
             <div className="form-footer">
               <button className="button button-primary" type="submit" disabled={submitting}>
-                {submitting ? 'Uploading…' : 'Create news'}
+                {submitting ? 'Uploading...' : page.publishNews}
               </button>
               <p className="form-feedback" aria-live="polite">
                 {error ? `Error: ${error}` : success}

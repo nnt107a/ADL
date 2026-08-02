@@ -2,9 +2,11 @@ import { useEffect } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
 import Header from './Header';
 import Footer from './Footer';
+import { useLocale } from '../context/LocaleContext';
 
 export default function Layout() {
   const location = useLocation();
+  const { copy } = useLocale();
 
   useEffect(() => {
     const targets = Array.from(document.querySelectorAll('.reveal'));
@@ -38,7 +40,7 @@ export default function Layout() {
   return (
     <div className="app-shell">
       <a className="skip-link" href="#main-content">
-        Skip to content
+        {copy.ui.skipToContent}
       </a>
       <Header />
       <main id="main-content" className="site-main">

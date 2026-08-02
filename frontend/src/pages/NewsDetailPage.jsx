@@ -5,6 +5,7 @@ import LoadingState from '../components/LoadingState';
 import ErrorState from '../components/ErrorState';
 import useApiResource from '../hooks/useApiResource';
 import useAdminSession from '../hooks/useAdminSession';
+import { useLocale } from '../context/LocaleContext';
 
 function formatPublishedAt(value) {
   if (!value) {
@@ -49,9 +50,7 @@ function renderContentWithImageToken(content, imageUrl) {
   return parts.map((part, index) => (
     <Fragment key={`${index}-${part.slice(0, 10)}`}>
       {renderTextWithLineBreaks(part)}
-      {index < parts.length - 1 && imageUrl ? (
-        <img src={imageUrl} alt="" />
-      ) : null}
+      {index < parts.length - 1 && imageUrl ? <img src={imageUrl} alt="" /> : null}
     </Fragment>
   ));
 }
@@ -65,9 +64,11 @@ export default function NewsDetailPage() {
   const { slug } = useParams();
   const navigate = useNavigate();
   const { isAdmin } = useAdminSession();
+  const { copy, locale } = useLocale();
+  const page = copy.pages.newsDetail;
   const [deleting, setDeleting] = useState(false);
   const [deleteError, setDeleteError] = useState('');
-  const { data: item, loading, error } = useApiResource(slug ? `/api/news/${slug}` : '', {
+  const { data: item, loading, error } = useApiResource(slug ? `/api/news/${slug}?lang=${locale}` : '', {
     initialData: null,
     enabled: Boolean(slug),
   });
@@ -77,7 +78,7 @@ export default function NewsDetailPage() {
       return;
     }
 
-    const confirmed = window.confirm(`Delete "${item?.title || 'this news item'}"? This cannot be undone.`);
+    const confirmed = window.confirm(`Delete "${item?.title || 'this news item'}"? ${copy.ui.deleteThis}`);
 
     if (!confirmed) {
       return;
@@ -109,44 +110,40 @@ export default function NewsDetailPage() {
   return (
     <>
       <PageHeader
-        kicker="News"
-        title={item?.title || 'News item'}
-        summary={
-          item?.publishedAt
-            ? `Published ${formatPublishedAt(item.publishedAt)}`
-            : 'News items are served from the backend API.'
-        }
+        kicker={page.kicker}
+        title={item?.title || page.titleFallback}
+        summary={item?.publishedAt ? `${page.publishedPrefix} ${formatPublishedAt(item.publishedAt)}` : page.apiSummary}
         rightAlignedSummary={true}
       >
         <div className="page-header-action page-header-action-detail">
-            <Link className="page-header-back-link" to="/news">
-                ← Back to News
-            </Link>
-            {slug && isAdmin ? (
-              <div className="page-header-admin-actions">
-                <Link
-                  className="page-header-admin-link page-header-admin-link-edit"
-                  to={`/news/edit?slug=${encodeURIComponent(slug)}`}
-                >
-                  Edit article
-                </Link>
-                <button
-                  className="page-header-admin-link page-header-admin-link-delete"
-                  type="button"
-                  onClick={handleDelete}
-                  disabled={deleting}
-                >
-                  {deleting ? 'Deleting...' : 'Delete article'}
-                </button>
-              </div>
-            ) : null}
-            {deleteError ? <p className="form-feedback">{deleteError}</p> : null}
+          <Link className="page-header-back-link" to="/news">
+            ← {page.backToList}
+          </Link>
+          {slug && isAdmin ? (
+            <div className="page-header-admin-actions">
+              <Link
+                className="page-header-admin-link page-header-admin-link-edit"
+                to={`/news/edit?slug=${encodeURIComponent(slug)}`}
+              >
+                {page.edit}
+              </Link>
+              <button
+                className="page-header-admin-link page-header-admin-link-delete"
+                type="button"
+                onClick={handleDelete}
+                disabled={deleting}
+              >
+                {deleting ? page.deleting : page.delete}
+              </button>
+            </div>
+          ) : null}
+          {deleteError ? <p className="form-feedback">{deleteError}</p> : null}
         </div>
       </PageHeader>
 
       <section className="section section-light reveal">
-        {loading ? <LoadingState label="Loading news item" /> : null}
-        {error ? <ErrorState title="Unable to load news" message={error} /> : null}
+        {loading ? <LoadingState label={page.loading} /> : null}
+        {error ? <ErrorState title={page.error} message={error} /> : null}
 
         {!loading && !error && item ? (
           <div className="container value-stack">
@@ -154,9 +151,7 @@ export default function NewsDetailPage() {
               <p className="content-label">{item.type || 'News'}</p>
               {item.excerpt ? <p className="state-copy">{item.excerpt}</p> : null}
 
-              {item.imageUrl && !String(item.content || '').includes('{{image}}') ? (
-                <img src={item.imageUrl} alt="" />
-              ) : null}
+              {item.imageUrl && !String(item.content || '').includes('{{image}}') ? <img src={item.imageUrl} alt="" /> : null}
 
               {item.content ? (
                 looksLikeHtml(item.content) ? (
@@ -166,14 +161,18 @@ export default function NewsDetailPage() {
                 )
               ) : null}
 
-              {!item.content && item.contentFileUrl ? (
-                <p className="state-copy">This update is provided as an attached file.</p>
-              ) : null}
+              {!item.content && item.contentFileUrl ? <p className="state-copy">{page.attachedFile}</p> : null}
 
               {item.contentFileUrl ? (
                 <p className="state-copy">
-                  <a className="page-header-admin-link page-header-admin-link-edit" href={item.contentFileUrl} target="_blank" rel="noreferrer">
-                    Open attached file{item.contentFileName ? `: ${item.contentFileName}` : ''}
+                  <a
+                    className="page-header-admin-link page-header-admin-link-edit"
+                    href={item.contentFileUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    {page.openFilePrefix}
+                    {item.contentFileName ? `: ${item.contentFileName}` : ''}
                   </a>
                 </p>
               ) : null}

@@ -61,6 +61,8 @@ const upload = multer({
 const uploadFields = upload.fields([
   { name: 'image', maxCount: 1 },
   { name: 'contentFile', maxCount: 1 },
+  { name: 'contentFile_en', maxCount: 1 },
+  { name: 'contentFile_vi', maxCount: 1 },
 ]);
 
 export default function maybeUploadNewsAssets(req, res, next) {

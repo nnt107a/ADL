@@ -43,6 +43,26 @@ const newsSchema = new mongoose.Schema(
       type: String,
       trim: true,
     },
+    translations: {
+      type: {
+        en: {
+          title: { type: String, trim: true },
+          excerpt: { type: String, trim: true },
+          content: { type: String, trim: true },
+          contentFileUrl: { type: String, trim: true },
+          contentFileName: { type: String, trim: true },
+        },
+        vi: {
+          title: { type: String, trim: true },
+          excerpt: { type: String, trim: true },
+          content: { type: String, trim: true },
+          contentFileUrl: { type: String, trim: true },
+          contentFileName: { type: String, trim: true },
+        },
+        _id: false,
+      },
+      default: () => ({}),
+    },
     publishedAt: {
       type: Date,
       default: () => new Date(),

@@ -1,9 +1,13 @@
-export default function ErrorState({ title = 'Content unavailable', message }) {
+import { useLocale } from '../context/LocaleContext';
+
+export default function ErrorState({ title, message }) {
+  const { copy } = useLocale();
+
   return (
     <div className="container state-panel state-panel-error">
-      <p className="state-label">Error</p>
-      <h2>{title}</h2>
-      <p className="state-copy">{message}</p>
+      <p className="state-label">{copy.ui.error}</p>
+      <h2>{title || copy.ui.loading}</h2>
+      <p className="state-copy">{message || copy.ui.noItems}</p>
     </div>
   );
 }

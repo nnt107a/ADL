@@ -1,40 +1,25 @@
 import PageHeader from '../components/PageHeader';
-
-const sections = [
-  {
-    title: 'A Trusted Long-Term Partner',
-    description:
-      'We strive to become the legal advisor that businesses rely on throughout every stage of their growth.',
-  },
-  {
-    title: 'Raising Professional Standards',
-    description:
-      'We are committed to delivering consistently high-quality legal services while helping elevate professional standards across Vietnam\'s legal industry.',
-  },
-  {
-    title: 'Growing Together',
-    description:
-      'We foster an environment where lawyers and professionals continue to learn, collaborate, and develop, enabling us to better serve our clients and contribute to the business community.'
-  }
-];
+import { useLocale } from '../context/LocaleContext';
 
 export default function VisionPage() {
+  const { copy } = useLocale();
+  const page = copy.pages.vision;
+
   return (
     <>
       <PageHeader
-        kicker="Vision"
-        title="Our vision is to become one of Vietnam's most trusted legal advisors."
-        summary="We strive to be recognized for legal excellence, practical thinking, and the highest professional standards while contributing to a stronger and more sustainable business community."
+        kicker={page.kicker}
+        title={page.title}
+        summary={page.summary}
+        featured
       />
 
-      <section className="section section-alt reveal">
+      <section className="section section-light reveal">
         <div className="container content-card">
-          <h3>Where we're heading</h3>
-          <p>
-            Our long-term vision extends beyond providing legal services—we aim to help shape a more professional legal industry and support sustainable business growth.
-          </p>
+          <h3>{page.heading}</h3>
+          <p>{page.body}</p>
           <div className="sections">
-            {sections.map((section) => (
+            {page.sections.map((section) => (
               <div className="section" key={section.title}>
                 <h4>{section.title}</h4>
                 <p>{section.description}</p>

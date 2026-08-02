@@ -29,6 +29,22 @@ const insightSchema = new mongoose.Schema(
       trim: true,
       required: true,
     },
+    translations: {
+      type: {
+        en: {
+          title: { type: String, trim: true },
+          excerpt: { type: String, trim: true },
+          content: { type: String, trim: true },
+        },
+        vi: {
+          title: { type: String, trim: true },
+          excerpt: { type: String, trim: true },
+          content: { type: String, trim: true },
+        },
+        _id: false,
+      },
+      default: () => ({}),
+    },
     imageUrl: {
       type: String,
       trim: true,

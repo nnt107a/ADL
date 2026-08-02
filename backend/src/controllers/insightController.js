@@ -1,10 +1,16 @@
 import Insight from '../models/Insight.js';
+import {
+  buildTranslations,
+  cleanText,
+  getArticleLocaleFromRequest,
+  resolveArticleForLocale,
+} from '../utils/articleLocalization.js';
 
 function slugify(value) {
   return String(value || '')
     .toLowerCase()
     .trim()
-    .replace(/['’]/g, '')
+    .replace(/['\u2019]/g, '')
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/(^-|-$)+/g, '');
 }
@@ -34,34 +40,67 @@ async function ensureUniqueSlug(baseSlug, excludeId = null) {
   }
 }
 
-function getSingleUploadedFile(files, fieldName) {
-  const value = files?.[fieldName];
-  if (Array.isArray(value) && value.length > 0) {
-    return value[0];
-  }
-  return null;
-}
-
-function uploadedFileUrl(file) {
-  if (!file?.filename) {
-    return '';
-  }
-
-  return `/uploads/news/${file.filename}`;
-}
-
 function stripHtml(value) {
   return String(value || '').replace(/<[^>]*>/g, ' ');
 }
 
-export async function listInsights(_req, res, next) {
+function cleanString(value) {
+  return cleanText(value);
+}
+
+function buildInsightDocumentBase(body, localized) {
+  const resolvedTitle = localized.title || cleanText(body.title || '');
+  const resolvedExcerpt =
+    localized.excerpt ||
+    cleanText(body.excerpt || '') ||
+    stripHtml(localized.content || '')
+      .replace(/\s+/g, ' ')
+      .trim()
+      .slice(0, 180) ||
+    'Insight article';
+
+  return {
+    title: resolvedTitle,
+    type: cleanText(body.type || ''),
+    excerpt: resolvedExcerpt,
+    content: cleanText(localized.content || ''),
+    translations: localized.translations,
+  };
+}
+
+async function resolveLocalizedContentForInsight(req, existing = null) {
+  const translations = buildTranslations(req.body || {}, existing || {});
+
+  for (const locale of ['en', 'vi']) {
+    const bodyContentKey = locale === 'vi' ? 'content_vi' : 'content_en';
+    const rawContent = cleanText(req.body?.[bodyContentKey] ?? req.body?.content ?? existing?.translations?.[locale]?.content ?? existing?.content);
+    if (rawContent) {
+      translations[locale].content = rawContent;
+    }
+  }
+
+  const primary =
+    translations.en.title || translations.en.excerpt || translations.en.content
+      ? translations.en
+      : translations.vi;
+
+  return {
+    translations,
+    title: primary.title || '',
+    excerpt: primary.excerpt || '',
+    content: primary.content || '',
+  };
+}
+
+export async function listInsights(req, res, next) {
   try {
+    const locale = getArticleLocaleFromRequest(req);
     const items = await Insight.find()
-      .select('title slug type excerpt publishedAt imageUrl createdAt updatedAt')
+      .select('title slug type excerpt publishedAt imageUrl createdAt updatedAt content translations')
       .sort({ publishedAt: -1, createdAt: -1 })
       .lean();
 
-    res.json(items);
+    res.json(items.map((item) => resolveArticleForLocale(item, locale)));
   } catch (error) {
     next(error);
   }
@@ -77,41 +116,40 @@ export async function getInsightBySlug(req, res, next) {
       return res.status(400).json({ message: 'Slug is required.' });
     }
 
-    const item = await Insight.findOne({ slug }).lean();
+    const item = await Insight.findOne({ slug })
+      .select('title slug type excerpt content imageUrl publishedAt createdAt updatedAt translations')
+      .lean();
 
     if (!item) {
       return res.status(404).json({ message: 'Insight not found.' });
     }
 
-    res.json(item);
+    res.json(resolveArticleForLocale(item, getArticleLocaleFromRequest(req)));
   } catch (error) {
     next(error);
   }
 }
 
 export async function uploadInsightImage(req, res) {
-  const uploadedImage = getSingleUploadedFile(req.files, 'image');
+  const uploadedImage = req.files?.image?.[0];
 
   if (!uploadedImage) {
     return res.status(400).json({ message: 'Image file is required.' });
   }
 
-  return res.status(201).json({ url: uploadedFileUrl(uploadedImage) });
+  return res.status(201).json({ url: `/uploads/news/${uploadedImage.filename}` });
 }
 
 export async function createInsight(req, res, next) {
   try {
     const { title, slug, type, excerpt, content, publishedAt } = req.body || {};
-    const uploadedImage = getSingleUploadedFile(req.files, 'image');
+    const localized = await resolveLocalizedContentForInsight(req);
 
-    const resolvedTitle = String(title || '').trim();
-    const resolvedContent = String(content || '').trim();
-
-    if (!resolvedTitle) {
+    if (!localized.title) {
       return res.status(400).json({ message: 'Title is required.' });
     }
 
-    if (!resolvedContent) {
+    if (!localized.content && !cleanText(content)) {
       return res.status(400).json({ message: 'Content is required.' });
     }
 
@@ -127,25 +165,22 @@ export async function createInsight(req, res, next) {
       resolvedPublishedAt = date;
     }
 
-    const uniqueSlug = await ensureUniqueSlug(slug || resolvedTitle);
+    const uniqueSlug = await ensureUniqueSlug(slug || localized.title);
 
     if (!uniqueSlug) {
       return res.status(400).json({ message: 'Slug could not be generated.' });
     }
 
-    const excerptSource = String(excerpt || '').trim();
-    const inferredExcerpt = stripHtml(resolvedContent)
-      .replace(/\s+/g, ' ')
-      .trim()
-      .slice(0, 180);
+    const base = buildInsightDocumentBase({ title, type, excerpt }, localized);
 
     const insight = await Insight.create({
-      title: resolvedTitle,
+      title: base.title,
       slug: uniqueSlug,
-      type: type ? String(type).trim() : undefined,
-      excerpt: excerptSource || inferredExcerpt || 'Insight article',
-      content: resolvedContent,
-      imageUrl: uploadedImage ? uploadedFileUrl(uploadedImage) : undefined,
+      type: base.type || undefined,
+      excerpt: base.excerpt,
+      content: base.content,
+      imageUrl: req.files?.image?.[0] ? `/uploads/news/${req.files.image[0].filename}` : undefined,
+      translations: base.translations,
       ...(resolvedPublishedAt ? { publishedAt: resolvedPublishedAt } : {}),
     });
 
@@ -176,20 +211,15 @@ export async function updateInsightBySlug(req, res, next) {
     }
 
     const { title, slug, type, excerpt, content, publishedAt } = req.body || {};
-    const uploadedImage = getSingleUploadedFile(req.files, 'image');
+    const localized = await resolveLocalizedContentForInsight(req, existing);
 
-    const resolvedTitle = String(title || existing.title || '').trim();
-    const resolvedContent = String(content || existing.content || '').trim();
+    const resolvedTitle = localized.title || cleanString(title) || existing.title;
 
     if (!resolvedTitle) {
       return res.status(400).json({ message: 'Title is required.' });
     }
 
-    if (!resolvedContent) {
-      return res.status(400).json({ message: 'Content is required.' });
-    }
-
-    const desiredSlugInput = String(slug || '').trim();
+    const desiredSlugInput = cleanString(slug);
     const desiredSlug = desiredSlugInput ? desiredSlugInput : existing.slug;
     const uniqueSlug = slugify(desiredSlug) === existing.slug
       ? existing.slug
@@ -211,21 +241,18 @@ export async function updateInsightBySlug(req, res, next) {
       resolvedPublishedAt = date;
     }
 
-    const resolvedExcerptSource = excerpt !== undefined ? String(excerpt).trim() : String(existing.excerpt || '').trim();
-    const inferredExcerpt = stripHtml(resolvedContent)
-      .replace(/\s+/g, ' ')
-      .trim()
-      .slice(0, 180);
+    const base = buildInsightDocumentBase({ title: resolvedTitle, type, excerpt, content }, localized);
 
     const updatedInsight = await Insight.findOneAndUpdate(
       { _id: existing._id },
       {
-        title: resolvedTitle,
+        title: base.title,
         slug: uniqueSlug,
-        type: type !== undefined ? String(type).trim() : existing.type,
-        excerpt: resolvedExcerptSource || inferredExcerpt || 'Insight article',
-        content: resolvedContent,
-        imageUrl: uploadedImage ? uploadedFileUrl(uploadedImage) : existing.imageUrl,
+        type: type !== undefined ? cleanString(type) : existing.type,
+        excerpt: base.excerpt,
+        content: base.content || existing.content || '',
+        imageUrl: req.files?.image?.[0] ? `/uploads/news/${req.files.image[0].filename}` : existing.imageUrl,
+        translations: base.translations,
         publishedAt: resolvedPublishedAt,
       },
       { new: true, runValidators: true }

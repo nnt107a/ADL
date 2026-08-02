@@ -1,13 +1,19 @@
-import News from '../models/News.js';
 import fs from 'fs/promises';
 import path from 'path';
 import mammoth from 'mammoth';
+import News from '../models/News.js';
+import {
+  buildTranslations,
+  cleanText,
+  getArticleLocaleFromRequest,
+  resolveArticleForLocale,
+} from '../utils/articleLocalization.js';
 
 function slugify(value) {
   return String(value || '')
     .toLowerCase()
     .trim()
-    .replace(/['’]/g, '')
+    .replace(/['\u2019]/g, '')
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/(^-|-$)+/g, '');
 }
@@ -43,6 +49,13 @@ function getSingleUploadedFile(files, fieldName) {
     return value[0];
   }
   return null;
+}
+
+function getUploadedLocalizedFiles(files) {
+  return {
+    en: getSingleUploadedFile(files, 'contentFile_en') || getSingleUploadedFile(files, 'contentFile'),
+    vi: getSingleUploadedFile(files, 'contentFile_vi'),
+  };
 }
 
 function uploadedNewsFileUrl(file) {
@@ -96,14 +109,84 @@ async function extractHtmlFromUploadedContentFile(uploadedFile) {
   return textToHtmlParagraphs(fileText);
 }
 
-export async function listNews(_req, res, next) {
+async function resolveLocalizedContentForNews(req, res, existing = null) {
+  const files = req.files || {};
+  const translations = buildTranslations(req.body || {}, existing || {});
+  const localizedFiles = getUploadedLocalizedFiles(files);
+  const fileFieldNames = {
+    en: localizedFiles.en ? 'contentFile_en' : '',
+    vi: localizedFiles.vi ? 'contentFile_vi' : '',
+  };
+
+  for (const locale of ['en', 'vi']) {
+    const uploadedFile = localizedFiles[locale];
+
+    if (uploadedFile) {
+      translations[locale].content = await extractHtmlFromUploadedContentFile(uploadedFile);
+      translations[locale].contentFileUrl = uploadedNewsFileUrl(uploadedFile);
+      translations[locale].contentFileName = uploadedFile.originalname || '';
+      continue;
+    }
+
+    const bodyContentKey = locale === 'vi' ? 'content_vi' : 'content_en';
+    const rawContent = cleanText(req.body?.[bodyContentKey] ?? req.body?.content ?? existing?.translations?.[locale]?.content ?? existing?.content);
+    if (rawContent) {
+      translations[locale].content = rawContent;
+    }
+  }
+
+  const primary =
+    translations.en.title || translations.en.excerpt || translations.en.content
+      ? translations.en
+      : translations.vi;
+
+  return {
+    translations,
+    title: primary.title || '',
+    excerpt: primary.excerpt || '',
+    content: primary.content || '',
+    contentFileUrl: primary.contentFileUrl || '',
+    contentFileName: primary.contentFileName || '',
+    fileFieldNames,
+  };
+}
+
+function buildNewsDocumentBase(body, localized) {
+  const resolvedTitle = localized.title || cleanText(body.title || '');
+  const resolvedExcerpt =
+    localized.excerpt ||
+    cleanText(body.excerpt || '') ||
+    cleanText(localized.content || '')
+      .replace(/<[^>]*>/g, ' ')
+      .replace(/\s+/g, ' ')
+      .trim()
+      .slice(0, 180) ||
+    'News update';
+
+  return {
+    title: resolvedTitle,
+    type: cleanText(body.type || ''),
+    excerpt: resolvedExcerpt,
+    content: cleanText(localized.content || ''),
+    contentFileUrl: localized.contentFileUrl || undefined,
+    contentFileName: localized.contentFileName || undefined,
+    translations: localized.translations,
+  };
+}
+
+function cleanString(value) {
+  return cleanText(value);
+}
+
+export async function listNews(req, res, next) {
   try {
+    const locale = getArticleLocaleFromRequest(req);
     const items = await News.find()
-      .select('title slug type excerpt publishedAt imageUrl createdAt updatedAt')
+      .select('title slug type excerpt publishedAt imageUrl createdAt updatedAt contentFileUrl contentFileName translations')
       .sort({ publishedAt: -1, createdAt: -1 })
       .lean();
 
-    res.json(items);
+    res.json(items.map((item) => resolveArticleForLocale(item, locale)));
   } catch (error) {
     next(error);
   }
@@ -119,13 +202,15 @@ export async function getNewsBySlug(req, res, next) {
       return res.status(400).json({ message: 'Slug is required.' });
     }
 
-    const item = await News.findOne({ slug }).lean();
+    const item = await News.findOne({ slug })
+      .select('title slug type excerpt content imageUrl contentFileUrl contentFileName publishedAt createdAt updatedAt translations')
+      .lean();
 
     if (!item) {
       return res.status(404).json({ message: 'News item not found.' });
     }
 
-    res.json(item);
+    res.json(resolveArticleForLocale(item, getArticleLocaleFromRequest(req)));
   } catch (error) {
     next(error);
   }
@@ -144,7 +229,10 @@ export async function uploadNewsImage(req, res) {
 
 export async function previewNewsContentFile(req, res, next) {
   try {
-    const uploadedContentFile = getSingleUploadedFile(req.files, 'contentFile');
+    const uploadedContentFile =
+      getSingleUploadedFile(req.files, 'contentFile') ||
+      getSingleUploadedFile(req.files, 'contentFile_en') ||
+      getSingleUploadedFile(req.files, 'contentFile_vi');
 
     if (!uploadedContentFile) {
       return res.status(400).json({ message: 'Content file is required.' });
@@ -161,53 +249,16 @@ export async function previewNewsContentFile(req, res, next) {
 
 export async function createNews(req, res, next) {
   try {
-    const { title, slug, type, excerpt, content, publishedAt } = req.body || {};
+    const { title, slug, type, excerpt, publishedAt } = req.body || {};
+    const localized = await resolveLocalizedContentForNews(req, res);
 
-    const uploadedImage = getSingleUploadedFile(req.files, 'image');
-    const uploadedContentFile = getSingleUploadedFile(req.files, 'contentFile');
-
-    const contentText = content ? String(content).trim() : '';
-    const hasContentFile = Boolean(uploadedContentFile);
-
-    let resolvedTitle = title ? String(title).trim() : '';
-    let resolvedContent = contentText;
-
-    if (!resolvedContent && !hasContentFile) {
-      return res.status(400).json({ message: 'Provide either content text or a content file.' });
-    }
-
-    if (!resolvedTitle) {
+    if (!localized.title) {
       return res.status(400).json({ message: 'Title is required.' });
     }
 
-    let fileContentToCleanupPath = '';
-
-    if (!resolvedContent && uploadedContentFile) {
-      const original = String(uploadedContentFile.originalname || '').toLowerCase();
-      const ext = path.extname(original);
-      const isSupported =
-        ext === '.docx' ||
-        uploadedContentFile.mimetype?.startsWith('text/') ||
-        ['.txt', '.md', '.markdown', '.html', '.htm'].includes(ext);
-
-      if (!isSupported) {
-        return res.status(400).json({
-          message: 'Unsupported content file type. Use docx, html, md, or txt.',
-        });
-      }
-
-      fileContentToCleanupPath = uploadedContentFile.path;
-      resolvedContent = await extractHtmlFromUploadedContentFile(uploadedContentFile);
+    if (!localized.content && !localized.translations.vi.content) {
+      return res.status(400).json({ message: 'Provide content for at least one language.' });
     }
-
-    const stripHtml = (value) => String(value || '').replace(/<[^>]*>/g, ' ');
-    const excerptSource = excerpt ? String(excerpt).trim() : '';
-    const inferredExcerpt = stripHtml(resolvedContent)
-      .replace(/\s+/g, ' ')
-      .trim()
-      .slice(0, 180);
-
-    const resolvedExcerpt = excerptSource || inferredExcerpt || 'News update';
 
     let resolvedPublishedAt;
 
@@ -221,36 +272,29 @@ export async function createNews(req, res, next) {
       resolvedPublishedAt = date;
     }
 
-    const desiredSlug = slugify(slug || resolvedTitle);
+    const desiredSlug = slugify(slug || localized.title);
     const uniqueSlug = await ensureUniqueSlug(desiredSlug);
 
     if (!uniqueSlug) {
       return res.status(400).json({ message: 'Slug could not be generated.' });
     }
 
-    const imageUrl = uploadedImage ? uploadedNewsFileUrl(uploadedImage) : undefined;
-    const contentFileUrl = undefined;
-    const contentFileName = undefined;
-
+    const base = buildNewsDocumentBase({ title, type, excerpt }, localized);
     const news = await News.create({
-      title: resolvedTitle,
+      title: base.title,
       slug: uniqueSlug,
-      type: type ? String(type).trim() : undefined,
-      excerpt: resolvedExcerpt,
-      content: String(resolvedContent || '').trim(),
-      imageUrl,
-      contentFileUrl,
-      contentFileName,
+      type: base.type || undefined,
+      excerpt: base.excerpt,
+      content: base.content,
+      imageUrl: getSingleUploadedFile(req.files, 'image') ? uploadedNewsFileUrl(getSingleUploadedFile(req.files, 'image')) : undefined,
+      contentFileUrl: base.contentFileUrl,
+      contentFileName: base.contentFileName,
+      translations: base.translations,
       ...(resolvedPublishedAt ? { publishedAt: resolvedPublishedAt } : {}),
     });
 
-    if (fileContentToCleanupPath) {
-      fs.unlink(fileContentToCleanupPath).catch(() => undefined);
-    }
-
-    res.status(201).json(news);
+    return res.status(201).json(news);
   } catch (error) {
-    // Handle unique index errors just in case two requests race.
     if (error?.code === 11000 && error?.keyPattern?.slug) {
       return res.status(409).json({ message: 'A news item with that slug already exists.' });
     }
@@ -275,17 +319,16 @@ export async function updateNewsBySlug(req, res, next) {
       return res.status(404).json({ message: 'News item not found.' });
     }
 
-    const { title, slug, type, excerpt, content, publishedAt } = req.body || {};
-    const uploadedImage = getSingleUploadedFile(req.files, 'image');
-    const uploadedContentFile = getSingleUploadedFile(req.files, 'contentFile');
+    const { title, slug, type, excerpt, publishedAt } = req.body || {};
+    const localized = await resolveLocalizedContentForNews(req, res, existing);
 
-    const resolvedTitle = String(title || existing.title || '').trim();
+    const resolvedTitle = localized.title || cleanString(title) || existing.title;
 
     if (!resolvedTitle) {
       return res.status(400).json({ message: 'Title is required.' });
     }
 
-    const desiredSlugInput = String(slug || '').trim();
+    const desiredSlugInput = cleanString(slug);
     const desiredSlug = desiredSlugInput ? desiredSlugInput : existing.slug;
     const uniqueSlug = slugify(desiredSlug) === existing.slug
       ? existing.slug
@@ -293,31 +336,6 @@ export async function updateNewsBySlug(req, res, next) {
 
     if (!uniqueSlug) {
       return res.status(400).json({ message: 'Slug could not be generated.' });
-    }
-
-    let resolvedContent = String(content || '').trim();
-    let contentFileToCleanupPath = '';
-
-    if (!resolvedContent && uploadedContentFile) {
-      const original = String(uploadedContentFile.originalname || '').toLowerCase();
-      const ext = path.extname(original);
-      const isSupported =
-        ext === '.docx' ||
-        uploadedContentFile.mimetype?.startsWith('text/') ||
-        ['.txt', '.md', '.markdown', '.html', '.htm'].includes(ext);
-
-      if (!isSupported) {
-        return res.status(400).json({
-          message: 'Unsupported content file type. Use docx, html, md, or txt.',
-        });
-      }
-
-      contentFileToCleanupPath = uploadedContentFile.path;
-      resolvedContent = await extractHtmlFromUploadedContentFile(uploadedContentFile);
-    }
-
-    if (!resolvedContent && !existing.contentFileUrl) {
-      return res.status(400).json({ message: 'Provide content text or keep an attached content file.' });
     }
 
     let resolvedPublishedAt = existing.publishedAt;
@@ -332,25 +350,24 @@ export async function updateNewsBySlug(req, res, next) {
       resolvedPublishedAt = date;
     }
 
+    const base = buildNewsDocumentBase({ title: resolvedTitle, type, excerpt }, localized);
+
     const updatedNews = await News.findOneAndUpdate(
       { _id: existing._id },
       {
-        title: resolvedTitle,
+        title: base.title,
         slug: uniqueSlug,
-        type: type !== undefined ? String(type).trim() : existing.type,
-        excerpt: excerpt !== undefined && String(excerpt).trim() ? String(excerpt).trim() : existing.excerpt,
-        content: resolvedContent || existing.content || '',
-        imageUrl: uploadedImage ? uploadedNewsFileUrl(uploadedImage) : existing.imageUrl,
-        contentFileUrl: existing.contentFileUrl,
-        contentFileName: existing.contentFileName,
+        type: type !== undefined ? cleanString(type) : existing.type,
+        excerpt: base.excerpt,
+        content: base.content || existing.content || '',
+        imageUrl: getSingleUploadedFile(req.files, 'image') ? uploadedNewsFileUrl(getSingleUploadedFile(req.files, 'image')) : existing.imageUrl,
+        contentFileUrl: base.contentFileUrl || existing.contentFileUrl,
+        contentFileName: base.contentFileName || existing.contentFileName,
+        translations: base.translations,
         publishedAt: resolvedPublishedAt,
       },
       { new: true, runValidators: true }
     ).lean();
-
-    if (contentFileToCleanupPath) {
-      fs.unlink(contentFileToCleanupPath).catch(() => undefined);
-    }
 
     return res.json(updatedNews);
   } catch (error) {

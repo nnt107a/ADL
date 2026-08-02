@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { EditorContent, useEditor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import Image from '@tiptap/extension-image';
@@ -7,39 +7,12 @@ import { Link as RouterLink, useSearchParams } from 'react-router-dom';
 import PageHeader from '../components/PageHeader';
 import LoadingState from '../components/LoadingState';
 import ErrorState from '../components/ErrorState';
+import { useLocale } from '../context/LocaleContext';
 
-function formatPublishedAt(value) {
-  if (!value) {
-    return '';
-  }
-
-  const date = new Date(value);
-
-  if (Number.isNaN(date.getTime())) {
-    return '';
-  }
-
-  return date.toLocaleDateString(undefined, {
-    year: 'numeric',
-    month: 'short',
-    day: 'numeric',
-  });
-}
-
-function formatDateTimeLocal(value) {
-  if (!value) {
-    return '';
-  }
-
-  const date = new Date(value);
-
-  if (Number.isNaN(date.getTime())) {
-    return '';
-  }
-
-  const offset = date.getTimezoneOffset() * 60000;
-  return new Date(date.getTime() - offset).toISOString().slice(0, 16);
-}
+const LANGUAGES = [
+  { id: 'en', label: 'ENG' },
+  { id: 'vi', label: 'VIE' },
+];
 
 const articleConfigs = {
   news: {
@@ -52,10 +25,9 @@ const articleConfigs = {
     publicListPath: '/news',
     publicDetailPath: (slug) => `/news/${slug}`,
     addPath: '/news/add',
-    pageKicker: 'Admin',
     defaultType: 'News',
     summary: {
-      edit: 'Pick a news item, update the content, then save the changes back to MongoDB.',
+      edit: 'Pick a news item, update both language versions, then save the changes back to MongoDB.',
       delete: 'Pick a news item, review it, then remove it from the site.',
     },
     submitLabel: 'Save changes',
@@ -73,10 +45,9 @@ const articleConfigs = {
     publicListPath: '/insight',
     publicDetailPath: (slug) => `/insight/${slug}`,
     addPath: '/insight/add',
-    pageKicker: 'Admin',
     defaultType: 'Insight',
     summary: {
-      edit: 'Pick an insight article, update the content, then save the changes back to MongoDB.',
+      edit: 'Pick an insight article, update both language versions, then save the changes back to MongoDB.',
       delete: 'Pick an insight article, review it, then remove it from the site.',
     },
     submitLabel: 'Save changes',
@@ -86,8 +57,67 @@ const articleConfigs = {
   },
 };
 
+function formatPublishedAt(value) {
+  if (!value) {
+    return '';
+  }
+
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) {
+    return '';
+  }
+
+  return date.toLocaleDateString(undefined, {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+  });
+}
+
+function formatDateTimeLocal(value) {
+  if (!value) {
+    return '';
+  }
+
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) {
+    return '';
+  }
+
+  const offset = date.getTimezoneOffset() * 60000;
+  return new Date(date.getTime() - offset).toISOString().slice(0, 16);
+}
+
+function emptyDraft() {
+  return { title: '', excerpt: '', content: '', contentFileUrl: '', contentFileName: '' };
+}
+
+function createDraftsFromItem(item) {
+  const fallback = {
+    en: {
+      ...emptyDraft(),
+      title: item?.translations?.en?.title || item?.title || '',
+      excerpt: item?.translations?.en?.excerpt || item?.excerpt || '',
+      content: item?.translations?.en?.content || item?.content || '',
+      contentFileUrl: item?.translations?.en?.contentFileUrl || item?.contentFileUrl || '',
+      contentFileName: item?.translations?.en?.contentFileName || item?.contentFileName || '',
+    },
+    vi: {
+      ...emptyDraft(),
+      title: item?.translations?.vi?.title || '',
+      excerpt: item?.translations?.vi?.excerpt || '',
+      content: item?.translations?.vi?.content || '',
+      contentFileUrl: item?.translations?.vi?.contentFileUrl || '',
+      contentFileName: item?.translations?.vi?.contentFileName || '',
+    },
+  };
+
+  return fallback;
+}
+
 export default function ArticleManagePage({ kind, action }) {
   const config = articleConfigs[kind];
+  const { locale } = useLocale();
   const [searchParams, setSearchParams] = useSearchParams();
   const [items, setItems] = useState([]);
   const [itemsLoading, setItemsLoading] = useState(true);
@@ -100,6 +130,8 @@ export default function ArticleManagePage({ kind, action }) {
   const [submitting, setSubmitting] = useState(false);
   const [feedback, setFeedback] = useState('');
   const [fileInputKey, setFileInputKey] = useState(0);
+  const [activeLanguage, setActiveLanguage] = useState(locale);
+  const [drafts, setDrafts] = useState({ en: emptyDraft(), vi: emptyDraft() });
 
   const editor = useEditor({
     extensions: [
@@ -123,10 +155,30 @@ export default function ArticleManagePage({ kind, action }) {
         'aria-label': `${config.label} content editor`,
       },
     },
+    onUpdate({ editor: tiptapEditor }) {
+      setDrafts((current) => ({
+        ...current,
+        [activeLanguage]: {
+          ...current[activeLanguage],
+          content: tiptapEditor.getHTML(),
+        },
+      }));
+    },
   });
 
   const pageTitle = action === 'delete' ? `Delete ${config.label.toLowerCase()}` : `Edit ${config.label.toLowerCase()}`;
   const pageSummary = config.summary[action];
+
+  const activeDraft = drafts[activeLanguage];
+
+  const languageTabs = useMemo(
+    () =>
+      LANGUAGES.map((tab) => ({
+        ...tab,
+        isActive: tab.id === activeLanguage,
+      })),
+    [activeLanguage]
+  );
 
   useEffect(() => {
     let ignore = false;
@@ -136,7 +188,7 @@ export default function ArticleManagePage({ kind, action }) {
         setItemsLoading(true);
         setItemsError('');
 
-        const response = await fetch(config.listEndpoint, { credentials: 'same-origin' });
+        const response = await fetch(`${config.listEndpoint}?lang=${locale}`, { credentials: 'same-origin' });
         const body = await response.json().catch(() => null);
 
         if (!response.ok) {
@@ -162,7 +214,7 @@ export default function ArticleManagePage({ kind, action }) {
     return () => {
       ignore = true;
     };
-  }, [config.label, config.listEndpoint]);
+  }, [config.label, config.listEndpoint, locale]);
 
   useEffect(() => {
     if (!itemsLoading && !selectedSlug && items.length > 0) {
@@ -223,13 +275,22 @@ export default function ArticleManagePage({ kind, action }) {
   }, [config, selectedSlug]);
 
   useEffect(() => {
+    if (!selectedItem) {
+      return;
+    }
+
+    setDrafts(createDraftsFromItem(selectedItem));
+    setActiveLanguage(locale);
+  }, [selectedItem, locale]);
+
+  useEffect(() => {
     if (!editor) {
       return undefined;
     }
 
-    editor.commands.setContent(selectedItem?.content || '');
+    editor.commands.setContent(activeDraft.content || '');
     return undefined;
-  }, [editor, selectedItem?._id]);
+  }, [editor, activeLanguage, activeDraft.content]);
 
   useEffect(() => {
     setCoverImage(null);
@@ -237,7 +298,7 @@ export default function ArticleManagePage({ kind, action }) {
   }, [selectedItem?._id]);
 
   async function refreshItems() {
-    const response = await fetch(config.listEndpoint, { credentials: 'same-origin' });
+    const response = await fetch(`${config.listEndpoint}?lang=${locale}`, { credentials: 'same-origin' });
     const body = await response.json().catch(() => null);
 
     if (!response.ok) {
@@ -246,6 +307,16 @@ export default function ArticleManagePage({ kind, action }) {
 
     setItems(Array.isArray(body) ? body : []);
     return Array.isArray(body) ? body : [];
+  }
+
+  function updateActiveDraft(field, value) {
+    setDrafts((current) => ({
+      ...current,
+      [activeLanguage]: {
+        ...current[activeLanguage],
+        [field]: value,
+      },
+    }));
   }
 
   async function handlePickImage(event) {
@@ -270,8 +341,10 @@ export default function ArticleManagePage({ kind, action }) {
     const form = event.currentTarget;
     const data = new FormData(form);
 
-    if (editor) {
-      data.set('content', editor.getHTML());
+    for (const lang of LANGUAGES.map((item) => item.id)) {
+      data.set(`title_${lang}`, drafts[lang].title || '');
+      data.set(`excerpt_${lang}`, drafts[lang].excerpt || '');
+      data.set(`content_${lang}`, drafts[lang].content || '');
     }
 
     if (coverImage) {
@@ -315,9 +388,7 @@ export default function ArticleManagePage({ kind, action }) {
       return;
     }
 
-    const confirmed = window.confirm(
-      `Delete "${selectedItem.title}"? This cannot be undone.`
-    );
+    const confirmed = window.confirm(`Delete "${selectedItem.title}"? This cannot be undone.`);
 
     if (!confirmed) {
       return;
@@ -358,11 +429,7 @@ export default function ArticleManagePage({ kind, action }) {
 
   return (
     <>
-      <PageHeader
-        kicker={config.pageKicker}
-        title={pageTitle}
-        summary={pageSummary}
-      >
+      <PageHeader kicker="Admin" title={pageTitle} summary={pageSummary}>
         <div className="page-header-action">
           <RouterLink className="page-header-back-link" to={config.publicListPath}>
             Back to public page
@@ -380,7 +447,7 @@ export default function ArticleManagePage({ kind, action }) {
 
           {!itemsLoading && !itemsError ? (
             items.length > 0 ? (
-              <div className="cards-grid" style={{ gridTemplateColumns: 'minmax(240px, 0.75fr) minmax(0, 1.25fr)', gap: '1rem', alignItems: 'start' }}>
+              <div className="cards-grid admin-editor-layout">
                 <aside className="value-stack">
                   {items.map((item) => (
                     <button
@@ -398,9 +465,7 @@ export default function ArticleManagePage({ kind, action }) {
                     >
                       <p className="content-label">{item.type || config.label}</p>
                       <h3>{item.title}</h3>
-                      {item.publishedAt ? (
-                        <p className="state-copy">Published {formatPublishedAt(item.publishedAt)}</p>
-                      ) : null}
+                      {item.publishedAt ? <p className="state-copy">Published {formatPublishedAt(item.publishedAt)}</p> : null}
                       <p>{item.excerpt}</p>
                     </button>
                   ))}
@@ -413,10 +478,31 @@ export default function ArticleManagePage({ kind, action }) {
                   {selectedItem ? (
                     action === 'edit' ? (
                       <form className="contact-form admin-editor-form" onSubmit={handleSubmit} key={selectedItem._id}>
+                        <div className="admin-language-tabs" role="tablist" aria-label="Article languages">
+                          {languageTabs.map((tab) => (
+                            <button
+                              key={tab.id}
+                              type="button"
+                              className={tab.isActive ? 'tab-button is-active' : 'tab-button'}
+                              onClick={() => {
+                                setActiveLanguage(tab.id);
+                                editor?.commands.setContent(drafts[tab.id].content || '');
+                              }}
+                            >
+                              {tab.label}
+                            </button>
+                          ))}
+                        </div>
+
                         <div className="field-grid">
                           <label className="field">
                             <span>Title</span>
-                            <input type="text" name="title" defaultValue={selectedItem.title || ''} required />
+                            <input
+                              type="text"
+                              value={activeDraft.title}
+                              onChange={(event) => updateActiveDraft('title', event.target.value)}
+                              required
+                            />
                           </label>
                           <label className="field">
                             <span>Slug</span>
@@ -436,33 +522,23 @@ export default function ArticleManagePage({ kind, action }) {
                           </label>
                           <label className="field">
                             <span>Published at</span>
-                            <input
-                              type="datetime-local"
-                              name="publishedAt"
-                              defaultValue={formatDateTimeLocal(selectedItem.publishedAt)}
-                            />
+                            <input type="datetime-local" name="publishedAt" defaultValue={formatDateTimeLocal(selectedItem.publishedAt)} />
                           </label>
                         </div>
 
                         <label className="field">
                           <span>Excerpt</span>
                           <textarea
-                            name="excerpt"
+                            value={activeDraft.excerpt}
+                            onChange={(event) => updateActiveDraft('excerpt', event.target.value)}
                             rows="3"
-                            defaultValue={selectedItem.excerpt || ''}
                             placeholder="Short summary for listing pages."
                           />
                         </label>
 
                         <label className="field">
                           <span>Cover image replacement</span>
-                          <input
-                            key={fileInputKey}
-                            type="file"
-                            name="image"
-                            accept="image/*"
-                            onChange={handlePickImage}
-                          />
+                          <input key={fileInputKey} type="file" name="image" accept="image/*" onChange={handlePickImage} />
                         </label>
 
                         {selectedItem.imageUrl ? (
@@ -490,15 +566,24 @@ export default function ArticleManagePage({ kind, action }) {
                       </form>
                     ) : (
                       <article className="contact-form admin-editor-form">
+                        <div className="admin-language-tabs" role="tablist" aria-label="Article languages">
+                          {languageTabs.map((tab) => (
+                            <button
+                              key={tab.id}
+                              type="button"
+                              className={tab.isActive ? 'tab-button is-active' : 'tab-button'}
+                              onClick={() => setActiveLanguage(tab.id)}
+                            >
+                              {tab.label}
+                            </button>
+                          ))}
+                        </div>
+
                         <div className="content-card" style={{ marginBottom: 0 }}>
                           <p className="content-label">{selectedItem.type || config.label}</p>
-                          <h3>{selectedItem.title}</h3>
-                          <p className="state-copy">
-                            {selectedItem.publishedAt
-                              ? `Published ${formatPublishedAt(selectedItem.publishedAt)}`
-                              : 'No published date'}
-                          </p>
-                          <p>{selectedItem.excerpt}</p>
+                          <h3>{drafts[activeLanguage].title || selectedItem.title}</h3>
+                          <p className="state-copy">{selectedItem.publishedAt ? `Published ${formatPublishedAt(selectedItem.publishedAt)}` : 'No published date'}</p>
+                          <p>{drafts[activeLanguage].excerpt || selectedItem.excerpt}</p>
                           {selectedItem.imageUrl ? <img src={selectedItem.imageUrl} alt="" /> : null}
                           <p className="state-copy">
                             This will delete the selected {config.kindLabel} from the site and the database.

@@ -27,6 +27,19 @@ export default function HeroSlider({ slides }) {
 
   return (
     <section id="home" className="hero">
+      <video
+        className="hero-video"
+        autoPlay
+        muted
+        loop
+        playsInline
+        aria-hidden="true"
+        tabIndex={-1}
+        preload="auto"
+      >
+        <source src="/Enhancer-HD-bg_vid.mp4" type="video/mp4" />
+      </video>
+
       <div className="container hero-grid hero-grid-single">
         <div className="hero-copy hero-copy-centered">
           <div className="hero-pagination">
@@ -48,7 +61,7 @@ export default function HeroSlider({ slides }) {
             </div>
           </div>
 
-          <div className="hero-message">
+          <div className={slide.compact ? 'hero-message hero-message--compact' : 'hero-message'}>
             <div className="hero-title-shell">
               <h1>{slide.title}</h1>
             </div>
