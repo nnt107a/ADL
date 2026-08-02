@@ -19,15 +19,6 @@ export default function ContactPage() {
       <PageHeader kicker={page.kicker} title={page.title} summary={page.summary} />
 
       <section className="section section-light reveal">
-        <div className="container">
-          <MediaPlaceholder
-            className="page-media-placeholder"
-            label={page.visual?.label || 'Contact image slot'}
-            size={page.visual?.size || '1200 x 720 px'}
-            note={page.visual?.note}
-          />
-        </div>
-
         <div className="container contact-grid">
           <div className="contact-stack">
             {page.details.map((item) => (

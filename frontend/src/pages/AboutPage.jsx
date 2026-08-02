@@ -21,12 +21,6 @@ export default function AboutPage() {
                 <p key={paragraph}>{paragraph}</p>
               ))}
             </div>
-            <MediaPlaceholder
-              className="page-media-placeholder"
-              label={page.visual?.label || 'About image slot'}
-              size={page.visual?.size || '1200 x 800 px'}
-              note={page.visual?.note}
-            />
           </article>
 
           <div className="value-stack">
