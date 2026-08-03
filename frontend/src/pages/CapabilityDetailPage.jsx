@@ -21,8 +21,7 @@ export default function CapabilityDetailPage() {
   return (
     <>
       <PageHeader
-        kicker={page.kicker}
-        title={service.title}
+        kicker={service.title}
         summary={service.shortDescription}
         featured
         backdropClassName="page-header-backdrop--service"
