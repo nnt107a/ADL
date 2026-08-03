@@ -9,7 +9,7 @@ export default function AboutPage() {
 
   return (
     <>
-      <PageHeader kicker={page.kicker} title={page.title} summary={page.summary} />
+      <PageHeader kicker={page.kicker} title={page.title} summary={page.summary} featured/>
 
       <section className="section section-light reveal">
         <div className="container about-grid">
@@ -40,7 +40,7 @@ export default function AboutPage() {
           <div className="section-heading-row">
             <div>
               <p className="section-kicker">{page.exploreKicker}</p>
-              <h2>{page.exploreTitle}</h2>
+              <h4>{page.exploreTitle}</h4>
             </div>
           </div>
 

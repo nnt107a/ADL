@@ -24,7 +24,9 @@ export default function PageHeader({
             <div className="page-header-left">
               <h1 className={`page-title ${titleClassName}`.trim()}>{title}</h1>
             </div>
-          ) : null}
+          ) : (
+            <div className="page-header-left" />
+          )}
 
           <div className={`page-summary-wrap ${rightAlignedSummary ? 'page-summary-wrap--right' : ''}`}>
             <p className="section-lead">{summary}</p>

@@ -7,7 +7,7 @@ export default function CapabilitiesPage() {
 
   return (
     <>
-      <PageHeader kicker={copy.pages.capabilities.kicker} title={copy.pages.capabilities.title} summary={copy.pages.capabilities.summary} />
+      <PageHeader kicker={copy.pages.capabilities.kicker} title={copy.pages.capabilities.title} summary={copy.pages.capabilities.summary} featured/>
 
       <section className="section section-light reveal">
         <div className="container cards-grid service-grid">

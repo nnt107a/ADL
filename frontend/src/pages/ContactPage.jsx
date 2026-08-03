@@ -16,7 +16,7 @@ export default function ContactPage() {
 
   return (
     <>
-      <PageHeader kicker={page.kicker} title={page.title} summary={page.summary} />
+      <PageHeader kicker={page.kicker} title={page.title} summary={page.summary} featured/>
 
       <section className="section section-light reveal">
         <div className="container contact-grid">

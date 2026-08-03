@@ -7,7 +7,7 @@ export default function PeoplePage() {
 
   return (
     <>
-      <PageHeader kicker={copy.pages.people.kicker} title={copy.pages.people.title} summary={copy.pages.people.summary} />
+      <PageHeader kicker={copy.pages.people.kicker} summary={copy.pages.people.summary} featured/>
 
       <section className="section section-light reveal">
         <div className="container cards-grid people-grid">
