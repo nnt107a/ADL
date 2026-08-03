@@ -786,10 +786,10 @@ img {
 }
 
 .page-header {
-  --page-header-kicker-size: clamp(0.78rem, 0.95vw, 0.92rem);
-  --page-header-title-size: clamp(2.25rem, 3.8vw, 3.75rem);
+  --page-header-kicker-size: clamp(0.92rem, 1.25vw, 1.12rem);
+  --page-header-title-size: clamp(1.5rem, 2.75vw, 2.25rem);
   --page-header-lead-size: clamp(1rem, 1.15vw, 1.15rem);
-  --page-header-kicker-color: var(--muted);
+  --page-header-kicker-color: var(--accent);
   --page-header-title-color: var(--ink);
   --page-header-lead-color: var(--muted);
   --page-header-lead-width: 38rem;
@@ -801,8 +801,8 @@ img {
 .page-header--feature {
   position: relative;
   overflow: hidden;
-  --page-header-title-size: clamp(2.75rem, 5vw, 4.2rem);
-  --page-header-lead-size: clamp(1.05rem, 1.2vw, 1.15rem);
+  --page-header-title-size: clamp(1.5rem, 2.75vw, 2.25rem);
+  --page-header-lead-size: clamp(1rem, 1.15vw, 1.15rem);
   --page-header-lead-width: 34rem;
   --page-header-lead-gap: 2.5rem;
   padding-top: clamp(2.6rem, 5.5vw, 4rem);
@@ -820,6 +820,13 @@ img {
     linear-gradient(180deg, rgba(247, 247, 247, 0.96), rgba(255, 255, 255, 0.9));
   opacity: 1;
   pointer-events: none;
+}
+
+.page-header-backdrop--service {
+  background:
+    radial-gradient(circle at 18% 24%, rgba(255, 189, 89, 0.18), transparent 32%),
+    radial-gradient(circle at 82% 26%, rgba(2, 107, 154, 0.18), transparent 30%),
+    linear-gradient(135deg, rgba(12, 40, 57, 0.04), rgba(255, 255, 255, 0.7));
 }
 
 .page-header--feature::after {
@@ -885,8 +892,8 @@ img {
 }
 
 .page-title--detail {
-  max-width: 12ch;
-  font-size: clamp(2rem, 3.15vw, 3rem);
+  max-width: 28ch;
+  font-size: clamp(1.8rem, 2.2vw, 2rem);
 }
 
 .section-lead {

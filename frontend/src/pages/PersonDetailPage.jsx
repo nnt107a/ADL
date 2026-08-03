@@ -14,7 +14,7 @@ export default function PersonDetailPage() {
         <PageHeader kicker={page.kicker} title={page.notFound} summary={page.notFoundSummary} />
 
         <section className="section">
-          <div className="container">
+          <div className="page-header-action">
             <Link className="page-header-back-link" to="/people">
               ← {page.backToList}
             </Link>

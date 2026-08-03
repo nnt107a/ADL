@@ -5,11 +5,17 @@ export default function PageHeader({
   children,
   rightAlignedSummary = false,
   featured = false,
+  backdropClassName = '',
   titleClassName = '',
 }) {
   return (
     <header className={`section page-header ${featured ? 'page-header--feature' : ''}`.trim()}>
-      {featured ? <div className="page-header-backdrop" aria-hidden="true" /> : null}
+      {featured ? (
+        <div
+          className={`page-header-backdrop ${backdropClassName}`.trim()}
+          aria-hidden="true"
+        />
+      ) : null}
       <div className="container">
         <p className="section-kicker">{kicker}</p>
 

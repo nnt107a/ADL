@@ -20,7 +20,13 @@ export default function CapabilityDetailPage() {
 
   return (
     <>
-      <PageHeader kicker={page.kicker} title={service.title} summary={service.shortDescription}>
+      <PageHeader
+        kicker={page.kicker}
+        title={service.title}
+        summary={service.shortDescription}
+        featured
+        backdropClassName="page-header-backdrop--service"
+      >
         <div className="page-header-action">
           <Link className="page-header-back-link" to="/services">
             ← {page.backToList}
