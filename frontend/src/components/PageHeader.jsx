@@ -17,7 +17,9 @@ export default function PageHeader({
         />
       ) : null}
       <div className="container">
-        <p className="section-kicker">{kicker}</p>
+        <p className="section-kicker" style={{ color: '#006797', fontSize: 'clamp(1.5rem, 2vw, 1.75rem)' }}>
+          {kicker}
+        </p>
 
         <div className="page-header-grid">
           {title ? (

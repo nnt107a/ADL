@@ -801,7 +801,7 @@ img {
 .page-header--feature {
   position: relative;
   overflow: hidden;
-  --page-header-title-size: clamp(1.5rem, 2.75vw, 2.25rem);
+  --page-header-title-size: clamp(1.25rem, 2.55vw, 2rem);
   --page-header-lead-size: clamp(1rem, 1.15vw, 1.15rem);
   --page-header-lead-width: 34rem;
   --page-header-lead-gap: 2.5rem;

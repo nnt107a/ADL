@@ -39,7 +39,9 @@ export default function PersonDetailPage() {
           <aside className="person-sidebar">
             <img className="person-photo-large" src={person.photo} alt={person.name} />
             <h2 className="person-sidebar-name">{person.name}</h2>
-            <p className="person-sidebar-role">{person.title}</p>
+            <p className="person-sidebar-role" style={{ color: '#2E4E6A' }}>
+              {person.title}
+            </p>
 
             <div className="person-contact">
               <h4>{page.contact}</h4>
