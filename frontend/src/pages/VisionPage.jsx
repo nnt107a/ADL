@@ -1,5 +1,6 @@
 import PageHeader from '../components/PageHeader';
 import { useLocale } from '../context/LocaleContext';
+import { pageBackdrops } from '../data/pageAssets';
 
 export default function VisionPage() {
   const { copy } = useLocale();
@@ -12,6 +13,7 @@ export default function VisionPage() {
         title={page.title}
         summary={page.summary}
         featured
+        backdropImage={pageBackdrops.vision}
       />
 
       <section className="section section-light reveal">

@@ -1,13 +1,20 @@
 import PageHeader from '../components/PageHeader';
 import ServiceCard from '../components/ServiceCard';
 import { useLocale } from '../context/LocaleContext';
+import { pageBackdrops } from '../data/pageAssets';
 
 export default function CapabilitiesPage() {
   const { copy } = useLocale();
 
   return (
     <>
-      <PageHeader kicker={copy.pages.capabilities.kicker} title={copy.pages.capabilities.title} summary={copy.pages.capabilities.summary} featured/>
+      <PageHeader
+        kicker={copy.pages.capabilities.kicker}
+        title={copy.pages.capabilities.title}
+        summary={copy.pages.capabilities.summary}
+        featured
+        backdropImage={pageBackdrops.services}
+      />
 
       <section className="section section-light reveal">
         <div className="container cards-grid service-grid">

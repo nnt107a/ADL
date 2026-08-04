@@ -2,6 +2,7 @@ import { useState } from 'react';
 import PageHeader from '../components/PageHeader';
 import MediaPlaceholder from '../components/MediaPlaceholder';
 import { useLocale } from '../context/LocaleContext';
+import { pageBackdrops } from '../data/pageAssets';
 
 export default function ContactPage() {
   const [message, setMessage] = useState('');
@@ -16,7 +17,13 @@ export default function ContactPage() {
 
   return (
     <>
-      <PageHeader kicker={page.kicker} title={page.title} summary={page.summary} featured/>
+      <PageHeader
+        kicker={page.kicker}
+        title={page.title}
+        summary={page.summary}
+        featured
+        backdropImage={pageBackdrops.contact}
+      />
 
       <section className="section section-light reveal">
         <div className="container contact-grid">

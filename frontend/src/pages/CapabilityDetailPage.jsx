@@ -1,12 +1,14 @@
 import { Link, useParams } from 'react-router-dom';
 import PageHeader from '../components/PageHeader';
 import { useLocale } from '../context/LocaleContext';
+import { serviceBackdrops } from '../data/pageAssets';
 
 export default function CapabilityDetailPage() {
   const { id } = useParams();
   const { copy } = useLocale();
   const page = copy.pages.capabilities;
   const service = copy.data.services.find((item) => item.id === id);
+  const backdropImage = id ? serviceBackdrops[id] : '';
 
   if (!service) {
     return (
@@ -25,6 +27,7 @@ export default function CapabilityDetailPage() {
         summary={service.shortDescription}
         featured
         backdropClassName="page-header-backdrop--service"
+        backdropImage={backdropImage}
       >
         <div className="page-header-action">
           <Link className="page-header-back-link" to="/services">

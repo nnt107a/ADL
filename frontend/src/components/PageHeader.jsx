@@ -5,6 +5,7 @@ export default function PageHeader({
   children,
   rightAlignedSummary = false,
   featured = false,
+  backdropImage = '',
   backdropClassName = '',
   titleClassName = '',
 }) {
@@ -17,6 +18,13 @@ export default function PageHeader({
       {featured ? (
         <div
           className={`page-header-backdrop ${backdropClassName}`.trim()}
+          style={
+            backdropImage
+              ? {
+                  '--page-header-backdrop-image': `url("${backdropImage}")`,
+                }
+              : undefined
+          }
           aria-hidden="true"
         />
       ) : null}

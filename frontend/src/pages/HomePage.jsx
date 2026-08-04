@@ -1,10 +1,11 @@
 import HeroSlider from '../components/HeroSlider';
 import { useLocale } from '../context/LocaleContext';
+import { homePartnerLogos } from '../data/pageAssets';
 
 export default function HomePage() {
   const { copy } = useLocale();
   const home = copy.home;
-  const clientRail = [...home.clients, ...home.clients];
+  const clientRail = [...homePartnerLogos, ...homePartnerLogos];
 
   return (
     <>
@@ -17,14 +18,13 @@ export default function HomePage() {
               <p className="section-kicker">{home.clientsKicker}</p>
               <h2>{home.clientsTitle}</h2>
             </div>
-            <p className="section-lead">{home.clientsNote}</p>
           </div>
 
           <div className="client-rail" aria-label={home.clientsKicker}>
             <div className="client-rail-track">
-              {clientRail.map((label, index) => (
-                <div className="client-rail-item" key={`${label}-${index}`}>
-                  <span>{label}</span>
+              {clientRail.map((logo, index) => (
+                <div className="client-rail-item" key={`${logo.alt}-${index}`}>
+                  <img src={logo.src} alt={logo.alt} loading="lazy" />
                 </div>
               ))}
             </div>

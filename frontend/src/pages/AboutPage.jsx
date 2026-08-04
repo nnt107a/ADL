@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import PageHeader from '../components/PageHeader';
 import MediaPlaceholder from '../components/MediaPlaceholder';
 import { useLocale } from '../context/LocaleContext';
+import { pageBackdrops } from '../data/pageAssets';
 
 export default function AboutPage() {
   const { copy } = useLocale();
@@ -9,7 +10,13 @@ export default function AboutPage() {
 
   return (
     <>
-      <PageHeader kicker={page.kicker} title={page.title} summary={page.summary} featured/>
+      <PageHeader
+        kicker={page.kicker}
+        title={page.title}
+        summary={page.summary}
+        featured
+        backdropImage={pageBackdrops.about}
+      />
 
       <section className="section section-light reveal">
         <div className="container about-grid">

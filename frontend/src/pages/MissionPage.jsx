@@ -1,5 +1,6 @@
 import PageHeader from '../components/PageHeader';
 import { useLocale } from '../context/LocaleContext';
+import { pageBackdrops } from '../data/pageAssets';
 
 export default function MissionPage() {
   const { copy } = useLocale();
@@ -12,6 +13,7 @@ export default function MissionPage() {
         title={page.title}
         summary={page.summary}
         featured
+        backdropImage={pageBackdrops.mission}
       />
 
       <section className="section section-light reveal">

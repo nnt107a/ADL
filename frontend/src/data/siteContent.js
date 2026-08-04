@@ -47,18 +47,10 @@ const en = {
     },
   },
   home: {
-    clientsKicker: 'Notable Clients',
-    clientsTitle: 'Selected logos and partners will sit here.',
-    clientsNote:
-      'This strip is ready for the final logo files. The current cards are placeholders so the layout can be reviewed before the emailed logos arrive.',
-    clients: [
-      'Logo placeholder 01',
-      'Logo placeholder 02',
-      'Logo placeholder 03',
-      'Logo placeholder 04',
-      'Logo placeholder 05',
-      'Logo placeholder 06',
-    ],
+    clientsKicker: 'Partners',
+    clientsTitle: 'Selected partner logos',
+    clientsNote: '',
+    clients: [],
   },
   navigation: [
     {
@@ -847,18 +839,10 @@ const vi = {
     },
   },
   home: {
-    clientsKicker: 'Khách hàng tiêu biểu',
-    clientsTitle: 'Các logo và đối tác sẽ hiển thị ở đây.',
-    clientsNote:
-      'Dải nội dung này đã sẵn sàng cho bộ logo cuối cùng. Các thẻ hiện tại chỉ là chỗ giữ để xem bố cục trước khi nhận file logo đã gửi qua email.',
-    clients: [
-      'Logo placeholder 01',
-      'Logo placeholder 02',
-      'Logo placeholder 03',
-      'Logo placeholder 04',
-      'Logo placeholder 05',
-      'Logo placeholder 06',
-    ],
+    clientsKicker: 'Đối tác',
+    clientsTitle: 'Các logo đối tác tiêu biểu',
+    clientsNote: '',
+    clients: [],
   },
   navigation: [
     {

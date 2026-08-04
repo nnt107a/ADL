@@ -5,6 +5,7 @@ import ErrorState from '../components/ErrorState';
 import useApiResource from '../hooks/useApiResource';
 import useAdminSession from '../hooks/useAdminSession';
 import { useLocale } from '../context/LocaleContext';
+import { pageBackdrops } from '../data/pageAssets';
 
 function formatPublishedAt(value) {
   if (!value) {
@@ -39,6 +40,7 @@ export default function KnowledgePage() {
         title={page.title}
         summary={page.summary}
         featured
+        backdropImage={pageBackdrops.insight}
       >
         {checking ? null : isAdmin ? (
           <div className="page-header-action">
