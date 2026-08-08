@@ -48,7 +48,7 @@ export default function PageHeader({
       ) : null}
 
       <div className="container">
-        <p className="section-kicker" style={{ color: `var(--page-header-kicker-color)`, fontSize: `clamp(1.5rem, 2.75vw, 2.25rem)` }}>
+        <p className="section-kicker">
           {kicker}
         </p>
 
@@ -66,7 +66,7 @@ export default function PageHeader({
         >
           {title ? (
             <div className="page-header-left">
-              <h1 className={`page-title ${titleClassName}`.trim()} style={{ fontSize: `clamp(1.25rem, 1.75vw, 1.5rem)` }}>
+              <h1 className={`page-title ${titleClassName}`.trim()}>
                 {title}
               </h1>
             </div>

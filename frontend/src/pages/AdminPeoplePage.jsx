@@ -213,7 +213,7 @@ export default function AdminPeoplePage() {
     <>
       <PageHeader kicker="Admin" title={page.addPeople} summary={page.peopleSummary} />
 
-      <section className="section section-light reveal">
+      <section className="section section-light reveal is-visible">
         <div className="container">
           <form className="contact-form" onSubmit={handleSubmit}>
             <div className="field-grid">

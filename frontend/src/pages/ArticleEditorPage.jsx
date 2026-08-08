@@ -64,6 +64,26 @@ const editorConfigs = {
 };
 
 function Toolbar({ editor, onPickImage }) {
+  const [, setTick] = useState(0);
+
+  useEffect(() => {
+    if (!editor) return undefined;
+
+    function handleStateChange() {
+      setTick((t) => t + 1);
+    }
+
+    editor.on('transaction', handleStateChange);
+    editor.on('selectionUpdate', handleStateChange);
+    editor.on('focus', handleStateChange);
+
+    return () => {
+      editor.off('transaction', handleStateChange);
+      editor.off('selectionUpdate', handleStateChange);
+      editor.off('focus', handleStateChange);
+    };
+  }, [editor]);
+
   if (!editor) {
     return null;
   }
@@ -87,7 +107,7 @@ function Toolbar({ editor, onPickImage }) {
   const tools = [
     { label: 'B', title: 'Bold', active: editor.isActive('bold'), action: () => editor.chain().focus().toggleBold().run() },
     { label: 'I', title: 'Italic', active: editor.isActive('italic'), action: () => editor.chain().focus().toggleItalic().run() },
-    { label: 'H2', title: 'Heading', active: editor.isActive('heading', { level: 2 }), action: () => editor.chain().focus().toggleHeading({ level: 2 }).run() },
+    { label: 'H2', title: 'Heading 2', active: editor.isActive('heading', { level: 2 }), action: () => editor.chain().focus().toggleHeading({ level: 2 }).run() },
     { label: 'List', title: 'Bullet list', active: editor.isActive('bulletList'), action: () => editor.chain().focus().toggleBulletList().run() },
     { label: '1.', title: 'Numbered list', active: editor.isActive('orderedList'), action: () => editor.chain().focus().toggleOrderedList().run() },
     { label: 'Quote', title: 'Quote', active: editor.isActive('blockquote'), action: () => editor.chain().focus().toggleBlockquote().run() },
@@ -104,6 +124,7 @@ function Toolbar({ editor, onPickImage }) {
           key={tool.title}
           type="button"
           className={tool.active ? 'tool-button is-active' : 'tool-button'}
+          onMouseDown={(e) => e.preventDefault()}
           onClick={tool.action}
           title={tool.title}
         >
@@ -563,57 +584,48 @@ export default function ArticleEditorPage({ kind, action = 'create' }) {
 
               {isNews ? (
                 <label className="field">
-                  <span>Content file ({activeLanguage.toUpperCase()})</span>
+                  <span>Import content file (optional, {activeLanguage.toUpperCase()})</span>
                   <input type="file" accept=".docx,.html,.htm,.txt,.md" onChange={handlePreviewFile} />
                   {fileNames[activeLanguage] ? <p className="state-copy">Selected: {fileNames[activeLanguage]}</p> : null}
                 </label>
               ) : null}
 
-              {!isNews || activeDraft.content ? (
-                <>
-                  <div className="admin-editor-tabs" role="tablist" aria-label="Editor mode">
-                    {editorModes.map((tab) => (
-                      <button
-                        key={tab.id}
-                        className={mode === tab.id ? 'tab-button is-active' : 'tab-button'}
-                        type="button"
-                        role="tab"
-                        aria-selected={mode === tab.id}
-                        onClick={() => setMode(tab.id)}
-                      >
-                        {tab.label}
-                      </button>
-                    ))}
+              <div className="admin-editor-tabs" role="tablist" aria-label="Editor mode">
+                {editorModes.map((tab) => (
+                  <button
+                    key={tab.id}
+                    className={mode === tab.id ? 'tab-button is-active' : 'tab-button'}
+                    type="button"
+                    role="tab"
+                    aria-selected={mode === tab.id}
+                    onClick={() => setMode(tab.id)}
+                  >
+                    {tab.label}
+                  </button>
+                ))}
+              </div>
+
+              <input ref={fileInputRef} type="file" accept="image/*" onChange={handleEditorImage} hidden />
+
+              {mode === 'editor' ? (
+                <div className="field">
+                  <Toolbar editor={editor} onPickImage={() => fileInputRef.current?.click()} />
+                  <div className="rich-editor pro-rich-editor">
+                    <EditorContent editor={editor} />
                   </div>
-
-                  <input ref={fileInputRef} type="file" accept="image/*" onChange={handleEditorImage} hidden />
-
-                  {mode === 'editor' ? (
-                    <div className="field">
-                      <Toolbar editor={editor} onPickImage={() => fileInputRef.current?.click()} />
-                      <div className="rich-editor pro-rich-editor">
-                        <EditorContent editor={editor} />
-                      </div>
-                      <p className="state-copy">
-                        {uploadingImage
-                          ? 'Uploading image...'
-                          : isEditMode
-                            ? 'Update the article content, then save your changes.'
-                            : 'Use headings, lists, quotes, links, and images to structure the article.'}
-                      </p>
-                    </div>
-                  ) : (
-                    <article className="content-card admin-editor-preview">
-                      <p className="content-label">Preview</p>
-                      <div className="news-content" dangerouslySetInnerHTML={{ __html: previewHtml }} />
-                    </article>
-                  )}
-                </>
-              ) : (
-                <div className="state-panel">
-                  <p className="state-label">No content yet</p>
-                  <p className="state-copy">Upload a file or switch to the other language tab to continue.</p>
+                  <p className="state-copy">
+                    {uploadingImage
+                      ? 'Uploading image...'
+                      : isEditMode
+                        ? 'Update the article content, then save your changes.'
+                        : 'Use headings, lists, quotes, links, and images to structure the article.'}
+                  </p>
                 </div>
+              ) : (
+                <article className="content-card admin-editor-preview">
+                  <p className="content-label">Preview</p>
+                  <div className="news-content" dangerouslySetInnerHTML={{ __html: previewHtml }} />
+                </article>
               )}
 
               {isNews && filePreviews[activeLanguage] ? (

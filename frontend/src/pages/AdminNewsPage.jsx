@@ -210,7 +210,7 @@ export default function AdminNewsPage() {
     <>
       <PageHeader kicker="Admin" title={page.newsTitle} summary={page.newsSummary} />
 
-      <section className="section section-light reveal">
+      <section className="section section-light reveal is-visible">
         <div className="container">
           <TabBar value={mode} labels={{ editor: page.editor, file: 'Từ tệp' }} onChange={(nextMode) => { setMode(nextMode); setError(''); setSuccess(''); }} />
 

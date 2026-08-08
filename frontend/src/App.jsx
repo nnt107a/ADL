@@ -17,6 +17,7 @@ import AdminUnlockGate from './components/AdminUnlockGate';
 import CapabilityDetailPage from './pages/CapabilityDetailPage';
 import ArticleEditorPage from './pages/ArticleEditorPage';
 import ProtectedAdminRoute from './components/ProtectedAdminRoute';
+import AdminMessagesPage from './pages/AdminMessagesPage';
 
 export default function App() {
   return (
@@ -68,6 +69,14 @@ export default function App() {
           <Route path="insight/:slug" element={<InsightDetailPage />} />
           <Route path="careers" element={<CareersPage />} />
           <Route path="contact" element={<ContactPage />} />
+          <Route
+            path="admin/messages"
+            element={
+              <ProtectedAdminRoute>
+                <AdminMessagesPage />
+              </ProtectedAdminRoute>
+            }
+          />
           <Route path="mission" element={<MissionPage />} />
           <Route path="vision" element={<VisionPage />} />
           <Route path="capabilities" element={<Navigate to="/services" replace />} />

@@ -8,30 +8,21 @@ import { useLocale } from '../context/LocaleContext';
 export default function Layout() {
   const location = useLocation();
   const { copy } = useLocale();
-
   useEffect(() => {
     const targets = Array.from(document.querySelectorAll('.reveal'));
+    targets.forEach((target) => target.classList.add('is-visible'));
 
-    if (!('IntersectionObserver' in window)) {
-      targets.forEach((target) => target.classList.add('is-visible'));
-      return undefined;
-    }
+    const t1 = setTimeout(() => {
+      document.querySelectorAll('.reveal').forEach((el) => el.classList.add('is-visible'));
+    }, 100);
+    const t2 = setTimeout(() => {
+      document.querySelectorAll('.reveal').forEach((el) => el.classList.add('is-visible'));
+    }, 500);
 
-    const observer = new IntersectionObserver(
-      (entries, io) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('is-visible');
-            io.unobserve(entry.target);
-          }
-        });
-      },
-      { threshold: 0.2, rootMargin: '0px 0px -10% 0px' }
-    );
-
-    targets.forEach((target) => observer.observe(target));
-
-    return () => observer.disconnect();
+    return () => {
+      clearTimeout(t1);
+      clearTimeout(t2);
+    };
   }, [location.pathname]);
 
   useEffect(() => {

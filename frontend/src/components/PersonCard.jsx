@@ -14,7 +14,7 @@ export default function PersonCard({ person }) {
 
             <h3>{person.name}</h3>
 
-            <p className="profile-role" style={{ color: '#2E4E6A' }}>
+            <p className="profile-role">
                 {person.title}
             </p>
         </Link>

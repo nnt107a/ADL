@@ -449,7 +449,7 @@ export default function ArticleManagePage({ kind, action }) {
         </div>
       </PageHeader>
 
-      <section className="section section-light reveal">
+      <section className="section section-light reveal is-visible">
         <div className="container admin-editor-shell">
           {itemsLoading ? <LoadingState label={`Loading ${config.label.toLowerCase()} items`} /> : null}
           {itemsError ? <ErrorState title={`Unable to load ${config.label.toLowerCase()} items`} message={itemsError} /> : null}

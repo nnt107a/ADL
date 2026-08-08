@@ -90,101 +90,59 @@ export default function Header() {
                   className={`nav-item ${hasChildren ? 'nav-dropdown' : ''} ${isDropdownOpen ? 'is-open' : ''}`}
                   key={item.path}
                   onMouseEnter={() => {
-                    if (hasChildren) {
+                    if (hasChildren && window.innerWidth > 900) {
                       setOpenDropdownPath(item.path);
                     }
                   }}
                   onMouseLeave={() => {
-                    if (hasChildren) {
-                      setOpenDropdownPath('');
-                    }
-                  }}
-                  onFocus={() => {
-                    if (hasChildren) {
-                      setOpenDropdownPath(item.path);
-                    }
-                  }}
-                  onBlur={(event) => {
-                    if (hasChildren && !event.currentTarget.contains(event.relatedTarget)) {
+                    if (hasChildren && window.innerWidth > 900) {
                       setOpenDropdownPath('');
                     }
                   }}
                 >
-                  <NavLink
-                    to={item.path}
-                    end
-                    onClick={closeMenu}
-                    className={({ isActive }) => (isActive ? 'is-active nav-link' : 'nav-link')}
+                  <div
+                    className="nav-item-header"
+                    onClick={(e) => {
+                      if (hasChildren && window.innerWidth <= 900) {
+                        e.stopPropagation();
+                        setOpenDropdownPath(isDropdownOpen ? '' : item.path);
+                      }
+                    }}
                   >
-                    {item.label}
-                  </NavLink>
-
-                  {item.path === '/contact' ? (
-                    <div
-                      ref={languageMenuRef}
-                      className={`nav-language ${isLanguageMenuOpen ? 'is-open' : ''}`}
+                    <NavLink
+                      to={item.path}
+                      end
+                      onClick={(e) => {
+                        if (hasChildren && window.innerWidth <= 900) {
+                          e.preventDefault();
+                          setOpenDropdownPath(isDropdownOpen ? '' : item.path);
+                        } else {
+                          closeMenu();
+                        }
+                      }}
+                      className={({ isActive }) => (isActive ? 'is-active nav-link' : 'nav-link')}
                     >
+                      {item.label}
+                    </NavLink>
+
+                    {hasChildren && (
                       <button
                         type="button"
-                        className="nav-language-toggle"
-                        aria-label={copy.ui.language}
-                        aria-haspopup="menu"
-                        aria-expanded={isLanguageMenuOpen}
-                        onClick={() => setIsLanguageMenuOpen((current) => !current)}
+                        className="nav-dropdown-arrow"
+                        aria-label={`Toggle ${item.label} submenu`}
+                        aria-expanded={isDropdownOpen}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          setOpenDropdownPath(isDropdownOpen ? '' : item.path);
+                        }}
                       >
-                        <svg
-                          viewBox="0 0 24 24"
-                          className="nav-language-icon"
-                          aria-hidden="true"
-                        >
-                          <path d="M12 3.2a8.8 8.8 0 1 1-6.2 2.6A8.76 8.76 0 0 1 12 3.2Z" fill="none" stroke="currentColor" strokeWidth="1.1" />
-                          <path d="M6.1 6.3c1.3.7 2.4 1.8 3.2 3.1.8 1.3 1.3 2.9 1.4 4.8.1 1.9-.2 3.6-.9 5" fill="none" stroke="currentColor" strokeWidth="1.05" strokeLinecap="round" />
-                          <path d="M17.9 6.3c-1.3.7-2.4 1.8-3.2 3.1-.8 1.3-1.3 2.9-1.4 4.8-.1 1.9.2 3.6.9 5" fill="none" stroke="currentColor" strokeWidth="1.05" strokeLinecap="round" />
-                          <path d="M4.7 12h14.6" fill="none" stroke="currentColor" strokeWidth="1.05" strokeLinecap="round" />
-                          <path d="M12 3.2c-2.2 2.2-3.2 4.9-3.2 8.8s1 6.6 3.2 8.8" fill="none" stroke="currentColor" strokeWidth="1.05" strokeLinecap="round" />
-                          <path d="M12 3.2c2.2 2.2 3.2 4.9 3.2 8.8s-1 6.6-3.2 8.8" fill="none" stroke="currentColor" strokeWidth="1.05" strokeLinecap="round" />
-                          <path d="M2.8 5.2h6.3v6.3H7.4l-.8 1.2-.9-1.2H2.8z" fill="none" stroke="currentColor" strokeWidth="1.05" strokeLinejoin="round" />
-                          <path d="M17.7 12.5h3.5v5h-2.1l-.8 1.1-.8-1.1h-2.1v-5z" fill="none" stroke="currentColor" strokeWidth="1.05" strokeLinejoin="round" />
-                          <path d="M4.4 7.4h1.9" fill="none" stroke="currentColor" strokeWidth="1.05" strokeLinecap="round" />
-                          <path d="M19.6 14.7h-1.9" fill="none" stroke="currentColor" strokeWidth="1.05" strokeLinecap="round" />
-                          <path d="M4.2 6.6h1.1v1.1" fill="none" stroke="currentColor" strokeWidth="1.05" strokeLinecap="round" strokeLinejoin="round" />
-                          <path d="M18.5 17.5v-1.1h1.1" fill="none" stroke="currentColor" strokeWidth="1.05" strokeLinecap="round" strokeLinejoin="round" />
-                          <path d="M8.1 8.2l.4-1 .4 1 .9.1-.7.6.2 1-.8-.6-.8.6.2-1-.7-.6z" fill="currentColor" />
-                          <path d="M15.7 14.8l.4-1 .4 1 .9.1-.7.6.2 1-.8-.6-.8.6.2-1-.7-.6z" fill="currentColor" />
+                        <svg viewBox="0 0 24 24" className="chevron-icon" aria-hidden="true">
+                          <path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
                         </svg>
                       </button>
-
-                      <div className="nav-language-menu" role="menu" aria-label={copy.ui.language}>
-                        <button
-                          type="button"
-                          role="menuitemradio"
-                          aria-checked={locale === 'en'}
-                          className={locale === 'en' ? 'nav-language-option is-active' : 'nav-language-option'}
-                          onClick={() => selectLocale('en')}
-                        >
-                          {copy.ui.english}
-                        </button>
-                        <button
-                          type="button"
-                          role="menuitemradio"
-                          aria-checked={locale === 'vi'}
-                          className={locale === 'vi' ? 'nav-language-option is-active' : 'nav-language-option'}
-                          onClick={() => selectLocale('vi')}
-                        >
-                          {copy.ui.vietnamese}
-                        </button>
-                        <button
-                          type="button"
-                          role="menuitemradio"
-                          aria-checked={locale === 'cn'}
-                          className={locale === 'cn' ? 'nav-language-option is-active' : 'nav-language-option'}
-                          onClick={() => selectLocale('cn')}
-                        >
-                          {copy.ui.chinese}
-                        </button>
-                      </div>
-                    </div>
-                  ) : null}
+                    )}
+                  </div>
 
                   {hasChildren ? (
                     <div className={`nav-submenu ${item.submenuClassName || ''}`} aria-label={`${item.label} submenu`}>
@@ -198,6 +156,72 @@ export default function Header() {
                 </div>
               );
             })}
+
+            <div
+              ref={languageMenuRef}
+              className={`nav-language ${isLanguageMenuOpen ? 'is-open' : ''}`}
+            >
+              <button
+                type="button"
+                className="nav-language-toggle"
+                aria-label={copy.ui.language}
+                aria-haspopup="menu"
+                aria-expanded={isLanguageMenuOpen}
+                onClick={() => setIsLanguageMenuOpen((current) => !current)}
+              >
+                <svg
+                  viewBox="0 0 24 24"
+                  className="nav-language-icon"
+                  aria-hidden="true"
+                >
+                  <path d="M12 3.2a8.8 8.8 0 1 1-6.2 2.6A8.76 8.76 0 0 1 12 3.2Z" fill="none" stroke="currentColor" strokeWidth="1.1" />
+                  <path d="M6.1 6.3c1.3.7 2.4 1.8 3.2 3.1.8 1.3 1.3 2.9 1.4 4.8.1 1.9-.2 3.6-.9 5" fill="none" stroke="currentColor" strokeWidth="1.05" strokeLinecap="round" />
+                  <path d="M17.9 6.3c-1.3.7-2.4 1.8-3.2 3.1-.8 1.3-1.3 2.9-1.4 4.8-.1 1.9.2 3.6.9 5" fill="none" stroke="currentColor" strokeWidth="1.05" strokeLinecap="round" />
+                  <path d="M4.7 12h14.6" fill="none" stroke="currentColor" strokeWidth="1.05" strokeLinecap="round" />
+                  <path d="M12 3.2c-2.2 2.2-3.2 4.9-3.2 8.8s1 6.6 3.2 8.8" fill="none" stroke="currentColor" strokeWidth="1.05" strokeLinecap="round" />
+                  <path d="M12 3.2c2.2 2.2 3.2 4.9 3.2 8.8s-1 6.6-3.2 8.8" fill="none" stroke="currentColor" strokeWidth="1.05" strokeLinecap="round" />
+                  <path d="M2.8 5.2h6.3v6.3H7.4l-.8 1.2-.9-1.2H2.8z" fill="none" stroke="currentColor" strokeWidth="1.05" strokeLinejoin="round" />
+                  <path d="M17.7 12.5h3.5v5h-2.1l-.8 1.1-.8-1.1h-2.1v-5z" fill="none" stroke="currentColor" strokeWidth="1.05" strokeLinejoin="round" />
+                  <path d="M4.4 7.4h1.9" fill="none" stroke="currentColor" strokeWidth="1.05" strokeLinecap="round" />
+                  <path d="M19.6 14.7h-1.9" fill="none" stroke="currentColor" strokeWidth="1.05" strokeLinecap="round" />
+                  <path d="M4.2 6.6h1.1v1.1" fill="none" stroke="currentColor" strokeWidth="1.05" strokeLinecap="round" strokeLinejoin="round" />
+                  <path d="M18.5 17.5v-1.1h1.1" fill="none" stroke="currentColor" strokeWidth="1.05" strokeLinecap="round" strokeLinejoin="round" />
+                  <path d="M8.1 8.2l.4-1 .4 1 .9.1-.7.6.2 1-.8-.6-.8.6.2-1-.7-.6z" fill="currentColor" />
+                  <path d="M15.7 14.8l.4-1 .4 1 .9.1-.7.6.2 1-.8-.6-.8.6.2-1-.7-.6z" fill="currentColor" />
+                </svg>
+                <span className="nav-language-label">{locale.toUpperCase()}</span>
+              </button>
+
+              <div className="nav-language-menu" role="menu" aria-label={copy.ui.language}>
+                <button
+                  type="button"
+                  role="menuitemradio"
+                  aria-checked={locale === 'en'}
+                  className={locale === 'en' ? 'nav-language-option is-active' : 'nav-language-option'}
+                  onClick={() => selectLocale('en')}
+                >
+                  {copy.ui.english}
+                </button>
+                <button
+                  type="button"
+                  role="menuitemradio"
+                  aria-checked={locale === 'vi'}
+                  className={locale === 'vi' ? 'nav-language-option is-active' : 'nav-language-option'}
+                  onClick={() => selectLocale('vi')}
+                >
+                  {copy.ui.vietnamese}
+                </button>
+                <button
+                  type="button"
+                  role="menuitemradio"
+                  aria-checked={locale === 'cn'}
+                  className={locale === 'cn' ? 'nav-language-option is-active' : 'nav-language-option'}
+                  onClick={() => selectLocale('cn')}
+                >
+                  {copy.ui.chinese}
+                </button>
+              </div>
+            </div>
           </nav>
         </div>
       </div>
