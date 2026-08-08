@@ -55,23 +55,46 @@ function normalizeFilterValue(value) {
 
 function buildServiceLookup() {
   const lookup = new Map();
-  const serviceCatalog = JSON.parse(
-    readFileSync(new URL('../../../frontend/src/data/services.json', import.meta.url), 'utf8')
-  );
+  const possibleUrls = [
+    new URL('../data/services.json', import.meta.url),
+    new URL('../../../frontend/src/data/services.json', import.meta.url)
+  ];
 
-  for (const service of serviceCatalog || []) {
-    const id = cleanText(service?.id || '');
-    const title = cleanText(service?.title || '');
-
-    if (!id) {
-      continue;
+  let rawData = null;
+  for (const url of possibleUrls) {
+    try {
+      rawData = readFileSync(url, 'utf8');
+      if (rawData) {
+        break;
+      }
+    } catch {
+      // Continue searching next path
     }
+  }
 
-    lookup.set(normalizeFilterValue(id).toLowerCase(), id);
+  if (!rawData) {
+    console.warn('[insightController] Warning: services.json not found for service lookup.');
+    return lookup;
+  }
 
-    if (title) {
-      lookup.set(normalizeFilterValue(title).toLowerCase(), id);
+  try {
+    const serviceCatalog = JSON.parse(rawData);
+    for (const service of serviceCatalog || []) {
+      const id = cleanText(service?.id || '');
+      const title = cleanText(service?.title || '');
+
+      if (!id) {
+        continue;
+      }
+
+      lookup.set(normalizeFilterValue(id).toLowerCase(), id);
+
+      if (title) {
+        lookup.set(normalizeFilterValue(title).toLowerCase(), id);
+      }
     }
+  } catch (err) {
+    console.error('[insightController] Error parsing services.json:', err);
   }
 
   return lookup;
