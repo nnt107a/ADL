@@ -1,9 +1,9 @@
-const SUPPORTED_LOCALES = ['en', 'vi'];
+const SUPPORTED_LOCALES = ['en', 'vi', 'cn'];
 const DEFAULT_LOCALE = 'en';
 
 function normalizeLocale(value) {
   const locale = String(value || '').toLowerCase();
-  return locale === 'vi' ? 'vi' : DEFAULT_LOCALE;
+  return SUPPORTED_LOCALES.includes(locale) ? locale : DEFAULT_LOCALE;
 }
 
 function cleanText(value) {
@@ -11,9 +11,9 @@ function cleanText(value) {
 }
 
 function readLocalizedFields(source = {}, existing = {}, locale = DEFAULT_LOCALE) {
-  const suffix = locale === 'vi' ? '_vi' : '_en';
-  const fallbackLocale = locale === 'vi' ? 'en' : 'vi';
-  const fallbackSuffix = fallbackLocale === 'vi' ? '_vi' : '_en';
+  const suffix = locale === 'en' ? '_en' : `_${locale}`;
+  const fallbackLocale = 'en';
+  const fallbackSuffix = '_en';
 
   const read = (fieldName) => {
     const localizedKey = `${fieldName}${suffix}`;
@@ -78,10 +78,17 @@ function resolveArticleForLocale(article = {}, locale = DEFAULT_LOCALE) {
       contentFileUrl: cleanText(article?.translations?.vi?.contentFileUrl),
       contentFileName: cleanText(article?.translations?.vi?.contentFileName),
     },
+    cn: {
+      title: cleanText(article?.translations?.cn?.title),
+      excerpt: cleanText(article?.translations?.cn?.excerpt),
+      content: cleanText(article?.translations?.cn?.content),
+      contentFileUrl: cleanText(article?.translations?.cn?.contentFileUrl),
+      contentFileName: cleanText(article?.translations?.cn?.contentFileName),
+    },
   };
 
   const requested = translations[normalizeLocale(locale)] || translations.en;
-  const fallback = translations.en.title || translations.en.content ? translations.en : translations.vi;
+  const fallback = (translations.en.title || translations.en.content) ? translations.en : (translations.vi.title || translations.vi.content) ? translations.vi : translations.cn;
   const resolved = {
     title: requested.title || fallback.title,
     excerpt: requested.excerpt || fallback.excerpt,
@@ -93,6 +100,7 @@ function resolveArticleForLocale(article = {}, locale = DEFAULT_LOCALE) {
   return {
     ...article,
     ...resolved,
+    filters: Array.isArray(article?.filters) ? article.filters : [],
     translations,
   };
 }

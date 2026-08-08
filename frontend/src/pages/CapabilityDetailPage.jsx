@@ -1,7 +1,7 @@
 import { Link, useParams } from 'react-router-dom';
 import PageHeader from '../components/PageHeader';
 import { useLocale } from '../context/LocaleContext';
-import { serviceBackdrops } from '../data/pageAssets';
+import { serviceBackdrops, serviceHeaderThemes } from '../data/pageAssets';
 
 export default function CapabilityDetailPage() {
   const { id } = useParams();
@@ -9,6 +9,7 @@ export default function CapabilityDetailPage() {
   const page = copy.pages.capabilities;
   const service = copy.data.services.find((item) => item.id === id);
   const backdropImage = id ? serviceBackdrops[id] : '';
+  const headerTheme = id ? serviceHeaderThemes[id] : null;
 
   if (!service) {
     return (
@@ -28,6 +29,10 @@ export default function CapabilityDetailPage() {
         featured
         backdropClassName="page-header-backdrop--service"
         backdropImage={backdropImage}
+        {...(headerTheme || {})}
+        kickerColor = 'white'
+        titleColor = 'white'
+        summaryColor = 'white'
       >
         <div className="page-header-action">
           <Link className="page-header-back-link" to="/services">

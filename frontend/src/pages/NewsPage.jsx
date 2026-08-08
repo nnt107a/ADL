@@ -5,7 +5,7 @@ import ErrorState from '../components/ErrorState';
 import useApiResource from '../hooks/useApiResource';
 import useAdminSession from '../hooks/useAdminSession';
 import { useLocale } from '../context/LocaleContext';
-import { pageBackdrops } from '../data/pageAssets';
+import { pageBackdrops, pageHeaderThemes } from '../data/pageAssets';
 
 function formatPublishedAt(value) {
   if (!value) {
@@ -43,6 +43,10 @@ export default function NewsPage() {
         summary={page.summary}
         featured
         backdropImage={pageBackdrops.news}
+        {...pageHeaderThemes.news}
+        kickerColor = 'white'
+        titleColor = 'white'
+        summaryColor = 'white'
       >
         {checking ? null : isAdmin ? (
           <div className="page-header-action">

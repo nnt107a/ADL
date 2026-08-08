@@ -1,7 +1,7 @@
 import PageHeader from '../components/PageHeader';
 import PersonCard from '../components/PersonCard';
 import { useLocale } from '../context/LocaleContext';
-import { pageBackdrops } from '../data/pageAssets';
+import { pageBackdrops, pageHeaderThemes } from '../data/pageAssets';
 
 export default function PeoplePage() {
   const { copy } = useLocale();
@@ -13,6 +13,10 @@ export default function PeoplePage() {
         summary={copy.pages.people.summary}
         featured
         backdropImage={pageBackdrops.people}
+        {...pageHeaderThemes.people}
+        kickerColor = 'white'
+        titleColor = 'white'
+        summaryColor = 'white'
       />
 
       <section className="section section-light reveal">

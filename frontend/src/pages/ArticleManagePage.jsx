@@ -12,6 +12,7 @@ import { useLocale } from '../context/LocaleContext';
 const LANGUAGES = [
   { id: 'en', label: 'ENG' },
   { id: 'vi', label: 'VIE' },
+  { id: 'cn', label: 'CHN' },
 ];
 
 const articleConfigs = {
@@ -110,6 +111,14 @@ function createDraftsFromItem(item) {
       contentFileUrl: item?.translations?.vi?.contentFileUrl || '',
       contentFileName: item?.translations?.vi?.contentFileName || '',
     },
+    cn: {
+      ...emptyDraft(),
+      title: item?.translations?.cn?.title || '',
+      excerpt: item?.translations?.cn?.excerpt || '',
+      content: item?.translations?.cn?.content || '',
+      contentFileUrl: item?.translations?.cn?.contentFileUrl || '',
+      contentFileName: item?.translations?.cn?.contentFileName || '',
+    },
   };
 
   return fallback;
@@ -131,7 +140,7 @@ export default function ArticleManagePage({ kind, action }) {
   const [feedback, setFeedback] = useState('');
   const [fileInputKey, setFileInputKey] = useState(0);
   const [activeLanguage, setActiveLanguage] = useState(locale);
-  const [drafts, setDrafts] = useState({ en: emptyDraft(), vi: emptyDraft() });
+  const [drafts, setDrafts] = useState({ en: emptyDraft(), vi: emptyDraft(), cn: emptyDraft() });
 
   const editor = useEditor({
     extensions: [

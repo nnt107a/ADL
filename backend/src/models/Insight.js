@@ -24,6 +24,10 @@ const insightSchema = new mongoose.Schema(
       required: true,
       trim: true,
     },
+    filters: {
+      type: [String],
+      default: [],
+    },
     content: {
       type: String,
       trim: true,
@@ -37,6 +41,11 @@ const insightSchema = new mongoose.Schema(
           content: { type: String, trim: true },
         },
         vi: {
+          title: { type: String, trim: true },
+          excerpt: { type: String, trim: true },
+          content: { type: String, trim: true },
+        },
+        cn: {
           title: { type: String, trim: true },
           excerpt: { type: String, trim: true },
           content: { type: String, trim: true },

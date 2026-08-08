@@ -173,6 +173,15 @@ export default function Header() {
                         >
                           {copy.ui.vietnamese}
                         </button>
+                        <button
+                          type="button"
+                          role="menuitemradio"
+                          aria-checked={locale === 'cn'}
+                          className={locale === 'cn' ? 'nav-language-option is-active' : 'nav-language-option'}
+                          onClick={() => selectLocale('cn')}
+                        >
+                          {copy.ui.chinese}
+                        </button>
                       </div>
                     </div>
                   ) : null}

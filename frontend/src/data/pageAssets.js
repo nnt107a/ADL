@@ -1,5 +1,17 @@
 const encodeAssetPath = (path) => encodeURI(path);
 
+const darkBackdropHeader = {
+  kickerColor: '#F8E3A2',
+  titleColor: '#FFFFFF',
+  summaryColor: 'rgba(255, 255, 255, 0.84)',
+};
+
+const lightBackdropHeader = {
+  kickerColor: '#006797',
+  titleColor: '#0C2839',
+  summaryColor: '#2E4758',
+};
+
 export const homePartnerLogos = [
   { src: encodeAssetPath('/partner_logo/logo 80.png'), alt: 'Partner logo 80' },
   { src: encodeAssetPath('/partner_logo/logo D&H.png'), alt: 'Partner logo D&H' },
@@ -20,19 +32,43 @@ export const pageBackdrops = {
   insight: encodeAssetPath('/page_bg/Trang Insight.jpg'),
   news: encodeAssetPath('/page_bg/Trang News.jpg'),
   contact: encodeAssetPath('/page_bg/Trang Contact.jpg'),
-  mission: encodeAssetPath('/page_bg/Trang Mission.jpg'),
-  vision: encodeAssetPath('/page_bg/Trang Vision.jpg'),
+  mission: encodeAssetPath('/page_bg/Lantern.png'),
+  vision: encodeAssetPath('/page_bg/Lantern.png'),
+};
+
+export const pageHeaderThemes = {
+  about: lightBackdropHeader,
+  services: lightBackdropHeader,
+  people: lightBackdropHeader,
+  insight: darkBackdropHeader,
+  news: lightBackdropHeader,
+  contact: lightBackdropHeader,
+  mission: lightBackdropHeader,
+  vision: lightBackdropHeader,
 };
 
 export const serviceBackdrops = {
-  'foreign-investment': encodeAssetPath('/page_bg/Trang Foreign Investment.jpg'),
-  'mergers-acquisitions-restructuring': encodeAssetPath('/page_bg/Trang M&A, Corporate Structuring.jpg'),
-  'capital-markets-finance-banking': encodeAssetPath('/page_bg/Trang Capital Market.jpg'),
-  'real-estate-construction': encodeAssetPath('/page_bg/Trang Real Estate.jpg'),
-  tax: encodeAssetPath('/page_bg/Trang Tax.jpg'),
-  'employment-labor': encodeAssetPath('/page_bg/Trang Employment.jpg'),
-  'corporate-governance-retainer': encodeAssetPath('/page_bg/Trang Corporate Governance.jpg'),
+  'foreign-investment': encodeAssetPath('/page_bg/Trang Intellectual Property.jpg'),
+  'mergers-acquisitions-restructuring': encodeAssetPath('/page_bg/Trang Intellectual Property.jpg'),
+  'capital-markets-finance-banking': encodeAssetPath('/page_bg/Trang Intellectual Property.jpg'),
+  'real-estate-construction': encodeAssetPath('/page_bg/Trang Intellectual Property.jpg'),
+  tax: encodeAssetPath('/page_bg/Trang Intellectual Property.jpg'),
+  'employment-labor': encodeAssetPath('/page_bg/Trang Intellectual Property.jpg'),
+  'corporate-governance-retainer': encodeAssetPath('/page_bg/Trang Intellectual Property.jpg'),
   'intellectual-property': encodeAssetPath('/page_bg/Trang Intellectual Property.jpg'),
-  'personal-data-protection': encodeAssetPath('/page_bg/Trang Personal Data Protection.jpg'),
-  'dispute-resolution': encodeAssetPath('/page_bg/Trang Dispute Resolution.jpg'),
+  'personal-data-protection': encodeAssetPath('/page_bg/Trang Intellectual Property.jpg'),
+  'dispute-resolution': encodeAssetPath('/page_bg/Trang Intellectual Property.jpg'),
+};
+
+export const serviceHeaderThemes = {
+  'foreign-investment': lightBackdropHeader,
+  'mergers-acquisitions-restructuring': darkBackdropHeader,
+  'capital-markets-finance-banking': darkBackdropHeader,
+  'real-estate-construction': darkBackdropHeader,
+  tax: darkBackdropHeader,
+  'employment-labor': lightBackdropHeader,
+  'corporate-governance-retainer': lightBackdropHeader,
+  'intellectual-property': darkBackdropHeader,
+  'personal-data-protection': darkBackdropHeader,
+  'dispute-resolution': darkBackdropHeader,
 };

@@ -6,6 +6,7 @@ import ErrorState from '../components/ErrorState';
 import useApiResource from '../hooks/useApiResource';
 import useAdminSession from '../hooks/useAdminSession';
 import { useLocale } from '../context/LocaleContext';
+import { getServiceLabel, normalizeServiceSelections } from '../utils/serviceFilters';
 
 function formatPublishedAt(value) {
   if (!value) {
@@ -37,6 +38,7 @@ export default function InsightDetailPage() {
     initialData: null,
     enabled: Boolean(slug),
   });
+  const serviceSelections = normalizeServiceSelections(item?.filters || [], copy.data.services);
 
   async function handleDelete() {
     if (!slug) {
@@ -115,6 +117,15 @@ export default function InsightDetailPage() {
             <article className="content-card">
               <p className="content-label">{item.type || 'Insight'}</p>
               {item.excerpt ? <p className="state-copy">{item.excerpt}</p> : null}
+              {serviceSelections.length > 0 ? (
+                <div className="insight-detail-filters" aria-label="Insight filters">
+                  {serviceSelections.map((filter) => (
+                    <span className="insight-card-filter" key={`${item._id || item.slug}-${filter}`}>
+                      {getServiceLabel(filter, copy.data.services)}
+                    </span>
+                  ))}
+                </div>
+              ) : null}
 
               {item.imageUrl ? <img src={item.imageUrl} alt="" /> : null}
 

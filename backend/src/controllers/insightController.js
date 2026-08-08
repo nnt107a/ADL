@@ -1,3 +1,4 @@
+import { readFileSync } from 'fs';
 import Insight from '../models/Insight.js';
 import {
   buildTranslations,
@@ -48,7 +49,92 @@ function cleanString(value) {
   return cleanText(value);
 }
 
-function buildInsightDocumentBase(body, localized) {
+function normalizeFilterValue(value) {
+  return cleanText(value).replace(/\s+/g, ' ');
+}
+
+function buildServiceLookup() {
+  const lookup = new Map();
+  const serviceCatalog = JSON.parse(
+    readFileSync(new URL('../../../frontend/src/data/services.json', import.meta.url), 'utf8')
+  );
+
+  for (const service of serviceCatalog || []) {
+    const id = cleanText(service?.id || '');
+    const title = cleanText(service?.title || '');
+
+    if (!id) {
+      continue;
+    }
+
+    lookup.set(normalizeFilterValue(id).toLowerCase(), id);
+
+    if (title) {
+      lookup.set(normalizeFilterValue(title).toLowerCase(), id);
+    }
+  }
+
+  return lookup;
+}
+
+const SERVICE_LOOKUP = buildServiceLookup();
+
+function parseInsightFilters(value, fallback = []) {
+  const fallbackList = Array.isArray(fallback) ? fallback : [];
+
+  if (value === undefined || value === null || value === '') {
+    return fallbackList;
+  }
+
+  let rawValues = value;
+
+  if (typeof value === 'string') {
+    const trimmed = value.trim();
+
+    if (!trimmed) {
+      return [];
+    }
+
+    try {
+      const parsed = JSON.parse(trimmed);
+      if (Array.isArray(parsed)) {
+        rawValues = parsed;
+      } else {
+        rawValues = trimmed.split(',');
+      }
+    } catch {
+      rawValues = trimmed.split(',');
+    }
+  }
+
+  if (!Array.isArray(rawValues)) {
+    return fallbackList;
+  }
+
+  const deduped = new Map();
+
+  for (const entry of rawValues) {
+    const normalized = normalizeFilterValue(entry);
+
+    if (!normalized) {
+      continue;
+    }
+
+    const key = SERVICE_LOOKUP.get(normalized.toLowerCase()) || '';
+
+    if (!key) {
+      continue;
+    }
+
+    if (!deduped.has(key)) {
+      deduped.set(key, key);
+    }
+  }
+
+  return Array.from(deduped.values());
+}
+
+function buildInsightDocumentBase(body, localized, filters) {
   const resolvedTitle = localized.title || cleanText(body.title || '');
   const resolvedExcerpt =
     localized.excerpt ||
@@ -63,6 +149,7 @@ function buildInsightDocumentBase(body, localized) {
     title: resolvedTitle,
     type: cleanText(body.type || ''),
     excerpt: resolvedExcerpt,
+    filters: parseInsightFilters(filters),
     content: cleanText(localized.content || ''),
     translations: localized.translations,
   };
@@ -96,7 +183,7 @@ export async function listInsights(req, res, next) {
   try {
     const locale = getArticleLocaleFromRequest(req);
     const items = await Insight.find()
-      .select('title slug type excerpt publishedAt imageUrl createdAt updatedAt content translations')
+      .select('title slug type excerpt filters publishedAt imageUrl createdAt updatedAt content translations')
       .sort({ publishedAt: -1, createdAt: -1 })
       .lean();
 
@@ -117,7 +204,7 @@ export async function getInsightBySlug(req, res, next) {
     }
 
     const item = await Insight.findOne({ slug })
-      .select('title slug type excerpt content imageUrl publishedAt createdAt updatedAt translations')
+      .select('title slug type excerpt filters content imageUrl publishedAt createdAt updatedAt translations')
       .lean();
 
     if (!item) {
@@ -142,7 +229,7 @@ export async function uploadInsightImage(req, res) {
 
 export async function createInsight(req, res, next) {
   try {
-    const { title, slug, type, excerpt, content, publishedAt } = req.body || {};
+    const { title, slug, type, excerpt, content, publishedAt, filters } = req.body || {};
     const localized = await resolveLocalizedContentForInsight(req);
 
     if (!localized.title) {
@@ -171,13 +258,14 @@ export async function createInsight(req, res, next) {
       return res.status(400).json({ message: 'Slug could not be generated.' });
     }
 
-    const base = buildInsightDocumentBase({ title, type, excerpt }, localized);
+    const base = buildInsightDocumentBase({ title, type, excerpt }, localized, filters);
 
     const insight = await Insight.create({
       title: base.title,
       slug: uniqueSlug,
       type: base.type || undefined,
       excerpt: base.excerpt,
+      filters: base.filters,
       content: base.content,
       imageUrl: req.files?.image?.[0] ? `/uploads/news/${req.files.image[0].filename}` : undefined,
       translations: base.translations,
@@ -210,7 +298,7 @@ export async function updateInsightBySlug(req, res, next) {
       return res.status(404).json({ message: 'Insight not found.' });
     }
 
-    const { title, slug, type, excerpt, content, publishedAt } = req.body || {};
+    const { title, slug, type, excerpt, content, publishedAt, filters } = req.body || {};
     const localized = await resolveLocalizedContentForInsight(req, existing);
 
     const resolvedTitle = localized.title || cleanString(title) || existing.title;
@@ -241,7 +329,7 @@ export async function updateInsightBySlug(req, res, next) {
       resolvedPublishedAt = date;
     }
 
-    const base = buildInsightDocumentBase({ title: resolvedTitle, type, excerpt, content }, localized);
+    const base = buildInsightDocumentBase({ title: resolvedTitle, type, excerpt, content }, localized, filters ?? existing.filters);
 
     const updatedInsight = await Insight.findOneAndUpdate(
       { _id: existing._id },
@@ -250,6 +338,7 @@ export async function updateInsightBySlug(req, res, next) {
         slug: uniqueSlug,
         type: type !== undefined ? cleanString(type) : existing.type,
         excerpt: base.excerpt,
+        filters: base.filters,
         content: base.content || existing.content || '',
         imageUrl: req.files?.image?.[0] ? `/uploads/news/${req.files.image[0].filename}` : existing.imageUrl,
         translations: base.translations,

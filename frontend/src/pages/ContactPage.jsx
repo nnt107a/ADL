@@ -2,7 +2,7 @@ import { useState } from 'react';
 import PageHeader from '../components/PageHeader';
 import MediaPlaceholder from '../components/MediaPlaceholder';
 import { useLocale } from '../context/LocaleContext';
-import { pageBackdrops } from '../data/pageAssets';
+import { pageBackdrops, pageHeaderThemes } from '../data/pageAssets';
 
 export default function ContactPage() {
   const [message, setMessage] = useState('');
@@ -23,6 +23,10 @@ export default function ContactPage() {
         summary={page.summary}
         featured
         backdropImage={pageBackdrops.contact}
+        {...pageHeaderThemes.contact}
+        kickerColor = 'white'
+        titleColor = 'white'
+        summaryColor = 'white'
       />
 
       <section className="section section-light reveal">

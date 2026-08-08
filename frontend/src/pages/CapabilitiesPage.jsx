@@ -1,7 +1,7 @@
 import PageHeader from '../components/PageHeader';
 import ServiceCard from '../components/ServiceCard';
 import { useLocale } from '../context/LocaleContext';
-import { pageBackdrops } from '../data/pageAssets';
+import { pageBackdrops, pageHeaderThemes } from '../data/pageAssets';
 
 export default function CapabilitiesPage() {
   const { copy } = useLocale();
@@ -14,6 +14,10 @@ export default function CapabilitiesPage() {
         summary={copy.pages.capabilities.summary}
         featured
         backdropImage={pageBackdrops.services}
+        {...pageHeaderThemes.services}
+        kickerColor = 'white'
+        titleColor = 'white'
+        summaryColor = 'white'
       />
 
       <section className="section section-light reveal">

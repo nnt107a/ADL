@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 import PageHeader from '../components/PageHeader';
 import MediaPlaceholder from '../components/MediaPlaceholder';
 import { useLocale } from '../context/LocaleContext';
-import { pageBackdrops } from '../data/pageAssets';
+import { pageBackdrops, pageHeaderThemes } from '../data/pageAssets';
 
 export default function AboutPage() {
   const { copy } = useLocale();
@@ -16,6 +16,10 @@ export default function AboutPage() {
         summary={page.summary}
         featured
         backdropImage={pageBackdrops.about}
+        {...pageHeaderThemes.about}
+        kickerColor = 'white'
+        titleColor = 'white'
+        summaryColor = 'white'
       />
 
       <section className="section section-light reveal">

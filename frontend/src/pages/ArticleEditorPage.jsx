@@ -7,11 +7,14 @@ import { Link as RouterLink, useSearchParams } from 'react-router-dom';
 import PageHeader from '../components/PageHeader';
 import LoadingState from '../components/LoadingState';
 import ErrorState from '../components/ErrorState';
+import InsightFilterWizard from '../components/InsightFilterWizard';
 import { useLocale } from '../context/LocaleContext';
+import { normalizeServiceSelections } from '../utils/serviceFilters';
 
 const LANGUAGES = [
   { id: 'en', label: 'ENG' },
   { id: 'vi', label: 'VIE' },
+  { id: 'cn', label: 'CHN' },
 ];
 
 const editorModes = [
@@ -133,6 +136,14 @@ function createDraftsFromArticle(article) {
       contentFileUrl: article?.translations?.vi?.contentFileUrl || '',
       contentFileName: article?.translations?.vi?.contentFileName || '',
     },
+    cn: {
+      ...emptyDraft(),
+      title: article?.translations?.cn?.title || '',
+      excerpt: article?.translations?.cn?.excerpt || '',
+      content: article?.translations?.cn?.content || '',
+      contentFileUrl: article?.translations?.cn?.contentFileUrl || '',
+      contentFileName: article?.translations?.cn?.contentFileName || '',
+    },
   };
 }
 
@@ -141,7 +152,7 @@ function buildFileFieldName(language) {
 }
 
 export default function ArticleEditorPage({ kind, action = 'create' }) {
-  const { locale } = useLocale();
+  const { locale, copy } = useLocale();
   const config = editorConfigs[kind];
   const fileInputRef = useRef(null);
   const [searchParams] = useSearchParams();
@@ -155,13 +166,16 @@ export default function ArticleEditorPage({ kind, action = 'create' }) {
   const [existingArticle, setExistingArticle] = useState(null);
   const [loadingExisting, setLoadingExisting] = useState(action === 'edit');
   const [existingError, setExistingError] = useState('');
-  const [drafts, setDrafts] = useState({ en: emptyDraft(), vi: emptyDraft() });
-  const [files, setFiles] = useState({ en: null, vi: null });
-  const [filePreviews, setFilePreviews] = useState({ en: '', vi: '' });
-  const [fileNames, setFileNames] = useState({ en: '', vi: '' });
+  const [drafts, setDrafts] = useState({ en: emptyDraft(), vi: emptyDraft(), cn: emptyDraft() });
+  const [files, setFiles] = useState({ en: null, vi: null, cn: null });
+  const [filePreviews, setFilePreviews] = useState({ en: '', vi: '', cn: '' });
+  const [fileNames, setFileNames] = useState({ en: '', vi: '', cn: '' });
+  const [filters, setFilters] = useState([]);
   const articleSlug = String(searchParams.get('slug') || '').trim();
   const isEditMode = action === 'edit';
   const isNews = kind === 'news';
+  const isInsight = kind === 'insight';
+  const serviceOptions = copy.data.services;
   const languageTabs = useMemo(() => LANGUAGES.map((tab) => ({ ...tab, isActive: tab.id === activeLanguage })), [activeLanguage]);
   const activeDraft = drafts[activeLanguage];
 
@@ -259,8 +273,9 @@ export default function ArticleEditorPage({ kind, action = 'create' }) {
     }
 
     setDrafts(createDraftsFromArticle(existingArticle));
+    setFilters(normalizeServiceSelections(existingArticle.filters, serviceOptions));
     setActiveLanguage(locale);
-  }, [existingArticle, locale]);
+  }, [existingArticle, locale, serviceOptions]);
 
   useEffect(() => {
     if (!editor) {
@@ -410,6 +425,12 @@ export default function ArticleEditorPage({ kind, action = 'create' }) {
       data.set(`content_${activeLanguage}`, drafts[activeLanguage].content || editor.getHTML() || '');
     }
 
+    if (isInsight) {
+      data.set('filters', JSON.stringify(normalizeServiceSelections(filters, serviceOptions)));
+    } else {
+      data.delete('filters');
+    }
+
     if (coverImage) {
       data.set('image', coverImage);
     } else {
@@ -440,10 +461,11 @@ export default function ArticleEditorPage({ kind, action = 'create' }) {
       });
       form.reset();
       setCoverImage(null);
-      setFiles({ en: null, vi: null });
-      setFilePreviews({ en: '', vi: '' });
-      setFileNames({ en: '', vi: '' });
-      setDrafts({ en: emptyDraft(), vi: emptyDraft() });
+      setFiles({ en: null, vi: null, cn: null });
+      setFilePreviews({ en: '', vi: '', cn: '' });
+      setFileNames({ en: '', vi: '', cn: '' });
+      setDrafts({ en: emptyDraft(), vi: emptyDraft(), cn: emptyDraft() });
+      setFilters([]);
       editor?.commands.setContent('');
     } catch (submitError) {
       setError(submitError.message || 'Failed to publish.');
@@ -530,6 +552,14 @@ export default function ArticleEditorPage({ kind, action = 'create' }) {
                   onChange={(event) => updateActiveDraft('excerpt', event.target.value)}
                 />
               </label>
+
+              {isInsight ? (
+                <InsightFilterWizard
+                  services={serviceOptions}
+                  selectedValues={filters}
+                  onChange={setFilters}
+                />
+              ) : null}
 
               {isNews ? (
                 <label className="field">

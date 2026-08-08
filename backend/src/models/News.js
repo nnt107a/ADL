@@ -59,6 +59,13 @@ const newsSchema = new mongoose.Schema(
           contentFileUrl: { type: String, trim: true },
           contentFileName: { type: String, trim: true },
         },
+        cn: {
+          title: { type: String, trim: true },
+          excerpt: { type: String, trim: true },
+          content: { type: String, trim: true },
+          contentFileUrl: { type: String, trim: true },
+          contentFileName: { type: String, trim: true },
+        },
         _id: false,
       },
       default: () => ({}),

@@ -36,7 +36,11 @@ export function LocaleProvider({ children }) {
       copy,
       isVietnamese: locale === 'vi',
       toggleLocale: () => {
-        setLocale((current) => (current === 'vi' ? 'en' : 'vi'));
+        setLocale((current) => {
+          const currentIndex = LOCALES.indexOf(current);
+          const nextIndex = (currentIndex + 1) % LOCALES.length;
+          return LOCALES[nextIndex] || DEFAULT_LOCALE;
+        });
       },
     };
   }, [locale]);

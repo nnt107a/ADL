@@ -8,36 +8,47 @@ export default function PageHeader({
   backdropImage = '',
   backdropClassName = '',
   titleClassName = '',
+  kickerColor = '',
+  titleColor = '',
+  summaryColor = '',
 }) {
-  const hasTitle = !!title;
+  const headerStyle = {
+    ...(backdropImage
+      ? {
+          '--page-header-backdrop-image': `url("${backdropImage}")`,
+        }
+      : {}),
+    ...(kickerColor
+      ? {
+          '--page-header-kicker-color': kickerColor,
+        }
+      : {}),
+    ...(titleColor
+      ? {
+          '--page-header-title-color': titleColor,
+        }
+      : {}),
+    ...(summaryColor
+      ? {
+          '--page-header-lead-color': summaryColor,
+        }
+      : {}),
+  };
 
   return (
     <header
       className={`section page-header ${featured ? 'page-header--feature' : ''}`.trim()}
+      style={Object.keys(headerStyle).length ? headerStyle : undefined}
     >
       {featured ? (
         <div
           className={`page-header-backdrop ${backdropClassName}`.trim()}
-          style={
-            backdropImage
-              ? {
-                  '--page-header-backdrop-image': `url("${backdropImage}")`,
-                }
-              : undefined
-          }
           aria-hidden="true"
         />
       ) : null}
 
       <div className="container">
-        <p
-          className="section-kicker"
-          style={{
-            color: '#006797',
-            fontSize: 'clamp(1.5rem, 2vw, 1.75rem)',
-            maxWidth: '32ch',
-          }}
-        >
+        <p className="section-kicker" style={{ color: `var(--page-header-kicker-color)`, fontSize: `clamp(1.5rem, 2.75vw, 2.25rem)` }}>
           {kicker}
         </p>
 
@@ -55,7 +66,7 @@ export default function PageHeader({
         >
           {title ? (
             <div className="page-header-left">
-              <h1 className={`page-title ${titleClassName}`.trim()}>
+              <h1 className={`page-title ${titleClassName}`.trim()} style={{ fontSize: `clamp(1.25rem, 1.75vw, 1.5rem)` }}>
                 {title}
               </h1>
             </div>
@@ -76,7 +87,9 @@ export default function PageHeader({
                 : undefined
             }
           >
-            <p className="section-lead">{summary}</p>
+            {/* <p className="section-lead" style={{ color: `var(--page-header-lead-color)` }}>
+              {summary}
+            </p> */}
             {children}
           </div>
         </div>
