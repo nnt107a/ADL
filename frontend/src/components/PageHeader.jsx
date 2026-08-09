@@ -47,52 +47,30 @@ export default function PageHeader({
         />
       ) : null}
 
-      <div className="container">
-        <p className="section-kicker">
-          {kicker}
-        </p>
+      <div className="container page-header-container">
+        <div className="page-header-center-content">
+          {kicker ? (
+            <p className="section-kicker page-header-kicker">
+              {kicker}
+            </p>
+          ) : null}
 
-        <div
-          className="page-header-grid"
-          style={
-            !title
-              ? {
-                  display: 'grid',
-                  gridTemplateColumns: '1fr auto',
-                  alignItems: 'start',
-                }
-              : undefined
-          }
-        >
           {title ? (
-            <div className="page-header-left">
-              <h1 className={`page-title ${titleClassName}`.trim()}>
-                {title}
-              </h1>
-            </div>
-          ) : (
-            <div />
-          )}
+            <h1 className={`page-title page-header-title ${titleClassName}`.trim()}>
+              {title}
+            </h1>
+          ) : null}
+        </div>
 
+        {children ? (
           <div
             className={`page-summary-wrap ${
               rightAlignedSummary ? 'page-summary-wrap--right' : ''
             }`}
-            style={
-              !title
-                ? {
-                    flex: '0 0 42rem',
-                    marginLeft: 'auto',
-                  }
-                : undefined
-            }
           >
-            {/* <p className="section-lead" style={{ color: `var(--page-header-lead-color)` }}>
-              {summary}
-            </p> */}
             {children}
           </div>
-        </div>
+        ) : null}
       </div>
     </header>
   );

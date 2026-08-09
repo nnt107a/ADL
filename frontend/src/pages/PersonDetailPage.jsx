@@ -1,6 +1,7 @@
 import { Link, useParams } from 'react-router-dom';
 import PageHeader from '../components/PageHeader';
 import { useLocale } from '../context/LocaleContext';
+import { resolveImageUrl } from '../utils/imageUrl';
 
 export default function PersonDetailPage() {
   const { id } = useParams();
@@ -37,7 +38,7 @@ export default function PersonDetailPage() {
       <section className="section section-light reveal">
         <div className="container person-profile">
           <aside className="person-sidebar">
-            <img className="person-photo-large" src={person.photo} alt={person.name} />
+            <img className="person-photo-large" src={resolveImageUrl(person.photo)} alt={person.name} />
             <h2 className="person-sidebar-name">{person.name}</h2>
             <p className="person-sidebar-role">
               {person.title}

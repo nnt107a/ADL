@@ -8,6 +8,8 @@ import PageHeader from '../components/PageHeader';
 import LoadingState from '../components/LoadingState';
 import ErrorState from '../components/ErrorState';
 import { useLocale } from '../context/LocaleContext';
+import { resolveImageUrl } from '../utils/imageUrl';
+import WordRibbonEditor from '../components/WordRibbonEditor';
 
 const LANGUAGES = [
   { id: 'en', label: 'ENG' },
@@ -142,39 +144,6 @@ export default function ArticleManagePage({ kind, action }) {
   const [activeLanguage, setActiveLanguage] = useState(locale);
   const [drafts, setDrafts] = useState({ en: emptyDraft(), vi: emptyDraft(), cn: emptyDraft() });
 
-  const editor = useEditor({
-    extensions: [
-      StarterKit.configure({
-        link: {
-          autolink: true,
-          openOnClick: false,
-          protocols: ['http', 'https', 'mailto'],
-        },
-      }),
-      Image.configure({ inline: false }),
-      Link.configure({
-        autolink: true,
-        openOnClick: false,
-        protocols: ['http', 'https', 'mailto'],
-      }),
-    ],
-    content: '',
-    editorProps: {
-      attributes: {
-        'aria-label': `${config.label} content editor`,
-      },
-    },
-    onUpdate({ editor: tiptapEditor }) {
-      setDrafts((current) => ({
-        ...current,
-        [activeLanguage]: {
-          ...current[activeLanguage],
-          content: tiptapEditor.getHTML(),
-        },
-      }));
-    },
-  });
-
   const pageTitle = action === 'delete' ? `Delete ${config.label.toLowerCase()}` : `Edit ${config.label.toLowerCase()}`;
   const pageSummary = config.summary[action];
 
@@ -291,15 +260,6 @@ export default function ArticleManagePage({ kind, action }) {
     setDrafts(createDraftsFromItem(selectedItem));
     setActiveLanguage(locale);
   }, [selectedItem, locale]);
-
-  useEffect(() => {
-    if (!editor) {
-      return undefined;
-    }
-
-    editor.commands.setContent(activeDraft.content || '');
-    return undefined;
-  }, [editor, activeLanguage, activeDraft.content]);
 
   useEffect(() => {
     setCoverImage(null);
@@ -553,16 +513,28 @@ export default function ArticleManagePage({ kind, action }) {
                         {selectedItem.imageUrl ? (
                           <article className="content-card">
                             <p className="content-label">Current cover</p>
-                            <img src={selectedItem.imageUrl} alt="" />
+                            <img src={resolveImageUrl(selectedItem.imageUrl)} alt="" />
                           </article>
                         ) : null}
 
-                        <label className="field">
-                          <span>Content</span>
-                          <div className="rich-editor pro-rich-editor">
-                            <EditorContent editor={editor} />
-                          </div>
-                        </label>
+                        <div className="field">
+                          <span>Content ({activeLanguage.toUpperCase()})</span>
+                          <WordRibbonEditor
+                            content={drafts[activeLanguage].content}
+                            onChange={(html) => updateActiveDraft('content', html)}
+                            onUploadImage={async (file) => {
+                              const data = new FormData();
+                              data.append('image', file);
+                              const res = await fetch(config.imageEndpoint, {
+                                method: 'POST',
+                                credentials: 'same-origin',
+                                body: data,
+                              });
+                              const body = await res.json();
+                              return body.url;
+                            }}
+                          />
+                        </div>
 
                         <div className="form-footer">
                           <button className="button button-primary" type="submit" disabled={submitting}>
@@ -593,7 +565,7 @@ export default function ArticleManagePage({ kind, action }) {
                           <h3>{drafts[activeLanguage].title || selectedItem.title}</h3>
                           <p className="state-copy">{selectedItem.publishedAt ? `Published ${formatPublishedAt(selectedItem.publishedAt)}` : 'No published date'}</p>
                           <p>{drafts[activeLanguage].excerpt || selectedItem.excerpt}</p>
-                          {selectedItem.imageUrl ? <img src={selectedItem.imageUrl} alt="" /> : null}
+                          {selectedItem.imageUrl ? <img src={resolveImageUrl(selectedItem.imageUrl)} alt="" /> : null}
                           <p className="state-copy">
                             This will delete the selected {config.kindLabel} from the site and the database.
                           </p>

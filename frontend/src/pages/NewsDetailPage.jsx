@@ -6,6 +6,7 @@ import ErrorState from '../components/ErrorState';
 import useApiResource from '../hooks/useApiResource';
 import useAdminSession from '../hooks/useAdminSession';
 import { useLocale } from '../context/LocaleContext';
+import { resolveImageUrl } from '../utils/imageUrl';
 
 function formatPublishedAt(value) {
   if (!value) {
@@ -47,10 +48,12 @@ function renderContentWithImageToken(content, imageUrl) {
     return renderTextWithLineBreaks(content);
   }
 
+  const resolvedUrl = resolveImageUrl(imageUrl);
+
   return parts.map((part, index) => (
     <Fragment key={`${index}-${part.slice(0, 10)}`}>
       {renderTextWithLineBreaks(part)}
-      {index < parts.length - 1 && imageUrl ? <img src={imageUrl} alt="" /> : null}
+      {index < parts.length - 1 && resolvedUrl ? <img src={resolvedUrl} alt="" /> : null}
     </Fragment>
   ));
 }
@@ -151,7 +154,7 @@ export default function NewsDetailPage() {
               <p className="content-label">{item.type || 'News'}</p>
               {item.excerpt ? <p className="state-copy">{item.excerpt}</p> : null}
 
-              {item.imageUrl && !String(item.content || '').includes('{{image}}') ? <img src={item.imageUrl} alt="" /> : null}
+              {item.imageUrl && !String(item.content || '').includes('{{image}}') ? <img src={resolveImageUrl(item.imageUrl)} alt="" /> : null}
 
               {item.content ? (
                 looksLikeHtml(item.content) ? (

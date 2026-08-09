@@ -24,6 +24,7 @@ export async function createMessage(data) {
       existing.items.push(newItem);
       existing.name = data.name.trim() || existing.name;
       if (data.company) existing.company = data.company.trim();
+      if (data.phone) existing.phone = data.phone.trim();
       if (data.subject) existing.subject = data.subject.trim();
       existing.status = 'unread';
       await existing.save();
@@ -33,6 +34,7 @@ export async function createMessage(data) {
         name: data.name.trim(),
         email: normalizedEmail,
         company: data.company ? data.company.trim() : '',
+        phone: data.phone ? data.phone.trim() : '',
         subject: data.subject ? data.subject.trim() : '',
         status: 'unread',
         items: [newItem],
@@ -54,6 +56,7 @@ export async function createMessage(data) {
     });
     existingMemory.name = data.name.trim() || existingMemory.name;
     if (data.company) existingMemory.company = data.company.trim();
+    if (data.phone) existingMemory.phone = data.phone.trim();
     if (data.subject) existingMemory.subject = data.subject.trim();
     existingMemory.status = 'unread';
     existingMemory.updatedAt = new Date().toISOString();
@@ -64,6 +67,7 @@ export async function createMessage(data) {
       name: data.name.trim(),
       email: normalizedEmail,
       company: data.company ? data.company.trim() : '',
+      phone: data.phone ? data.phone.trim() : '',
       subject: data.subject ? data.subject.trim() : '',
       status: 'unread',
       items: [

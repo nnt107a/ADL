@@ -15,16 +15,16 @@ export default function VisionPage() {
         featured
         backdropImage={pageBackdrops.vision}
         {...pageHeaderThemes.vision}
-        kickerColor = 'white'
-        titleColor = 'white'
-        summaryColor = 'white'
+        kickerColor='white'
+        titleColor='white'
+        summaryColor='white'
       />
 
       <section className="section section-light reveal">
         <div className="container">
           <article className="content-card">
             <p className="content-label">{page.kicker}</p>
-            <h3>{page.heading}</h3>
+            {/* <h3>{page.heading}</h3> */}
             <p className="section-lead" style={{ marginTop: '0.5rem' }}>
               {page.body}
             </p>

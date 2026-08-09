@@ -8,6 +8,7 @@ import PageHeader from '../components/PageHeader';
 import LoadingState from '../components/LoadingState';
 import ErrorState from '../components/ErrorState';
 import InsightFilterWizard from '../components/InsightFilterWizard';
+import WordRibbonEditor from '../components/WordRibbonEditor';
 import { useLocale } from '../context/LocaleContext';
 import { normalizeServiceSelections } from '../utils/serviceFilters';
 
@@ -200,40 +201,6 @@ export default function ArticleEditorPage({ kind, action = 'create' }) {
   const languageTabs = useMemo(() => LANGUAGES.map((tab) => ({ ...tab, isActive: tab.id === activeLanguage })), [activeLanguage]);
   const activeDraft = drafts[activeLanguage];
 
-  const editor = useEditor({
-    extensions: [
-      StarterKit.configure({
-        link: {
-          autolink: true,
-          openOnClick: false,
-          protocols: ['http', 'https', 'mailto'],
-        },
-      }),
-      Image.configure({ inline: false }),
-      Link.configure({
-        autolink: true,
-        openOnClick: false,
-        protocols: ['http', 'https', 'mailto'],
-      }),
-    ],
-    content: '',
-    editorProps: {
-      attributes: {
-        'aria-label': `${config.title} content editor`,
-      },
-    },
-    onUpdate({ editor: tiptapEditor }) {
-      setDrafts((current) => ({
-        ...current,
-        [activeLanguage]: {
-          ...current[activeLanguage],
-          content: tiptapEditor.getHTML(),
-        },
-      }));
-    },
-  });
-
-  const previewHtml = useMemo(() => editor?.getHTML() || '', [editor, mode, activeLanguage, drafts]);
   const pageTitle = isEditMode ? config.editTitle : config.title;
   const pageSummary = isEditMode ? config.editSummary : config.summary;
 
@@ -297,15 +264,6 @@ export default function ArticleEditorPage({ kind, action = 'create' }) {
     setFilters(normalizeServiceSelections(existingArticle.filters, serviceOptions));
     setActiveLanguage(locale);
   }, [existingArticle, locale, serviceOptions]);
-
-  useEffect(() => {
-    if (!editor) {
-      return undefined;
-    }
-
-    editor.commands.setContent(activeDraft.content || '');
-    return undefined;
-  }, [editor, activeLanguage, activeDraft.content]);
 
   useEffect(() => {
     setCoverImage(null);
@@ -590,43 +548,16 @@ export default function ArticleEditorPage({ kind, action = 'create' }) {
                 </label>
               ) : null}
 
-              <div className="admin-editor-tabs" role="tablist" aria-label="Editor mode">
-                {editorModes.map((tab) => (
-                  <button
-                    key={tab.id}
-                    className={mode === tab.id ? 'tab-button is-active' : 'tab-button'}
-                    type="button"
-                    role="tab"
-                    aria-selected={mode === tab.id}
-                    onClick={() => setMode(tab.id)}
-                  >
-                    {tab.label}
-                  </button>
-                ))}
+              <div className="field">
+                <span>Article Content ({activeLanguage.toUpperCase()})</span>
+                <WordRibbonEditor
+                  content={activeDraft.content}
+                  onChange={(html) => updateActiveDraft('content', html)}
+                  onUploadImage={async (file) => {
+                    return await uploadImage(file);
+                  }}
+                />
               </div>
-
-              <input ref={fileInputRef} type="file" accept="image/*" onChange={handleEditorImage} hidden />
-
-              {mode === 'editor' ? (
-                <div className="field">
-                  <Toolbar editor={editor} onPickImage={() => fileInputRef.current?.click()} />
-                  <div className="rich-editor pro-rich-editor">
-                    <EditorContent editor={editor} />
-                  </div>
-                  <p className="state-copy">
-                    {uploadingImage
-                      ? 'Uploading image...'
-                      : isEditMode
-                        ? 'Update the article content, then save your changes.'
-                        : 'Use headings, lists, quotes, links, and images to structure the article.'}
-                  </p>
-                </div>
-              ) : (
-                <article className="content-card admin-editor-preview">
-                  <p className="content-label">Preview</p>
-                  <div className="news-content" dangerouslySetInnerHTML={{ __html: previewHtml }} />
-                </article>
-              )}
 
               {isNews && filePreviews[activeLanguage] ? (
                 <article className="content-card">

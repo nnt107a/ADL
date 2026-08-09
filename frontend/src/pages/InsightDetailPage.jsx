@@ -7,6 +7,7 @@ import useApiResource from '../hooks/useApiResource';
 import useAdminSession from '../hooks/useAdminSession';
 import { useLocale } from '../context/LocaleContext';
 import { getServiceLabel, normalizeServiceSelections } from '../utils/serviceFilters';
+import { resolveImageUrl } from '../utils/imageUrl';
 
 function formatPublishedAt(value) {
   if (!value) {
@@ -127,7 +128,7 @@ export default function InsightDetailPage() {
                 </div>
               ) : null}
 
-              {item.imageUrl ? <img src={item.imageUrl} alt="" /> : null}
+              {item.imageUrl ? <img src={resolveImageUrl(item.imageUrl)} alt="" /> : null}
 
               {item.content ? <div className="news-content" dangerouslySetInnerHTML={{ __html: item.content }} /> : null}
             </article>

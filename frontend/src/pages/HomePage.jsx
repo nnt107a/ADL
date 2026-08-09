@@ -15,7 +15,7 @@ export default function HomePage() {
         <div className="container">
           <div className="section-heading-row home-clients-heading">
             <div>
-              <p className="section-kicker">{home.clientsKicker}</p>
+              <p className="section-kicker" style={{ fontSize: '2rem' }}>{home.clientsKicker}</p>
               <h2>{home.clientsTitle}</h2>
             </div>
           </div>

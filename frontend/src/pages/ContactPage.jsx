@@ -38,6 +38,7 @@ export default function ContactPage() {
     const payload = {
       name: formData.get('name'),
       email: formData.get('email'),
+      phone: formData.get('phone'),
       company: formData.get('company'),
       subject: formData.get('subject'),
       message: formData.get('message'),
@@ -139,14 +140,19 @@ export default function ContactPage() {
 
               <div className="field-grid">
                 <label className="field">
+                  <span>{page.form.phone}</span>
+                  <input type="tel" name="phone" placeholder={page.form.phonePlaceholder} />
+                </label>
+                <label className="field">
                   <span>{page.form.company}</span>
                   <input type="text" name="company" placeholder={page.form.companyPlaceholder} />
                 </label>
-                <label className="field">
-                  <span>{page.form.subject}</span>
-                  <input type="text" name="subject" placeholder={page.form.subjectPlaceholder} />
-                </label>
               </div>
+
+              <label className="field">
+                <span>{page.form.subject}</span>
+                <input type="text" name="subject" placeholder={page.form.subjectPlaceholder} />
+              </label>
 
               <label className="field">
                 <span>{page.form.message}</span>

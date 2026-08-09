@@ -259,6 +259,7 @@ export default function AdminMessagesPage() {
                       </h2>
                       <div style={{ marginTop: '0.4rem', color: 'var(--muted)', fontSize: '0.9rem' }}>
                         From: <strong>{selectedMessage.name}</strong> (&lt;<a href={`mailto:${selectedMessage.email}`}>{selectedMessage.email}</a>&gt;)
+                        {selectedMessage.phone && <span> • Phone: <strong><a href={`tel:${selectedMessage.phone}`}>{selectedMessage.phone}</a></strong></span>}
                         {selectedMessage.company && <span> • Company: <strong>{selectedMessage.company}</strong></span>}
                       </div>
                     </div>

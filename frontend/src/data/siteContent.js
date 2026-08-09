@@ -48,8 +48,8 @@ const en = {
     },
   },
   home: {
-    clientsKicker: 'Clients',
-    clientsTitle: 'Selected client logos',
+    clientsKicker: 'Selected clients',
+    clientsTitle: '',
     clientsNote: '',
     clients: [],
   },
@@ -85,7 +85,7 @@ const en = {
   homeSlides: [
     {
       status: '01',
-      title: 'We are committed to delivering the highest quality services to our clients.',
+      title: 'We are committed to delivering the highest quality services to our clients',
       compact: false,
       size: 'large',
     },
@@ -107,7 +107,7 @@ const en = {
   pages: {
     about: {
       kicker: 'About Us',
-      title: 'Comprehensive legal services shaped by commercial insight.',
+      title: 'Comprehensive legal services shaped by commercial insight',
       summary:
         'AD Legal brings together legal, financial, and business perspectives to help clients make confident decisions in a changing marketplace.',
       visual: {
@@ -116,12 +116,17 @@ const en = {
         note: 'Replace this placeholder with the supplied office or firm image once it arrives.',
       },
       introLabel: 'Who we are',
-      introTitle: 'Experienced lawyers and financial professionals working as one team.',
+      introTitle: 'Experienced lawyers and financial professionals working as one team',
       introParagraphs: [
         'AD Legal is a team of experienced lawyers and financial professionals united by a shared commitment to delivering comprehensive, effective, and commercially pragmatic legal services.',
         'Combining sound legal expertise with financial and commercial insight, we develop flexible solutions tailored to the evolving needs of businesses in a dynamic marketplace.',
         'Guided by professionalism, dedication, and innovation, AD Legal is committed to supporting clients in managing legal risks, enhancing operational efficiency, and laying the groundwork for sustainable growth.',
       ],
+      brochure: {
+        textBefore: 'Please find our company brochure ',
+        linkText: 'here',
+        url: '/data/Brochure%20AD%20Legal_%20EN.pdf',
+      },
       valuesHeading: 'What matters to us',
       values: [
         {
@@ -141,7 +146,7 @@ const en = {
         },
       ],
       exploreKicker: 'Explore AD Legal',
-      exploreTitle: 'Learn more about our direction, work, and updates.',
+      exploreTitle: 'Learn more about our direction, work, and updates',
       sections: [
         {
           id: 'news',
@@ -171,7 +176,7 @@ const en = {
     },
     capabilities: {
       kicker: 'Services',
-      title: 'Support across the situations that matter most.',
+      title: 'Support across the situations that matter most',
       summary: 'ADL brings together the right people, the right pace, and the right level of detail for each engagement.',
       notFound: 'Service not found.',
       overview: 'Overview',
@@ -194,7 +199,7 @@ const en = {
     },
     knowledge: {
       kicker: 'Insight',
-      title: 'Short reads with practical takeaways.',
+      title: 'Short reads with practical takeaways',
       summary: 'Timely legal insights to help you make informed business decisions.',
       visual: {
         label: 'Insight image slot',
@@ -257,11 +262,11 @@ const en = {
     },
     careers: {
       kicker: 'Careers',
-      title: 'Build your career with a team that values clarity and ownership.',
+      title: 'Build your career with a team that values clarity and ownership',
       summary:
         'ADL is a place for people who want meaningful work, direct feedback, and the chance to make a visible impact on clients and projects.',
       whyJoin: 'Why join',
-      title2: 'Join a team that moves with purpose.',
+      title2: 'Join a team that moves with purpose',
       body:
         'You will work with people who care about quality, communicate directly, and build practical solutions together.',
       benefits: [
@@ -276,7 +281,7 @@ const en = {
     },
     contact: {
       kicker: 'Contact',
-      title: "Let's talk about your next project.",
+      title: "Let's talk about your next project",
       summary:
         "Share a short note and we'll respond with the right next step. Replace the placeholder contact details with your official information when you're ready.",
       visual: {
@@ -293,11 +298,13 @@ const en = {
       form: {
         name: 'Name',
         email: 'Email',
+        phone: 'Phone',
         company: 'Company',
         subject: 'Subject',
         message: 'Message',
         namePlaceholder: 'Your name',
         emailPlaceholder: 'you@example.com',
+        phonePlaceholder: '+84 123 456 789',
         companyPlaceholder: 'Your company',
         subjectPlaceholder: 'How can we help?',
         messagePlaceholder: 'Tell us a little about what you need.',
@@ -308,7 +315,7 @@ const en = {
     },
     mission: {
       kicker: 'Mission',
-      title: 'Our mission is to empower confident business decisions.',
+      title: 'Our mission is to empower confident business decisions',
       summary:
         'We provide clear, practical legal advice that helps businesses make confident decisions through flexible, business-focused solutions delivered with professionalism and integrity.',
       visual: {
@@ -339,7 +346,7 @@ const en = {
     },
     vision: {
       kicker: 'Vision',
-      title: "Our vision is to become one of Vietnam's most trusted legal advisors.",
+      title: "Our vision is to become one of Vietnam's most trusted legal advisors",
       summary:
         'We strive to be recognized for legal excellence, practical thinking, and the highest professional standards while contributing to a stronger and more sustainable business community.',
       visual: {
@@ -846,8 +853,8 @@ const vi = {
     },
   },
   home: {
-    clientsKicker: 'Đối tác',
-    clientsTitle: 'Khách hàng tiêu biểu',
+    clientsKicker: 'Khách hàng tiêu biểu',
+    clientsTitle: '',
     clientsNote: '',
     clients: [],
   },
@@ -863,7 +870,7 @@ const vi = {
     },
     { label: 'Đội ngũ nhân sự', path: '/people' },
     {
-      label: 'Dịch vụ cung cấp',
+      label: 'Dịch vụ',
       path: '/services',
       submenuClassName: 'nav-submenu-services',
       children: [
@@ -883,7 +890,7 @@ const vi = {
   homeSlides: [
     {
       status: '01',
-      title: 'Chúng tôi tin rằng vai trò của Luật sư không chỉ là đưa ra ý kiến pháp lý đúng quy định, mà còn là đồng hành cùng khách hàng để tìm ra những giải pháp linh hoạt, phù hợp với thực tiễn kinh doanh, trên nền tảng các chuẩn mực pháp lý vững chắc và trách nhiệm nghề nghiệp cao nhất.',
+      title: 'Chúng tôi tin rằng vai trò của Luật sư không chỉ là đưa ra ý kiến pháp lý đúng quy định, mà còn là đồng hành cùng khách hàng để tìm ra những giải pháp linh hoạt, phù hợp với thực tiễn kinh doanh, trên nền tảng các chuẩn mực pháp lý vững chắc và trách nhiệm nghề nghiệp cao nhất',
       compact: false,
       size: 'large',
     },
@@ -905,16 +912,21 @@ const vi = {
   pages: {
     about: {
       kicker: 'Về công ty',
-      title: 'Dịch vụ pháp lý toàn diện được định hình bởi tư duy thương mại.',
+      title: 'Dịch vụ pháp lý toàn diện được định hình bởi tư duy thương mại',
       summary:
         'AD Legal là tập hợp của các Luật sư và Chuyên gia tài chính giàu kinh nghiệm, cùng chung mục tiêu mang đến cho khách hàng những dịch vụ pháp lý toàn diện, hiệu quả và mang tính thực tiễn cao.',
       introLabel: 'Về công ty',
-      introTitle: 'Luật sư và chuyên gia tài chính giàu kinh nghiệm làm việc như một đội ngũ thống nhất.',
+      introTitle: 'Luật sư và chuyên gia tài chính giàu kinh nghiệm làm việc như một đội ngũ thống nhất',
       introParagraphs: [
         'AD Legal là tập hợp của các Luật sư và Chuyên gia tài chính giàu kinh nghiệm, cùng chung mục tiêu mang đến cho khách hàng những dịch vụ pháp lý toàn diện, hiệu quả và mang tính thực tiễn cao.',
         'Chúng tôi kết hợp tư duy pháp lý chuẩn mực với góc nhìn tài chính – kinh doanh nhằm cung cấp các giải pháp linh hoạt, phù hợp với nhu cầu đa dạng của doanh nghiệp trong môi trường kinh doanh không ngừng thay đổi.',
         'Với tinh thần chuyên nghiệp, tận tâm và sáng tạo, AD Legal cam kết đồng hành cùng khách hàng trong việc quản trị rủi ro pháp lý, tối ưu hóa hiệu quả hoạt động và xây dựng nền tảng phát triển bền vững.',
       ],
+      brochure: {
+        textBefore: 'Vui lòng xem hồ sơ năng lực của chúng tôi ',
+        linkText: 'tại đây',
+        url: '/data/Brochure%20AD%20Legal_VN.pdf',
+      },
       valuesHeading: 'Giá trị cốt lõi',
       values: [
         {
@@ -934,7 +946,7 @@ const vi = {
         },
       ],
       exploreKicker: 'Khám phá AD Legal',
-      exploreTitle: 'Tìm hiểu thêm về định hướng, công việc và các cập nhật của chúng tôi.',
+      exploreTitle: 'Tìm hiểu thêm về định hướng, công việc và các cập nhật của chúng tôi',
       sections: [
         {
           id: 'news',
@@ -963,18 +975,18 @@ const vi = {
       ],
     },
     capabilities: {
-      kicker: 'Dịch vụ cung cấp',
-      title: 'Đồng hành trong những vấn đề quan trọng nhất.',
+      kicker: 'Dịch vụ',
+      title: 'Đồng hành trong những vấn đề quan trọng nhất',
       summary: 'ADL kết hợp đúng người, đúng nhịp độ và đúng mức độ chi tiết cho từng vụ việc.',
       notFound: 'Không tìm thấy dịch vụ.',
       overview: 'Tổng quan',
       coreServices: 'Các dịch vụ tiêu biểu',
       selectedProjects: 'Dự án tiêu biểu',
-      backToList: 'Quay lại Dịch vụ cung cấp',
+      backToList: 'Quay lại Dịch vụ',
     },
     people: {
       kicker: 'Đội ngũ nhân sự',
-      title: 'Đội ngũ nhân sự',
+      title: 'Đội ngũ nhân sự của AD Legal bao gồm các luật sư và chuyên gia có kinh nghiệm chuyên sâu',
       summary: 'Đội ngũ nhân sự của AD Legal bao gồm các luật sư và chuyên gia có kinh nghiệm chuyên sâu.',
       notFound: 'Không tìm thấy hồ sơ',
       notFoundSummary: 'Không tìm thấy thành viên được yêu cầu.',
@@ -987,7 +999,7 @@ const vi = {
     },
     knowledge: {
       kicker: 'Góc nhìn',
-      title: 'Những bài viết ngắn với giá trị thực tiễn.',
+      title: 'Những bài viết ngắn với giá trị thực tiễn',
       summary: 'Các góc nhìn pháp lý kịp thời giúp bạn đưa ra quyết định kinh doanh có cơ sở.',
       visual: {
         label: 'Ô ảnh góc nhìn',
@@ -1058,7 +1070,7 @@ const vi = {
     },
     contact: {
       kicker: 'Liên hệ',
-      title: 'Hãy cho chúng tôi biết vấn đề pháp lý của bạn.',
+      title: 'Hãy cho chúng tôi biết vấn đề pháp lý của bạn',
       summary:
         'Hãy để lại vài dòng ngắn, chúng tôi sẽ phản hồi với bước tiếp theo phù hợp.',
       details: [
@@ -1070,11 +1082,13 @@ const vi = {
       form: {
         name: 'Họ tên',
         email: 'Email',
+        phone: 'Số điện thoại',
         company: 'Công ty',
         subject: 'Tiêu đề',
         message: 'Nội dung',
         namePlaceholder: 'Họ tên của bạn',
         emailPlaceholder: 'ban@vidu.com',
+        phonePlaceholder: '090 123 4567',
         companyPlaceholder: 'Công ty của bạn',
         subjectPlaceholder: 'Chúng tôi có thể hỗ trợ gì?',
         messagePlaceholder: 'Hãy cho chúng tôi biết đôi chút về nhu cầu của bạn.',
@@ -1085,7 +1099,7 @@ const vi = {
     },
     mission: {
       kicker: 'Sứ mệnh',
-      title: 'Sứ mệnh của chúng tôi là trở thành đối tác pháp lý đáng tin cậy của khách hàng.',
+      title: 'Sứ mệnh của chúng tôi là trở thành đối tác pháp lý đáng tin cậy của khách hàng',
       summary:
         'Sứ mệnh của AD Legal là trở thành đối tác pháp lý đáng tin cậy của khách hàng, mang đến những tư vấn rõ ràng, kịp thời và có giá trị thực tiễn.',
       heading: 'Điều thúc đẩy công việc của chúng tôi',
@@ -1111,7 +1125,7 @@ const vi = {
     },
     vision: {
       kicker: 'Tầm nhìn',
-      title: 'Tầm nhìn của chúng tôi là trở thành đơn vị tư vấn uy tín tại Việt Nam.',
+      title: 'Tầm nhìn của chúng tôi là trở thành đơn vị tư vấn uy tín tại Việt Nam',
       summary:
         'AD Legal đặt mục tiêu trở thành đơn vị tư vấn uy tín tại Việt Nam, được khách hàng và đối tác tin tưởng lựa chọn nhờ chất lượng chuyên môn vững chắc, tư duy giải pháp linh hoạt và chuẩn mực nghề nghiệp cao.',
       heading: 'Chúng tôi đang hướng tới điều gì?',
@@ -1500,8 +1514,8 @@ const cn = {
     },
   },
   home: {
-    clientsKicker: '合作伙伴',
-    clientsTitle: '精选客户标志',
+    clientsKicker: '精选客户标志',
+    clientsTitle: '',
     clientsNote: '',
     clients: [],
   },
@@ -1574,6 +1588,11 @@ const cn = {
         '结合扎实的法律专业知识与财务及商业洞察，我们针对动态市场中企业不断变化的需求，制定灵活定制的解决方案。',
         '在专业、奉献和创新的指引下，AD Legal 致力于支持客户管理法律风险、提升运营效率，并为长期可持续增长奠定坚实基础。',
       ],
+      brochure: {
+        textBefore: '請參閱我們的公司簡介：',
+        linkText: '點擊此處',
+        url: '/data/Brochure%20AD%20Legal_%20EN.pdf',
+      },
       valuesHeading: '我们的核心价值',
       values: [
         {
@@ -1745,11 +1764,13 @@ const cn = {
       form: {
         name: '姓名',
         email: '电子邮箱',
+        phone: '电话号码',
         company: '公司名称',
         subject: '主题',
         message: '留言内容',
         namePlaceholder: '您的姓名',
         emailPlaceholder: 'you@example.com',
+        phonePlaceholder: '+84 123 456 789',
         companyPlaceholder: '您的公司',
         subjectPlaceholder: '我们能为您提供什么帮助？',
         messagePlaceholder: '请简单说明您的需求。',

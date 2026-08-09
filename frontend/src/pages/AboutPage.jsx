@@ -17,20 +17,33 @@ export default function AboutPage() {
         featured
         backdropImage={pageBackdrops.about}
         {...pageHeaderThemes.about}
-        kickerColor = 'white'
-        titleColor = 'white'
-        summaryColor = 'white'
+        kickerColor='white'
+        titleColor='white'
+        summaryColor='white'
       />
 
       <section className="section section-light reveal">
         <div className="container about-grid">
           <article className="content-card">
             <p className="content-label">{page.introLabel}</p>
-            <h3>{page.introTitle}</h3>
+            {/* <h3>{page.introTitle}</h3> */}
             <div className="about-copy">
               {page.introParagraphs.map((paragraph) => (
                 <p key={paragraph}>{paragraph}</p>
               ))}
+              {page.brochure ? (
+                <p className="brochure-link-line">
+                  {page.brochure.textBefore}
+                  <a
+                    href={page.brochure.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="brochure-inline-link"
+                  >
+                    {page.brochure.linkText}
+                  </a>
+                </p>
+              ) : null}
             </div>
           </article>
 

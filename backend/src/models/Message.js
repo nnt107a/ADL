@@ -44,6 +44,11 @@ const messageSchema = new mongoose.Schema(
       trim: true,
       default: '',
     },
+    phone: {
+      type: String,
+      trim: true,
+      default: '',
+    },
     subject: {
       type: String,
       trim: true,
