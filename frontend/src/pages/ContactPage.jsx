@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import PageHeader from '../components/PageHeader';
+import PageSEO from '../components/PageSEO';
 import { useLocale } from '../context/LocaleContext';
 import { pageBackdrops, pageHeaderThemes } from '../data/pageAssets';
 
@@ -8,7 +9,7 @@ export default function ContactPage() {
   const [feedback, setFeedback] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
-  const { copy } = useLocale();
+  const { copy, locale } = useLocale();
   const page = copy.pages.contact;
 
   useEffect(() => {
@@ -73,6 +74,12 @@ export default function ContactPage() {
 
   return (
     <>
+      <PageSEO
+        title={page.title || 'Contact Us'}
+        description={page.summary || 'Get in touch with AD Legal. Our legal and financial advisory team is ready to assist you. Contact us by phone, email, or message form.'}
+        url="https://adlegal.vn/contact"
+        locale={locale}
+      />
       <PageHeader
         kicker={page.kicker}
         title={page.title}

@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react';
 import PageHeader from '../components/PageHeader';
+import PageSEO from '../components/PageSEO';
 import { Link } from 'react-router-dom';
 import LoadingState from '../components/LoadingState';
 import ErrorState from '../components/ErrorState';
@@ -74,6 +75,12 @@ export default function KnowledgePage() {
 
   return (
     <>
+      <PageSEO
+        title={page.title || 'Insights & Legal Knowledge'}
+        description={page.summary || 'Explore AD Legal\'s legal insights, expert analysis, and knowledge articles on Vietnamese law, finance, and business.'}
+        url="https://adlegal.vn/insight"
+        locale={locale}
+      />
       <PageHeader
         kicker={page.kicker}
         title={page.title}

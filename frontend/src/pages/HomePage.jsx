@@ -1,14 +1,20 @@
 import HeroSlider from '../components/HeroSlider';
+import PageSEO from '../components/PageSEO';
 import { useLocale } from '../context/LocaleContext';
 import { homePartnerLogos } from '../data/pageAssets';
 
 export default function HomePage() {
-  const { copy } = useLocale();
+  const { copy, locale } = useLocale();
   const home = copy.home;
   const clientRail = [...homePartnerLogos, ...homePartnerLogos];
 
   return (
     <>
+      <PageSEO
+        description="AD Legal is a multi-disciplinary legal and financial advisory firm in Vietnam. We provide integrated legal, tax, and finance solutions to businesses."
+        url="https://adlegal.vn"
+        locale={locale}
+      />
       <HeroSlider slides={copy.homeSlides} />
 
       <section className="section section-alt reveal home-clients-section">

@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import PageHeader from '../components/PageHeader';
+import PageSEO from '../components/PageSEO';
 import LoadingState from '../components/LoadingState';
 import ErrorState from '../components/ErrorState';
 import useApiResource from '../hooks/useApiResource';
@@ -37,6 +38,12 @@ export default function NewsPage() {
 
   return (
     <>
+      <PageSEO
+        title={page.title || 'News & Updates'}
+        description={page.summary || 'Stay up to date with the latest news, announcements, and updates from AD Legal.'}
+        url="https://adlegal.vn/news"
+        locale={locale}
+      />
       <PageHeader
         kicker={page.kicker}
         title={page.title}

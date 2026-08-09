@@ -1,15 +1,22 @@
 import { Link } from 'react-router-dom';
 import PageHeader from '../components/PageHeader';
+import PageSEO from '../components/PageSEO';
 import MediaPlaceholder from '../components/MediaPlaceholder';
 import { useLocale } from '../context/LocaleContext';
 import { pageBackdrops, pageHeaderThemes } from '../data/pageAssets';
 
 export default function AboutPage() {
-  const { copy } = useLocale();
+  const { copy, locale } = useLocale();
   const page = copy.pages.about;
 
   return (
     <>
+      <PageSEO
+        title={page.title || 'About AD Legal'}
+        description={page.summary || 'Learn about AD Legal — our story, values, mission, and the team behind Vietnam\'s integrated legal and financial advisory firm.'}
+        url="https://adlegal.vn/about"
+        locale={locale}
+      />
       <PageHeader
         kicker={page.kicker}
         title={page.title}

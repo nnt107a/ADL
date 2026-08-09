@@ -1,6 +1,7 @@
 import { Fragment, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import PageHeader from '../components/PageHeader';
+import PageSEO from '../components/PageSEO';
 import LoadingState from '../components/LoadingState';
 import ErrorState from '../components/ErrorState';
 import useApiResource from '../hooks/useApiResource';
@@ -112,6 +113,15 @@ export default function NewsDetailPage() {
 
   return (
     <>
+      <PageSEO
+        title={item?.title}
+        description={item?.excerpt}
+        image={item?.imageUrl ? resolveImageUrl(item.imageUrl) : undefined}
+        url={`https://adlegal.vn/news/${slug}`}
+        type="article"
+        publishedAt={item?.publishedAt}
+        locale={locale}
+      />
       <PageHeader
         kicker={page.kicker}
         summary={item?.publishedAt ? `${page.publishedPrefix} ${formatPublishedAt(item.publishedAt)}` : page.apiSummary}

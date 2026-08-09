@@ -1,13 +1,20 @@
 import PageHeader from '../components/PageHeader';
+import PageSEO from '../components/PageSEO';
 import ServiceCard from '../components/ServiceCard';
 import { useLocale } from '../context/LocaleContext';
 import { pageBackdrops, pageHeaderThemes } from '../data/pageAssets';
 
 export default function CapabilitiesPage() {
-  const { copy } = useLocale();
+  const { copy, locale } = useLocale();
 
   return (
     <>
+      <PageSEO
+        title={copy.pages.capabilities.title || 'Our Capabilities'}
+        description={copy.pages.capabilities.summary || 'Explore AD Legal\'s legal and financial service capabilities: corporate law, M&A, real estate, dispute resolution, tax advisory, and more.'}
+        url="https://adlegal.vn/capabilities"
+        locale={locale}
+      />
       <PageHeader
         kicker={copy.pages.capabilities.kicker}
         title={copy.pages.capabilities.title}
