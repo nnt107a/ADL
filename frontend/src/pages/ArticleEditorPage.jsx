@@ -400,10 +400,6 @@ export default function ArticleEditorPage({ kind, action = 'create' }) {
       }
     }
 
-    if (editor) {
-      data.set(`content_${activeLanguage}`, drafts[activeLanguage].content || editor.getHTML() || '');
-    }
-
     if (isInsight) {
       data.set('filters', JSON.stringify(normalizeServiceSelections(filters, serviceOptions)));
     } else {
@@ -461,7 +457,7 @@ export default function ArticleEditorPage({ kind, action = 'create' }) {
         </RouterLink>
       </PageHeader>
 
-      <section className="section section-light reveal is-visible">
+      <section className="section section-light">
         <div className="container admin-editor-shell">
           {loadingExisting ? <LoadingState label={`Loading ${kind} for editing`} /> : null}
           {existingError ? <ErrorState title={`Unable to load ${kind}`} message={existingError} /> : null}

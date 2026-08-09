@@ -9,6 +9,7 @@ import { useLocale } from '../context/LocaleContext';
 import FilterChips from '../components/FilterChips';
 import { pageBackdrops, pageHeaderThemes } from '../data/pageAssets';
 import { getServiceLabel, getServiceOptions, normalizeServiceSelections } from '../utils/serviceFilters';
+import { resolveImageUrl } from '../utils/imageUrl';
 
 function formatPublishedAt(value) {
   if (!value) {
@@ -116,20 +117,15 @@ export default function KnowledgePage() {
                   {filteredArticles.map((article) => (
                     <article className="insight-card" key={article._id}>
                       <div className="insight-meta">
-                        <span>{article.type || 'Insight'}</span>
                         <time>{formatPublishedAt(article.publishedAt)}</time>
                       </div>
-                      <h3>{article.title}</h3>
-                      <p>{article.excerpt}</p>
-                      {normalizeServiceSelections(article.filters || [], copy.data.services).length > 0 ? (
-                        <div className="insight-card-filters" aria-label="Insight filters">
-                          {normalizeServiceSelections(article.filters || [], copy.data.services).map((filter) => (
-                            <span className="insight-card-filter" key={`${article._id}-${filter}`}>
-                              {getServiceLabel(filter, copy.data.services)}
-                            </span>
-                          ))}
+                      {article.imageUrl ? (
+                        <div className="insight-card-image">
+                          <img src={resolveImageUrl(article.imageUrl)} alt="" />
                         </div>
                       ) : null}
+                      <h3>{article.title}</h3>
+                      <p>{article.excerpt}</p>
                       <Link to={`/insight/${article.slug}`}>{page.readMore}</Link>
                     </article>
                   ))}

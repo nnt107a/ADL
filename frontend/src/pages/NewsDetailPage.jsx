@@ -114,7 +114,6 @@ export default function NewsDetailPage() {
     <>
       <PageHeader
         kicker={page.kicker}
-        title={item?.title || page.titleFallback}
         summary={item?.publishedAt ? `${page.publishedPrefix} ${formatPublishedAt(item.publishedAt)}` : page.apiSummary}
         rightAlignedSummary={true}
       >
@@ -151,10 +150,7 @@ export default function NewsDetailPage() {
         {!loading && !error && item ? (
           <div className="container value-stack">
             <article className="content-card">
-              <p className="content-label">{item.type || 'News'}</p>
-              {item.excerpt ? <p className="state-copy">{item.excerpt}</p> : null}
-
-              {item.imageUrl && !String(item.content || '').includes('{{image}}') ? <img src={resolveImageUrl(item.imageUrl)} alt="" /> : null}
+              <h1 className="news-detail-title">{item.title}</h1>
 
               {item.content ? (
                 looksLikeHtml(item.content) ? (

@@ -93,7 +93,7 @@ const en = {
       status: '02',
       title:
         'AD Legal provides us with professional, practical, and always timely legal support for every issue that arises. The lawyers not only advise solutions in compliance with the law, but also understand our business operations, helping us manage risk effectively and confidently expand our activities in a sustainable way.',
-      description: 'Pham Thanh Quang - CEO, Da Lat Vegetable Company',
+      description: 'Pham Thanh Quang - CEO, Quang Vinh Vegetable Company',
       compact: true,
       size: 'small',
     },
@@ -210,7 +210,7 @@ const en = {
       loading: 'Loading insights',
       error: 'Unable to load insights',
       emptyTitle: 'No insights yet',
-      emptyCopy: 'Published insight articles will appear here.',
+      emptyCopy: '',
       readMore: 'Read more',
       filterTitle: 'Filter insights',
       filterAll: 'All insights',
@@ -243,8 +243,9 @@ const en = {
       loading: 'Loading news',
       error: 'Unable to load news',
       emptyTitle: 'No news yet',
-      emptyCopy: 'Create a news item via the admin endpoint to see it here.',
+      emptyCopy: '',
       publishedPrefix: 'Published',
+      readMore: 'Read more',
     },
     newsDetail: {
       kicker: 'News',
@@ -676,7 +677,7 @@ const en = {
         ],
         languages: ['Vietnamese', 'English'],
         contact: {
-          phone: '(+84) 969 451 906',
+          phone: '(+84) 969 638 248',
           email: 'anh.bui@adlegal.vn',
         },
       },
@@ -699,7 +700,7 @@ const en = {
         ],
         languages: ['Vietnamese', 'English'],
         contact: {
-          phone: '(+84) 969 451 906',
+          phone: '(+84) 846 123 119',
           email: 'loc.nguyen@adlegal.vn',
         },
       },
@@ -721,7 +722,7 @@ const en = {
         ],
         languages: ['Vietnamese', 'English'],
         contact: {
-          phone: '(+84) 969 451 906',
+          phone: '(+84) 988 278 810',
           email: 'minh.nguyen@adlegal.vn',
         },
       },
@@ -738,7 +739,7 @@ const en = {
         education: ['B.A. in Accounting, Ho Chi Minh City University of Economics', 'Certified Chief Accountant'],
         languages: ['Vietnamese', 'English'],
         contact: {
-          phone: '(+84) 969 451 906',
+          phone: '(+84) 982 845 934',
           email: 'khoa.trinh@adlegal.vn',
         },
       },
@@ -761,7 +762,7 @@ const en = {
         ],
         languages: ['Vietnamese', 'English'],
         contact: {
-          phone: '(+84) 969 451 906',
+          phone: '(+84) 905 058 400',
           email: 'tan.doan@adlegal.vn',
         },
       },
@@ -781,7 +782,7 @@ const en = {
         ],
         languages: ['Vietnamese', 'English'],
         contact: {
-          phone: '(+84) 969 451 906',
+          phone: '(+84) 346 902 255',
           email: 'nhung.lai@adlegal.vn',
         },
       },
@@ -798,7 +799,7 @@ const en = {
         education: ['B.Eng. in Software Engineering & Data Science, Ho Chi Minh City University of Science (HCMUS)'],
         languages: ['Vietnamese', 'English', 'Japanese'],
         contact: {
-          phone: '(+84) 969 451 906',
+          phone: '(+84) 865 275 817',
           email: 'tan.nguyen@adlegal.vn',
         },
       },
@@ -849,7 +850,7 @@ const vi = {
       license: 'Giấy phép hoạt động số: 79.2026.02.5495/TP/DKHD',
       address: '428/4 Hoàng Ngân, Phường Phú Định, Thành phố Hồ Chí Minh, Việt Nam',
       email: 'counsel@adlegal.vn',
-      phone: '(+84) 969 451 906',
+      phone: '+84 87 844 7664',
     },
   },
   home: {
@@ -890,7 +891,7 @@ const vi = {
   homeSlides: [
     {
       status: '01',
-      title: 'Chúng tôi tin rằng vai trò của Luật sư không chỉ là đưa ra ý kiến pháp lý đúng quy định, mà còn là đồng hành cùng khách hàng để tìm ra những giải pháp linh hoạt, phù hợp với thực tiễn kinh doanh, trên nền tảng các chuẩn mực pháp lý vững chắc và trách nhiệm nghề nghiệp cao nhất',
+      title: 'Chúng tôi cam kết cung cấp cho khách hàng các dịch vụ pháp lý chất lượng cao nhất',
       compact: false,
       size: 'large',
     },
@@ -1010,7 +1011,7 @@ const vi = {
       loading: 'Đang tải bài viết',
       error: 'Không thể tải góc nhìn',
       emptyTitle: 'Chưa có bài viết nào',
-      emptyCopy: 'Các bài viết góc nhìn đã đăng sẽ xuất hiện tại đây.',
+      emptyCopy: '',
       filterTitle: 'Bộ lọc',
       filterAll: 'Tất cả bài viết',
       filterEmpty: 'Không tìm thấy bài viết nào',
@@ -1036,8 +1037,9 @@ const vi = {
       loading: 'Đang tải tin tức',
       error: 'Không thể tải tin tức',
       emptyTitle: 'Chưa có tin tức nào',
-      emptyCopy: 'Tạo một tin tức qua endpoint quản trị để thấy nó ở đây.',
+      emptyCopy: '',
       publishedPrefix: 'Đã đăng',
+      readMore: 'Đọc thêm',
     },
     newsDetail: {
       kicker: 'Tin tức',
@@ -1075,7 +1077,7 @@ const vi = {
         'Hãy để lại vài dòng ngắn, chúng tôi sẽ phản hồi với bước tiếp theo phù hợp.',
       details: [
         { label: 'Yêu cầu chung', value: 'counsel@adlegal.vn', href: 'mailto:counsel@adlegal.vn' },
-        { label: 'Điện thoại', value: '(+84) 969 451 906', href: 'tel:+84969451906' },
+        { label: 'Điện thoại', value: '(+84) 878 447 664', href: 'tel:+84878447664' },
         { label: 'Văn phòng', value: '428/4 Hoàng Ngân, Phường Phú Định, Thành phố Hồ Chí Minh, Việt Nam' },
         { label: 'Giờ làm việc', value: 'Thứ Hai đến Thứ Sáu • 9h đến 18h' },
       ],
@@ -1559,7 +1561,7 @@ const cn = {
       status: '02',
       title:
         'AD Legal 为我们在每一个出现的法律问题上提供了专业、实用且及时的支持。律师不仅提供符合法律规定的解决方案，还深入理解我们的商业运营，帮助我们有效管理风险并充满信心实现可持续扩展。',
-      description: 'Pham Thanh Quang - 大叻蔬菜公司 CEO',
+      description: 'Pham Thanh Quang – 執行長，Quang Vinh 蔬菜公司',
       compact: true,
       size: 'small',
     },
@@ -1676,7 +1678,7 @@ const cn = {
       loading: '正在加载洞察文章',
       error: '无法加载洞察文章',
       emptyTitle: '暂无洞察文章',
-      emptyCopy: '发布的洞察文章将显示在这里。',
+      emptyCopy: '',
       readMore: '阅读全文',
       filterTitle: '筛选洞察',
       filterAll: '全部洞察',
@@ -1709,8 +1711,9 @@ const cn = {
       loading: '正在加载新闻',
       error: '无法加载新闻',
       emptyTitle: '暂无新闻',
-      emptyCopy: '通过管理员后台创建新闻项目后将在此显示。',
+      emptyCopy: '',
       publishedPrefix: '发布于',
+      readMore: '閱讀更多',
     },
     newsDetail: {
       kicker: '新闻动态',

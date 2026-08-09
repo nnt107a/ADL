@@ -1,4 +1,4 @@
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import PageHeader from '../components/PageHeader';
 import LoadingState from '../components/LoadingState';
 import ErrorState from '../components/ErrorState';
@@ -6,6 +6,7 @@ import useApiResource from '../hooks/useApiResource';
 import useAdminSession from '../hooks/useAdminSession';
 import { useLocale } from '../context/LocaleContext';
 import { pageBackdrops, pageHeaderThemes } from '../data/pageAssets';
+import { resolveImageUrl } from '../utils/imageUrl';
 
 function formatPublishedAt(value) {
   if (!value) {
@@ -26,7 +27,6 @@ function formatPublishedAt(value) {
 }
 
 export default function NewsPage() {
-  const navigate = useNavigate();
   const { isAdmin, checking } = useAdminSession();
   const { copy, locale } = useLocale();
   const page = copy.pages.news;
@@ -57,31 +57,26 @@ export default function NewsPage() {
         ) : null}
       </PageHeader>
 
-      <section className="section section-light reveal">
+      <section className="section section-alt reveal">
         {loading ? <LoadingState label={page.loading} /> : null}
         {error ? <ErrorState title={page.error} message={error} /> : null}
 
         {!loading && !error ? (
           items.length > 0 ? (
-            <div className="container value-stack">
+            <div className="container cards-grid insights-grid">
               {items.map((item) => (
-                <article
-                  className="content-card"
-                  key={item._id}
-                  role="link"
-                  tabIndex={0}
-                  onClick={() => navigate(`/news/${item.slug}`)}
-                  onKeyDown={(event) => {
-                    if (event.key === 'Enter' || event.key === ' ') {
-                      event.preventDefault();
-                      navigate(`/news/${item.slug}`);
-                    }
-                  }}
-                >
-                  <p className="content-label">{item.type || 'News'}</p>
+                <article className="insight-card" key={item._id}>
+                  <div className="insight-meta">
+                    <time>{formatPublishedAt(item.publishedAt)}</time>
+                  </div>
+                  {item.imageUrl ? (
+                    <div className="insight-card-image">
+                      <img src={resolveImageUrl(item.imageUrl)} alt="" />
+                    </div>
+                  ) : null}
                   <h3>{item.title}</h3>
-                  {item.publishedAt ? <p className="state-copy">{`${page.publishedPrefix} ${formatPublishedAt(item.publishedAt)}`}</p> : null}
                   <p>{item.excerpt}</p>
+                  <Link to={`/news/${item.slug}`}>{page.readMore || 'Read more'}</Link>
                 </article>
               ))}
             </div>

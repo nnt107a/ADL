@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { EditorContent, NodeViewWrapper, ReactNodeViewRenderer, useEditor } from '@tiptap/react';
 import { Extension } from '@tiptap/core';
 import StarterKit from '@tiptap/starter-kit';
@@ -252,15 +252,368 @@ const PersistentTextAlign = Extension.create({
   },
 });
 
+// Extension to support paragraph/block-level indents
+const CustomIndent = Extension.create({
+  name: 'customIndent',
+  addGlobalAttributes() {
+    return [
+      {
+        types: ['paragraph', 'heading', 'blockquote', 'listItem'],
+        attributes: {
+          indent: {
+            default: null,
+            parseHTML: (element) => element.style.marginLeft || null,
+            renderHTML: (attributes) => {
+              if (!attributes.indent || attributes.indent === '0rem' || attributes.indent === '0px') return {};
+              return {
+                style: `margin-left: ${attributes.indent};`,
+              };
+            },
+          },
+        },
+      },
+    ];
+  },
+  addCommands() {
+    return {
+      setIndent: (indentValue) => ({ tr, state, dispatch }) => {
+        const { selection } = state;
+        const { from, to } = selection;
+        let modified = false;
+
+        tr.doc.nodesBetween(from, to, (node, pos) => {
+          if (['paragraph', 'heading', 'blockquote', 'listItem'].includes(node.type.name)) {
+            tr.setNodeMarkup(pos, undefined, {
+              ...node.attrs,
+              indent: indentValue,
+            });
+            modified = true;
+          }
+        });
+
+        if (!modified && state.selection.$from) {
+          for (let d = state.selection.$from.depth; d >= 0; d--) {
+            const parentNode = state.selection.$from.node(d);
+            if (['paragraph', 'heading', 'blockquote', 'listItem'].includes(parentNode.type.name)) {
+              const parentPos = state.selection.$from.before(d);
+              tr.setNodeMarkup(parentPos, undefined, {
+                ...parentNode.attrs,
+                indent: indentValue,
+              });
+              modified = true;
+              break;
+            }
+          }
+        }
+
+        if (modified && dispatch) {
+          dispatch(tr);
+        }
+        return true;
+      },
+    };
+  },
+});
+
+// Horizontal Ruler Component for MS Word alignment & indent control
+function WordHorizontalRuler({ editor, indentLeft, setIndentLeft, indentRight, setIndentRight, headerOffset, isParentFixed }) {
+  const scaleRef = useRef(null);
+  const containerRef = useRef(null);
+  const [containerRect, setContainerRect] = useState(null);
+
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+
+    function sync() {
+      const rect = el.getBoundingClientRect();
+      setContainerRect({ left: rect.left, width: rect.width, top: rect.top });
+    }
+
+    sync();
+    const ro = new ResizeObserver(sync);
+    ro.observe(el);
+    window.addEventListener('scroll', sync, { passive: true });
+    window.addEventListener('resize', sync, { passive: true });
+
+    return () => {
+      ro.disconnect();
+      window.removeEventListener('scroll', sync);
+      window.removeEventListener('resize', sync);
+    };
+  }, []);
+  const currentAlign = editor?.isActive({ textAlign: 'center' })
+    ? 'center'
+    : editor?.isActive({ textAlign: 'right' })
+    ? 'right'
+    : editor?.isActive({ textAlign: 'justify' })
+    ? 'justify'
+    : 'left';
+
+  const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17];
+
+  useEffect(() => {
+    if (!editor) return;
+    function updateActiveIndent() {
+      const { selection } = editor.state;
+      const { $from } = selection;
+      let activeIndent = '0rem';
+      for (let d = $from.depth; d >= 0; d--) {
+        const node = $from.node(d);
+        if (node?.attrs?.indent) {
+          activeIndent = node.attrs.indent;
+          break;
+        }
+      }
+      setIndentLeft(activeIndent);
+    }
+    editor.on('selectionUpdate', updateActiveIndent);
+    return () => {
+      editor.off('selectionUpdate', updateActiveIndent);
+    };
+  }, [editor, setIndentLeft]);
+
+  function applyNodeIndent(val) {
+    setIndentLeft(val);
+    if (editor?.commands?.setIndent) {
+      editor.commands.setIndent(val);
+    }
+  }
+
+  function handleIncreaseIndent() {
+    const num = parseFloat(indentLeft) || 0;
+    const newRem = `${Math.min(num + 0.75, 4.5)}rem`;
+    applyNodeIndent(newRem);
+  }
+
+  function handleDecreaseIndent() {
+    const num = parseFloat(indentLeft) || 0;
+    const newRem = `${Math.max(num - 0.75, 0)}rem`;
+    applyNodeIndent(newRem);
+  }
+
+  function handleResetIndent() {
+    applyNodeIndent('0rem');
+    setIndentRight('0rem');
+  }
+
+  function handleMouseDownLeft(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    if (!scaleRef.current) return;
+
+    const scaleRect = scaleRef.current.getBoundingClientRect();
+
+    function onMouseMove(moveEvt) {
+      const offsetX = moveEvt.clientX - scaleRect.left;
+      const ratio = Math.max(0, Math.min(offsetX / scaleRect.width, 0.45));
+      const remVal = `${(ratio * 10).toFixed(2)}rem`;
+      applyNodeIndent(remVal);
+    }
+
+    function onMouseUp() {
+      window.removeEventListener('mousemove', onMouseMove);
+      window.removeEventListener('mouseup', onMouseUp);
+    }
+
+    window.addEventListener('mousemove', onMouseMove);
+    window.addEventListener('mouseup', onMouseUp);
+  }
+
+  function handleMouseDownRight(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    if (!scaleRef.current) return;
+
+    const scaleRect = scaleRef.current.getBoundingClientRect();
+
+    function onMouseMove(moveEvt) {
+      const offsetX = scaleRect.right - moveEvt.clientX;
+      const ratio = Math.max(0, Math.min(offsetX / scaleRect.width, 0.45));
+      const remVal = `${(ratio * 10).toFixed(2)}rem`;
+      setIndentRight(remVal);
+    }
+
+    function onMouseUp() {
+      window.removeEventListener('mousemove', onMouseMove);
+      window.removeEventListener('mouseup', onMouseUp);
+    }
+
+    window.addEventListener('mousemove', onMouseMove);
+    window.addEventListener('mouseup', onMouseUp);
+  }
+
+  function handleUnitClick(index) {
+    const remVal = `${((index / 17) * 4.5).toFixed(2)}rem`;
+    applyNodeIndent(remVal);
+  }
+
+  const rulerFixed = containerRect != null && containerRect.top <= headerOffset && isParentFixed;
+  const rulerStyle = rulerFixed
+    ? {
+        position: 'fixed',
+        top: `${headerOffset}px`,
+        left: `${containerRect.left}px`,
+        width: `${containerRect.width}px`,
+        zIndex: 110,
+        borderRadius: '10px',
+      }
+    : {};
+
+  return (
+    <>
+      {rulerFixed && <div style={{ height: containerRef.current?.offsetHeight || 60, marginBottom: '0.85rem' }} />}
+      <div className="word-ruler-container" ref={containerRef} style={rulerStyle}>
+      <div className="word-ruler-toolbar">
+        <div className="ruler-actions-left">
+          <span className="ruler-label">📐 RULER & INDENT</span>
+          <button
+            type="button"
+            className="ruler-btn"
+            title="Decrease Left Indent"
+            onClick={handleDecreaseIndent}
+          >
+            ⇤ Outdent
+          </button>
+          <button
+            type="button"
+            className="ruler-btn"
+            title="Increase Left Indent"
+            onClick={handleIncreaseIndent}
+          >
+            ⇥ Indent
+          </button>
+          <button
+            type="button"
+            className="ruler-btn"
+            title="Reset Indents"
+            onClick={handleResetIndent}
+          >
+            ↺ Reset
+          </button>
+        </div>
+
+        <div className="ruler-actions-right">
+          <span className="ruler-label">ALIGN:</span>
+          <button
+            type="button"
+            className={`ruler-btn-align ${currentAlign === 'left' ? 'is-active' : ''}`}
+            onClick={() => editor?.chain().focus().setTextAlign('left').run()}
+            title="Align Left"
+          >
+            ⇐ Left
+          </button>
+          <button
+            type="button"
+            className={`ruler-btn-align ${currentAlign === 'center' ? 'is-active' : ''}`}
+            onClick={() => editor?.chain().focus().setTextAlign('center').run()}
+            title="Align Center"
+          >
+            ⇔ Center
+          </button>
+          <button
+            type="button"
+            className={`ruler-btn-align ${currentAlign === 'right' ? 'is-active' : ''}`}
+            onClick={() => editor?.chain().focus().setTextAlign('right').run()}
+            title="Align Right"
+          >
+            ⇒ Right
+          </button>
+          <button
+            type="button"
+            className={`ruler-btn-align ${currentAlign === 'justify' ? 'is-active' : ''}`}
+            onClick={() => editor?.chain().focus().setTextAlign('justify').run()}
+            title="Justify"
+          >
+            ≡ Justify
+          </button>
+        </div>
+      </div>
+
+      <div className="word-ruler-track">
+        <div className="ruler-margin-left" />
+        <div className="ruler-active-scale" ref={scaleRef}>
+          {numbers.map((n, idx) => (
+            <div
+              key={n}
+              className="ruler-unit"
+              onClick={() => handleUnitClick(idx)}
+              title={`Click to set left indent at ${n}`}
+            >
+              <span className="ruler-number">{n}</span>
+              <span className="ruler-tick-major" />
+              <span className="ruler-tick-sub" />
+            </div>
+          ))}
+
+          <div
+            className="ruler-indent-handle handle-left"
+            style={{ left: indentLeft }}
+            onMouseDown={handleMouseDownLeft}
+            title={`Drag left triangle handle to adjust left indent (${indentLeft})`}
+          >
+            ▲
+          </div>
+          <div
+            className="ruler-indent-handle handle-right"
+            style={{ right: indentRight }}
+            onMouseDown={handleMouseDownRight}
+            title={`Drag right triangle handle to adjust right indent (${indentRight})`}
+          >
+            ▲
+          </div>
+        </div>
+        <div className="ruler-margin-right" />
+      </div>
+    </div>
+    </>
+  );
+}
+
 export default function WordRibbonEditor({ content, onChange, onUploadImage, placeholder = 'Start typing your article here...' }) {
   const [activeTab, setActiveTab] = useState('home');
   const [viewMode, setViewMode] = useState('editor'); // 'editor', 'split', 'reading'
   const [themeStyle, setThemeStyle] = useState('corporate'); // 'corporate', 'editorial', 'modern'
   const [canvasWidth, setCanvasWidth] = useState('standard'); // 'standard', 'wide', 'full'
   const [lineSpacing, setLineSpacing] = useState('normal'); // 'normal', 'compact', 'relaxed'
+  const [indentLeft, setIndentLeft] = useState('0rem');
+  const [indentRight, setIndentRight] = useState('0rem');
   const [previewDark, setPreviewDark] = useState(false);
   const [showSymbols, setShowSymbols] = useState(false);
   const [, setTick] = useState(0);
+
+  // Fixed-position ribbon tracking
+  const shellRef = useRef(null);
+  const ribbonRef = useRef(null);
+  const [shellRect, setShellRect] = useState(null);
+  const [ribbonHeight, setRibbonHeight] = useState(0);
+
+  useEffect(() => {
+    const shell = shellRef.current;
+    const ribbon = ribbonRef.current;
+    if (!shell) return;
+
+    function sync() {
+      const rect = shell.getBoundingClientRect();
+      const rawHeight = getComputedStyle(document.documentElement).getPropertyValue('--header-stack-height').trim();
+      const headerPx = rawHeight ? parseFloat(rawHeight) : 130;
+      setShellRect({ left: rect.left, width: rect.width, top: rect.top, headerPx });
+      if (ribbonRef.current) setRibbonHeight(ribbonRef.current.offsetHeight);
+    }
+
+    sync();
+    const ro = new ResizeObserver(sync);
+    ro.observe(shell);
+    if (ribbon) ro.observe(ribbon);
+    window.addEventListener('scroll', sync, { passive: true });
+    window.addEventListener('resize', sync, { passive: true });
+
+    return () => {
+      ro.disconnect();
+      window.removeEventListener('scroll', sync);
+      window.removeEventListener('resize', sync);
+    };
+  }, []);
 
   const editor = useEditor({
     extensions: [
@@ -279,6 +632,7 @@ export default function WordRibbonEditor({ content, onChange, onUploadImage, pla
       FontFamily,
       TextAlign.configure({ types: ['heading', 'paragraph', 'blockquote', 'bulletList', 'orderedList', 'listItem'] }),
       PersistentTextAlign,
+      CustomIndent,
       Table.configure({ resizable: true }),
       TableRow,
       TableHeader,
@@ -444,10 +798,27 @@ export default function WordRibbonEditor({ content, onChange, onUploadImage, pla
     editor.chain().focus().insertContent(sym).run();
   }
 
+  // Compute whether ribbon should be fixed (shell is partially or fully above viewport)
+  const headerStackHeight = shellRect?.headerPx ?? 130;
+  const ribbonFixed = shellRect != null && shellRect.top <= headerStackHeight;
+
+  const ribbonStyle = ribbonFixed
+    ? {
+        position: 'fixed',
+        top: `${headerStackHeight}px`,
+        left: `${shellRect.left}px`,
+        width: `${shellRect.width}px`,
+        zIndex: 120,
+        borderRadius: '18px 18px 0 0',
+      }
+    : {};
+
   return (
-    <div className="word-editor-shell">
+    <div className="word-editor-shell" ref={shellRef}>
       {/* Top MS Word Ribbon Bar Header */}
-      <div className="word-ribbon-bar">
+      {/* Spacer so content below ribbon isn't hidden under fixed bar */}
+      {ribbonFixed && <div style={{ height: ribbonHeight, flexShrink: 0 }} />}
+      <div className="word-ribbon-bar" ref={ribbonRef} style={ribbonStyle}>
         {/* Ribbon Main Menu Tabs */}
         <div className="word-ribbon-tabs" role="tablist">
           <button
@@ -1094,9 +1465,15 @@ export default function WordRibbonEditor({ content, onChange, onUploadImage, pla
         {/* Editor Canvas View */}
         {(viewMode === 'editor' || viewMode === 'split') && (
           <div className="word-paper-wrapper">
-            <div className="word-paper-header">
-              <span className="paper-margin-ruler"></span>
-            </div>
+            <WordHorizontalRuler
+              editor={editor}
+              indentLeft={indentLeft}
+              setIndentLeft={setIndentLeft}
+              indentRight={indentRight}
+              setIndentRight={setIndentRight}
+              headerOffset={headerStackHeight + (ribbonFixed ? ribbonHeight : 0)}
+              isParentFixed={ribbonFixed}
+            />
             <div className="rich-editor pro-rich-editor word-prose-container">
               <EditorContent editor={editor} />
             </div>
