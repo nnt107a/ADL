@@ -287,6 +287,8 @@ export async function createInsight(req, res, next) {
       ? await uploadToCloudinaryOrLocal(req.files.image[0], { folder: 'news' })
       : undefined;
 
+    const base = buildInsightDocumentBase({ title, type, excerpt, content }, localized, filters);
+
     const insight = await Insight.create({
       title: base.title,
       slug: uniqueSlug,

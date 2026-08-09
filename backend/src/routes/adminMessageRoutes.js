@@ -2,6 +2,7 @@ import { Router } from 'express';
 import {
   deleteAdminMessage,
   getAdminMessageById,
+  getAdminMessageNotifications,
   getAdminMessages,
   replyToAdminMessage,
 } from '../controllers/adminMessageController.js';
@@ -10,6 +11,7 @@ import requireAdmin from '../middleware/requireAdmin.js';
 const router = Router();
 
 router.get('/', requireAdmin, getAdminMessages);
+router.get('/notifications', requireAdmin, getAdminMessageNotifications);
 router.get('/:id', requireAdmin, getAdminMessageById);
 router.post('/:id/reply', requireAdmin, replyToAdminMessage);
 router.delete('/:id', requireAdmin, deleteAdminMessage);

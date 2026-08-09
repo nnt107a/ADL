@@ -3,6 +3,7 @@ import { Outlet, useLocation } from 'react-router-dom';
 import Header from './Header';
 import Footer from './Footer';
 import FloatingContactWidgets from './FloatingContactWidgets';
+import AdminNotificationToast from './AdminNotificationToast';
 import { useLocale } from '../context/LocaleContext';
 
 export default function Layout() {
@@ -40,6 +41,7 @@ export default function Layout() {
       </main>
       <Footer />
       <FloatingContactWidgets />
+      <AdminNotificationToast />
     </div>
   );
 }

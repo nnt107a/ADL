@@ -72,6 +72,8 @@ const en = {
         { label: 'Foreign Investment', path: '/services/foreign-investment' },
         { label: 'Mergers & Acquisitions / Corporate Restructuring', path: '/services/mergers-acquisitions-restructuring' },
         { label: 'Capital Markets, Finance & Banking', path: '/services/capital-markets-finance-banking' },
+        { label: 'Real Estate & Construction', path: '/services/real-estate-construction' },
+        { label: 'Tax', path: '/services/tax' },
         { label: 'Employment & Labor', path: '/services/employment-labor' },
         { label: 'Corporate Governance & General Corporate Advisory', path: '/services/corporate-governance-retainer' },
         { label: 'Intellectual Property', path: '/services/intellectual-property' },
@@ -503,6 +505,50 @@ const en = {
           'Drafting and reviewing loan and financing agreements',
           'Financial structuring for investment projects',
           'Review of financing documents and security arrangements',
+          'Regulatory compliance advisory for capital markets and banking transactions',
+        ],
+        representativeProjects: [
+          'Advised a diversified business group in Gia Lai Province on the successful issuance of a corporate bond package valued at USD 40,000,000.',
+          'Participated in advising a real estate developer in Ho Chi Minh City on the successful issuance of a corporate bond package valued at USD 34,000,000.',
+          'Advised, prepared transaction documentation, and assisted a manufacturing company in Binh Duong Province in completing a private equity placement valued at USD 23,000,000.',
+          'Represented and negotiated a real estate security arrangement for a construction company in Ho Chi Minh City in connection with an offshore financing transaction.',
+        ],
+      },
+      {
+        id: 'real-estate-construction',
+        title: 'REAL ESTATE & CONSTRUCTION',
+        shortDescription:
+          'Practical legal solutions throughout the entire lifecycle of real estate and construction projects.',
+        overview: [
+          "Real Estate & Construction is one of AD Legal's key practice areas, supported by lawyers with extensive experience advising leading property developers, investors, and construction contractors throughout Vietnam. We work alongside clients at every stage of a project's lifecycle - from project planning and investment to development, construction, and operation - with a focus on managing legal risks and ensuring practical project implementation.",
+          "Our team places particular emphasis on contract risk management and providing strategic legal advice throughout project execution. By proactively addressing legal issues during construction and operations, we help minimize disputes while safeguarding our clients' commercial interests.",
+        ],
+        services: [
+          'Legal advisory for real estate development projects',
+          'Project legal due diligence and investment structuring',
+          'Drafting, reviewing, and negotiating construction contracts (EPC, turnkey, main contractor, and construction agreements)',
+          'Construction contract management and risk control',
+          'Legal advisory throughout project implementation',
+          'Representation in construction and real estate disputes before courts and arbitration tribunals',
+        ],
+        representativeProjects: [
+          'Represented a construction contractor based in Ho Chi Minh City in negotiating construction contracts with project owners for developments in Phu Quoc, Da Nang, and Ha Giang.',
+          'Represented a Ho Chi Minh City real estate developer in successfully negotiating an investment cooperation agreement for a real estate project in Vung Tau.',
+          'Provided legal advisory on construction and real estate contract terms for multiple enterprises in Ho Chi Minh City.',
+          'Acted as ongoing legal counsel for several office building owners and commercial landlords in Ho Chi Minh City.',
+          'Represented a group of private investors in successfully negotiating and settling investment contribution and property sale agreements with a major real estate developer in Ho Chi Minh City.',
+        ],
+      },
+      {
+        id: 'tax',
+        title: 'TAX',
+        shortDescription:
+          'Strategic tax advisory that combines legal expertise with commercial and financial insight.',
+        overview: [
+          "Tax advisory is one of AD Legal's key practice areas, built upon the experience of our lawyers and finance professionals who have advised on numerous large-scale corporate transactions and investment projects. We combine legal expertise with practical financial knowledge to help clients optimize their tax position while maintaining a high level of regulatory compliance in an ever-evolving tax environment.",
+          'We place particular emphasis on evaluating tax implications in investment decisions, corporate restructurings, and financing transactions, enabling clients to proactively manage tax risks and implement commercially efficient transaction structures.',
+        ],
+        services: [
           'Tax advisory for investments, mergers & acquisitions, and corporate restructuring',
           'Tax-efficient transaction structuring and planning',
           'Tax risk review and assessment for business operations',
@@ -677,7 +723,7 @@ const en = {
         ],
         languages: ['Vietnamese', 'English'],
         contact: {
-          phone: '(+84) 969 638 248',
+          phone: '(+84) 87 844 7664',
           email: 'anh.bui@adlegal.vn',
         },
       },
@@ -700,7 +746,7 @@ const en = {
         ],
         languages: ['Vietnamese', 'English'],
         contact: {
-          phone: '(+84) 846 123 119',
+          phone: '(+84) 87 844 7664',
           email: 'loc.nguyen@adlegal.vn',
         },
       },
@@ -722,7 +768,7 @@ const en = {
         ],
         languages: ['Vietnamese', 'English'],
         contact: {
-          phone: '(+84) 988 278 810',
+          phone: '(+84) 87 844 7664',
           email: 'minh.nguyen@adlegal.vn',
         },
       },
@@ -739,7 +785,7 @@ const en = {
         education: ['B.A. in Accounting, Ho Chi Minh City University of Economics', 'Certified Chief Accountant'],
         languages: ['Vietnamese', 'English'],
         contact: {
-          phone: '(+84) 982 845 934',
+          phone: '(+84) 87 844 7664',
           email: 'khoa.trinh@adlegal.vn',
         },
       },
@@ -762,7 +808,7 @@ const en = {
         ],
         languages: ['Vietnamese', 'English'],
         contact: {
-          phone: '(+84) 905 058 400',
+          phone: '(+84) 87 844 7664',
           email: 'tan.doan@adlegal.vn',
         },
       },
@@ -782,7 +828,7 @@ const en = {
         ],
         languages: ['Vietnamese', 'English'],
         contact: {
-          phone: '(+84) 346 902 255',
+          phone: '(+84) 87 844 7664',
           email: 'nhung.lai@adlegal.vn',
         },
       },
@@ -799,7 +845,7 @@ const en = {
         education: ['B.Eng. in Software Engineering & Data Science, Ho Chi Minh City University of Science (HCMUS)'],
         languages: ['Vietnamese', 'English', 'Japanese'],
         contact: {
-          phone: '(+84) 865 275 817',
+          phone: '(+84) 87 844 7664',
           email: 'tan.nguyen@adlegal.vn',
         },
       },
@@ -878,6 +924,8 @@ const vi = {
         { label: 'Đầu tư nước ngoài', path: '/services/foreign-investment' },
         { label: 'M&A, Tái cấu trúc', path: '/services/mergers-acquisitions-restructuring' },
         { label: 'Thị trường vốn, Tài chính & Ngân hàng', path: '/services/capital-markets-finance-banking' },
+        { label: 'Bất động sản & Xây dựng', path: '/services/real-estate-construction' },
+        { label: 'Thuế', path: '/services/tax' },
         { label: 'Việc làm & Lao động', path: '/services/employment-labor' },
         { label: 'Quản trị doanh nghiệp, Tư vấn thường xuyên', path: '/services/corporate-governance-retainer' },
         { label: 'Sở hữu trí tuệ', path: '/services/intellectual-property' },
@@ -1225,6 +1273,8 @@ vi.data.services = vi.data.services.length ? vi.data.services : en.data.services
     'ĐẦU TƯ NƯỚC NGOÀI',
     'M&A, TÁI CẤU TRÚC',
     'THỊ TRƯỜNG VỐN, TÀI CHÍNH & NGÂN HÀNG',
+    'BẤT ĐỘNG SẢN & XÂY DỰNG',
+    'THUẾ',
     'VIỆC LÀM & LAO ĐỘNG',
     'QUẢN TRỊ DOANH NGHIỆP, TƯ VẤN THƯỜNG XUYÊN',
     'SỞ HỮU TRÍ TUỆ',
@@ -1235,6 +1285,8 @@ vi.data.services = vi.data.services.length ? vi.data.services : en.data.services
     'Đồng hành cùng nhà đầu tư quốc tế trong hành trình tiếp cận và phát triển tại thị trường Việt Nam.',
     'Thiết kế các giao dịch chiến lược với sự chính xác về pháp lý và nhạy bén thương mại.',
     'Giải pháp pháp lý cho các giao dịch tài chính và huy động vốn phức tạp.',
+    'Giải pháp pháp lý thực tiễn xuyên suốt toàn bộ vòng đời của các dự án bất động sản và xây dựng.',
+    'Tư vấn thuế chiến lược kết hợp giữa chuyên môn pháp lý với tư duy thương mại và tài chính.',
     'Cân bằng giữa tuân thủ pháp luật và quản trị nhân sự hiện đại.',
     'Sự hỗ trợ pháp lý đáng tin cậy cho các quyết định kinh doanh hàng ngày.',
     'Bảo vệ sáng tạo và gia tăng giá trị thương hiệu.',
@@ -1252,6 +1304,14 @@ vi.data.services = vi.data.services.length ? vi.data.services : en.data.services
     [
       'Thị trường vốn, tài chính và ngân hàng là một trong những lĩnh vực dịch vụ cốt lõi của AD Legal, phản ánh thế mạnh của chúng tôi trong việc kết hợp tư vấn pháp lý với hiểu biết thực tiễn về cấu trúc tài chính doanh nghiệp và giao dịch huy động vốn. Chúng tôi hỗ trợ doanh nghiệp và nhà đầu tư thiết kế các giải pháp tài chính phù hợp với mục tiêu kinh doanh, đồng thời bảo đảm tuân thủ khung pháp lý và kiểm soát hiệu quả rủi ro giao dịch.',
       'AD Legal tham gia tư vấn từ giai đoạn xây dựng cấu trúc huy động vốn, chuẩn bị tài liệu giao dịch đến triển khai và hoàn tất giao dịch tài chính, với cách tiếp cận chú trọng tính khả thi và hiệu quả thương mại lâu dài.',
+    ],
+    [
+      'Bất động sản & Xây dựng là một trong những lĩnh vực hành nghề trọng tâm của AD Legal, được đảm nhiệm bởi các luật sư có kinh nghiệm tư vấn cho nhiều nhà phát triển dự án, nhà đầu tư và nhà thầu xây dựng hàng đầu tại Việt Nam. Chúng tôi đồng hành cùng khách hàng trong suốt vòng đời dự án—từ giai đoạn lập quy hoạch, đầu tư, phát triển, xây dựng đến vận hành—với định hướng quản trị rủi ro pháp lý và bảo đảm tính khả thi trong triển khai.',
+      'Đội ngũ của chúng tôi đặc biệt chú trọng đến quản trị rủi ro hợp đồng và cung cấp các tư vấn pháp lý chiến lược trong suốt quá trình thực hiện dự án. Bằng việc chủ động xử lý các vấn đề pháp lý phát sinh trong quá trình xây dựng và vận hành, chúng tôi giúp giảm thiểu tranh chấp và bảo vệ tối đa lợi ích thương mại của khách hàng.',
+    ],
+    [
+      'Tư vấn thuế là một trong những lĩnh vực chuyên sâu của AD Legal, được xây dựng trên nền tảng kinh nghiệm của các luật sư và chuyên gia tài chính từng tư vấn cho nhiều giao dịch doanh nghiệp và dự án đầu tư quy mô lớn. Chúng tôi kết hợp chuyên môn pháp lý với kiến thức tài chính thực tiễn để giúp khách hàng tối ưu hóa vị thế thuế, đồng thời duy trì sự tuân thủ nghiêm túc trong môi trường pháp lý thuế liên tục thay đổi.',
+      'Chúng tôi đặc biệt chú trọng đánh giá các tác động về thuế trong các quyết định đầu tư, tái cấu trúc doanh nghiệp và giao dịch tài chính, giúp khách hàng chủ động quản trị rủi ro thuế và thực thi các cấu trúc giao dịch hiệu quả về mặt thương mại.',
     ],
     [
       'AD Legal tư vấn cho doanh nghiệp trong việc xây dựng và quản lý quan hệ lao động ổn định, phù hợp với yêu cầu tuân thủ pháp luật và chiến lược quản trị nhân sự hiện đại. Với kinh nghiệm làm việc cùng nhiều doanh nghiệp trong và ngoài nước, chúng tôi hỗ trợ khách hàng thiết lập hệ thống chính sách nhân sự rõ ràng, minh bạch, đồng thời nhận diện và kiểm soát sớm các rủi ro pháp lý phát sinh trong quá trình sử dụng lao động.',
@@ -1299,6 +1359,22 @@ vi.data.services = vi.data.services.length ? vi.data.services : en.data.services
       'Tư vấn cấu trúc tài chính cho dự án đầu tư',
       'Rà soát tài liệu tài chính và biện pháp bảo đảm giao dịch',
       'Tư vấn tuân thủ pháp lý trong giao dịch thị trường vốn và ngân hàng',
+    ],
+    [
+      'Tư vấn pháp lý cho các dự án phát triển bất động sản',
+      'Thẩm định pháp lý dự án và cấu trúc đầu tư',
+      'Soạn thảo, rà soát và đàm phán hợp đồng xây dựng (EPC, chìa khóa trao tay, nhà thầu chính và các thỏa thuận xây dựng)',
+      'Quản lý hợp đồng xây dựng và kiểm soát rủi ro',
+      'Tư vấn pháp lý trong suốt quá trình triển khai dự án',
+      'Đại diện giải quyết tranh chấp xây dựng và bất động sản tại Tòa án và Trọng tài',
+    ],
+    [
+      'Tư vấn thuế cho hoạt động đầu tư, M&A và tái cấu trúc doanh nghiệp',
+      'Lập kế hoạch và cấu trúc giao dịch tối ưu hóa thuế',
+      'Rà soát và đánh giá rủi ro thuế cho hoạt động kinh doanh',
+      'Tư vấn tuân thủ thuế và quy định pháp luật thường xuyên',
+      'Đại diện và hỗ trợ làm việc với cơ quan thuế',
+      'Hỗ trợ giải quyết tranh chấp và khiếu nại về thuế',
     ],
     [
       'Soạn thảo và rà soát hợp đồng lao động, thỏa thuận lao động',
@@ -1360,6 +1436,18 @@ vi.data.services = vi.data.services.length ? vi.data.services : en.data.services
       'Tham gia tư vấn cho một doanh nghiệp bất động sản tại TP. HCM, thành công phát hành gói trái phiếu trị giá 34,000,000 USD.',
       'Tư vấn, chuẩn bị hồ sơ và hỗ trợ một doanh nghiệp sản xuất tại Bình Dương chào bán thành công cổ phần riêng lẻ với giá trị 23,000,000 USD.',
       'Tư vấn, đại diện đàm phán một thỏa thuận bảo đảm bằng bất động sản cho một công ty xây dựng tại TP. HCM, trong giao dịch vay nước ngoài.',
+    ],
+    [
+      'Đại diện một nhà thầu xây dựng tại TP. HCM đàm phán hợp đồng xây dựng với các chủ đầu tư dự án tại Phú Quốc, Đà Nẵng và Hà Giang.',
+      'Đại diện một nhà phát triển bất động sản tại TP. HCM đàm phán thành công hợp đồng hợp tác đầu tư dự án bất động sản tại Vũng Tàu.',
+      'Tư vấn pháp lý về điều khoản hợp đồng xây dựng và bất động sản cho nhiều doanh nghiệp tại TP. HCM.',
+      'Đóng vai trò tư vấn pháp lý thường xuyên cho nhiều chủ sở hữu tòa nhà văn phòng và bên cho thuê thương mại tại TP. HCM.',
+      'Đại diện một nhóm nhà đầu tư cá nhân đàm phán và giải quyết thành công các thỏa thuận góp vốn đầu tư và mua bán bất động sản với một nhà phát triển bất động sản lớn tại TP. HCM.',
+    ],
+    [
+      'Rà soát các vấn đề về thuế, tư vấn thuế chiến lược và đại diện thành công cho một doanh nghiệp sản xuất lớn tại Đồng Nai giải quyết các vướng mắc thuế phức tạp.',
+      'Hỗ trợ một công ty sản xuất tại TP. HCM hoàn tất thủ tục quyết toán thuế và nhận hoàn thuế khoảng 360.000 USD.',
+      'Cung cấp dịch vụ tư vấn thuế thường xuyên cho nhiều doanh nghiệp có vốn đầu tư nước ngoài tại Việt Nam.',
     ],
     [
       'Xây dựng bộ tài liệu mẫu về lao động cho nhiều doanh nghiệp FDI tại Việt Nam, điển hình là các doanh nghiệp về IT, sản xuất.',
@@ -1550,6 +1638,8 @@ const cn = {
         { label: '外商投资', path: '/services/foreign-investment' },
         { label: '并购与企业重组', path: '/services/mergers-acquisitions-restructuring' },
         { label: '资本市场、金融与银行', path: '/services/capital-markets-finance-banking' },
+        { label: '房地产与建设', path: '/services/real-estate-construction' },
+        { label: '税务', path: '/services/tax' },
         { label: '劳动与就业', path: '/services/employment-labor' },
         { label: '公司治理与日常法律顾问', path: '/services/corporate-governance-retainer' },
         { label: '知识产权', path: '/services/intellectual-property' },
@@ -1926,8 +2016,10 @@ cn.data.services = cn.data.services.length ? cn.data.services : en.data.services
   ...service,
   title: [
     '外商投资',
-    '并购 / 企业重组',
+    '并购与企业重组',
     '资本市场、金融与银行',
+    '房地产与建设',
+    '税务',
     '劳动与就业',
     '公司治理与日常法律顾问',
     '知识产权',
@@ -1938,6 +2030,8 @@ cn.data.services = cn.data.services.length ? cn.data.services : en.data.services
     '为外商投资进入、运营和在越南扩展提供全面的法律支持。',
     '为并购交易及企业重组提供战略性法律与财务顾问服务。',
     '为融资、银行交易及公司融资提供全面的法律与财务咨询。',
+    '贯穿房地产及建设项目全生命周期的实用法律解决方案。',
+    '将法律专业知识与商业及财务洞察相结合的战略税务顾问。',
     '全面的劳动法解决方案，支持合规且可持续的人力资源管理。',
     '持续的法律支持，强化日常业务运营中的治理与合规。',
     '知识产权资产的战略性保护、管理与商业化。',
@@ -1955,6 +2049,14 @@ cn.data.services = cn.data.services.length ? cn.data.services : en.data.services
     [
       '资本市场、金融与银行是 AD Legal 的核心领域之一，展现了我们在将法律专业知识与公司融资及资本市场交易的实务经验相结合方面的强项。我们协助企业和投资者设计符合其商业目标的融资方案，同时确保符合适用法律法规要求并有效控制交易风险。',
       '我们的团队在融资全过程中为客户提供建议 - 从制定融资策略、准备交易文件到执行与完成融资交易 - 始终注重商业实用性与长期价值创造。',
+    ],
+    [
+      '房地产与建设是 AD Legal 的核心执业领域之一，由在为越南领先房地产开发商、投资者及建设承包商提供咨询方面拥有丰富经验的律师团队提供支持。我们陪同客户度过项目的各个阶段——从项目规划与投资到开发、建设及运营——着重于管理法律风险并确保项目的实际落地。',
+      '我们的团队特别注重合同风险管理，并在项目执行过程中提供战略性法律建议。通过在建设与运营期间主动解决法律问题，我们协助减少争议，同时保障客户的商业利益。',
+    ],
+    [
+      '税务顾问是 AD Legal 的重点执业领域之一，建立在我们的律师和财务专业人士曾就多项大型公司交易和投资项目提供咨询的经验之上。我们结合法律专业知识与实用财务知识，帮助客户优化其税务地位，同时在不断变化的税务监管环境中保持高度合规。',
+      '我们特别注重评估投资决策、公司重组及融资交易中的税务影响，使客户能够主动管理税务风险并实施商业上高效的交易结构。',
     ],
     [
       'AD Legal 协助雇主建立并维护稳定、符合法律规定与现代人力资源管理策略的劳动关系。凭借服务国内外企业的丰富经验，我们协助客户建立清晰有效的劳动制度，并在员工整个在职期间主动识别和管理法律风险。',
@@ -2002,10 +2104,21 @@ cn.data.services = cn.data.services.length ? cn.data.services : en.data.services
       '投资项目财务结构设计',
       '审查融资文件及担保安排',
       '针对投资、并购及公司重组的税务咨询',
+    ],
+    [
+      '房地产开发项目法律顾问',
+      '项目法律尽职调查与投资结构设计',
+      '起草、审查与谈判建设合同（EPC、交钥匙、总承包及施工协议）',
+      '建设合同管理与风险控制',
+      '项目实施全过程法律顾问',
+      '在法院及仲裁庭代表处理建设与房地产争议',
+    ],
+    [
+      '针对投资、并购及公司重组的税务咨询',
       '税收优化交易结构与规划',
       '业务运营中的税务风险审查与评估',
       '日常税务合规与法律规定咨询',
-      '代表并协助与税务机关沟通沟通',
+      '代表并协助与税务机关沟通',
       '税务争议解决及申诉支持',
     ],
     [
@@ -2062,6 +2175,19 @@ cn.data.services = cn.data.services.length ? cn.data.services : en.data.services
       '为同奈省一家拥有 4 家工厂、900 多名员工的木材制造企业提供咨询并实施公司重组。',
       '主导公司重组、准备投资推广材料，并成功为西宁省一家工业机械制造商筹集了 7,200,000 美元的投资资金。',
       '就公司分立及成功转让价值 12,000,000 美元的项目为同奈省一家瓷砖制造商提供咨询。',
+    ],
+    [
+      '参与咨询位于嘉莱省的多元化业务集团，成功发行价值 40,000,000 美元的公司债券包。',
+      '参与咨询胡志明市一家房地产开发商，成功发行价值 34,000,000 美元的公司债券包。',
+      '为平阳省一家制造公司提供咨询、准备交易文件并协助其完成 23,000,000 美元的私募股权投资。',
+      '代表胡志明市一家建筑公司就离岸融资交易谈判房地产担保安排。',
+    ],
+    [
+      '代表胡志明市一家建设承包商与富国、岘港及哈 Giang 的项目业主谈判建设合同。',
+      '代表胡志明市一家房地产开发商成功谈判了位于头顿的房地产项目投资合作协议。',
+      '为胡志明市多家企业就建设与房地产合同条款提供法律咨询。',
+      '担任胡志明市多家写字楼业主及商业出租人的常年法律顾问。',
+      '代表一组私人投资者与胡志明市一家大型房地产开发商成功谈判并解决投资出资与房屋买卖协议。',
     ],
     [
       '审查税务事项、提供战略税务建议，并成功代表同奈省一家大型制造企业解决复杂的税务问题。',

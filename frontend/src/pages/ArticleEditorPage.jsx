@@ -1,8 +1,4 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { EditorContent, useEditor } from '@tiptap/react';
-import StarterKit from '@tiptap/starter-kit';
-import Image from '@tiptap/extension-image';
-import Link from '@tiptap/extension-link';
 import { Link as RouterLink, useSearchParams } from 'react-router-dom';
 import PageHeader from '../components/PageHeader';
 import LoadingState from '../components/LoadingState';
@@ -63,78 +59,6 @@ const editorConfigs = {
     detailEndpoint: (slug) => `/api/insights/${slug}`,
   },
 };
-
-function Toolbar({ editor, onPickImage }) {
-  const [, setTick] = useState(0);
-
-  useEffect(() => {
-    if (!editor) return undefined;
-
-    function handleStateChange() {
-      setTick((t) => t + 1);
-    }
-
-    editor.on('transaction', handleStateChange);
-    editor.on('selectionUpdate', handleStateChange);
-    editor.on('focus', handleStateChange);
-
-    return () => {
-      editor.off('transaction', handleStateChange);
-      editor.off('selectionUpdate', handleStateChange);
-      editor.off('focus', handleStateChange);
-    };
-  }, [editor]);
-
-  if (!editor) {
-    return null;
-  }
-
-  function setLink() {
-    const previousUrl = editor.getAttributes('link').href || '';
-    const url = window.prompt('Paste a URL', previousUrl);
-
-    if (url === null) {
-      return;
-    }
-
-    if (!url.trim()) {
-      editor.chain().focus().extendMarkRange('link').unsetLink().run();
-      return;
-    }
-
-    editor.chain().focus().extendMarkRange('link').setLink({ href: url.trim() }).run();
-  }
-
-  const tools = [
-    { label: 'B', title: 'Bold', active: editor.isActive('bold'), action: () => editor.chain().focus().toggleBold().run() },
-    { label: 'I', title: 'Italic', active: editor.isActive('italic'), action: () => editor.chain().focus().toggleItalic().run() },
-    { label: 'H2', title: 'Heading 2', active: editor.isActive('heading', { level: 2 }), action: () => editor.chain().focus().toggleHeading({ level: 2 }).run() },
-    { label: 'List', title: 'Bullet list', active: editor.isActive('bulletList'), action: () => editor.chain().focus().toggleBulletList().run() },
-    { label: '1.', title: 'Numbered list', active: editor.isActive('orderedList'), action: () => editor.chain().focus().toggleOrderedList().run() },
-    { label: 'Quote', title: 'Quote', active: editor.isActive('blockquote'), action: () => editor.chain().focus().toggleBlockquote().run() },
-    { label: 'Link', title: 'Add or remove link', active: editor.isActive('link'), action: setLink },
-    { label: 'Image', title: 'Upload image', active: false, action: onPickImage },
-    { label: 'Undo', title: 'Undo', active: false, action: () => editor.chain().focus().undo().run() },
-    { label: 'Redo', title: 'Redo', active: false, action: () => editor.chain().focus().redo().run() },
-  ];
-
-  return (
-    <div className="editor-toolbar pro-editor-toolbar" role="toolbar" aria-label="Article editor toolbar">
-      {tools.map((tool) => (
-        <button
-          key={tool.title}
-          type="button"
-          className={tool.active ? 'tool-button is-active' : 'tool-button'}
-          onMouseDown={(e) => e.preventDefault()}
-          onClick={tool.action}
-          title={tool.title}
-        >
-          {tool.label}
-        </button>
-      ))}
-    </div>
-  );
-}
 
 function emptyDraft() {
   return { title: '', excerpt: '', content: '', contentFileUrl: '', contentFileName: '' };
@@ -434,14 +358,18 @@ export default function ArticleEditorPage({ kind, action = 'create' }) {
         message: `${isEditMode ? config.updateSuccessPrefix : config.successPrefix}.`,
         path: config.viewPath(body.slug),
       });
-      form.reset();
-      setCoverImage(null);
-      setFiles({ en: null, vi: null, cn: null });
-      setFilePreviews({ en: '', vi: '', cn: '' });
-      setFileNames({ en: '', vi: '', cn: '' });
-      setDrafts({ en: emptyDraft(), vi: emptyDraft(), cn: emptyDraft() });
-      setFilters([]);
-      editor?.commands.setContent('');
+
+      if (!isEditMode) {
+        form.reset();
+        setCoverImage(null);
+        setFiles({ en: null, vi: null, cn: null });
+        setFilePreviews({ en: '', vi: '', cn: '' });
+        setFileNames({ en: '', vi: '', cn: '' });
+        setDrafts({ en: emptyDraft(), vi: emptyDraft(), cn: emptyDraft() });
+        setFilters([]);
+      } else if (body) {
+        setExistingArticle(body);
+      }
     } catch (submitError) {
       setError(submitError.message || 'Failed to publish.');
     } finally {

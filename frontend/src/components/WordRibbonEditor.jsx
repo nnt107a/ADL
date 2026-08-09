@@ -718,15 +718,15 @@ export default function WordRibbonEditor({ content, onChange, onUploadImage, pla
   }, [editor]);
 
   useEffect(() => {
-    if (!editor) return;
+    if (!editor || editor.isDestroyed) return;
 
-    // Only update internal editor content if the user is NOT actively typing inside it
-    if (!editor.isFocused && content !== undefined && content !== editor.getHTML()) {
-      queueMicrotask(() => {
-        if (!editor.isDestroyed && content !== undefined && content !== editor.getHTML()) {
-          editor.commands.setContent(content || '', false);
-        }
-      });
+    const currentHtml = editor.getHTML();
+    const incomingHtml = content || '';
+
+    if (currentHtml !== incomingHtml) {
+      if (!editor.isFocused || Math.abs(currentHtml.length - incomingHtml.length) > 5) {
+        editor.commands.setContent(incomingHtml, false);
+      }
     }
   }, [content, editor]);
 

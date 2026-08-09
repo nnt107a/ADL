@@ -21,6 +21,26 @@ export async function getAdminMessages(req, res) {
   }
 }
 
+export async function getAdminMessageNotifications(req, res) {
+  try {
+    const unreadMessages = await fetchAllMessages('unread');
+    return res.json({
+      status: 'success',
+      unreadCount: unreadMessages.length,
+      unreadMessages: unreadMessages.map((m) => ({
+        _id: m._id,
+        name: m.name,
+        email: m.email,
+        subject: m.subject,
+        updatedAt: m.updatedAt || m.createdAt,
+      })),
+    });
+  } catch (error) {
+    console.error('Error fetching unread message notifications:', error);
+    return res.status(500).json({ message: 'Failed to retrieve notifications.' });
+  }
+}
+
 export async function getAdminMessageById(req, res) {
   try {
     const { id } = req.params;
