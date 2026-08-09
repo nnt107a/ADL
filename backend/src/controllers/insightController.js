@@ -1,5 +1,6 @@
 import { readFileSync } from 'fs';
 import Insight from '../models/Insight.js';
+import { uploadToCloudinaryOrLocal } from '../services/cloudinaryService.js';
 import {
   buildTranslations,
   cleanText,
@@ -247,7 +248,8 @@ export async function uploadInsightImage(req, res) {
     return res.status(400).json({ message: 'Image file is required.' });
   }
 
-  return res.status(201).json({ url: `/uploads/news/${uploadedImage.filename}` });
+  const url = await uploadToCloudinaryOrLocal(uploadedImage, { folder: 'news' });
+  return res.status(201).json({ url });
 }
 
 export async function createInsight(req, res, next) {
@@ -281,7 +283,9 @@ export async function createInsight(req, res, next) {
       return res.status(400).json({ message: 'Slug could not be generated.' });
     }
 
-    const base = buildInsightDocumentBase({ title, type, excerpt }, localized, filters);
+    const imageUrl = req.files?.image?.[0]
+      ? await uploadToCloudinaryOrLocal(req.files.image[0], { folder: 'news' })
+      : undefined;
 
     const insight = await Insight.create({
       title: base.title,
@@ -290,7 +294,7 @@ export async function createInsight(req, res, next) {
       excerpt: base.excerpt,
       filters: base.filters,
       content: base.content,
-      imageUrl: req.files?.image?.[0] ? `/uploads/news/${req.files.image[0].filename}` : undefined,
+      imageUrl,
       translations: base.translations,
       ...(resolvedPublishedAt ? { publishedAt: resolvedPublishedAt } : {}),
     });
@@ -352,6 +356,10 @@ export async function updateInsightBySlug(req, res, next) {
       resolvedPublishedAt = date;
     }
 
+    const imageUrl = req.files?.image?.[0]
+      ? await uploadToCloudinaryOrLocal(req.files.image[0], { folder: 'news' })
+      : existing.imageUrl;
+
     const base = buildInsightDocumentBase({ title: resolvedTitle, type, excerpt, content }, localized, filters ?? existing.filters);
 
     const updatedInsight = await Insight.findOneAndUpdate(
@@ -363,7 +371,7 @@ export async function updateInsightBySlug(req, res, next) {
         excerpt: base.excerpt,
         filters: base.filters,
         content: base.content || existing.content || '',
-        imageUrl: req.files?.image?.[0] ? `/uploads/news/${req.files.image[0].filename}` : existing.imageUrl,
+        imageUrl,
         translations: base.translations,
         publishedAt: resolvedPublishedAt,
       },

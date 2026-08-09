@@ -2,6 +2,7 @@ import fs from 'fs/promises';
 import path from 'path';
 import mammoth from 'mammoth';
 import News from '../models/News.js';
+import { uploadToCloudinaryOrLocal } from '../services/cloudinaryService.js';
 import {
   buildTranslations,
   cleanText,
@@ -223,7 +224,7 @@ export async function uploadNewsImage(req, res) {
     return res.status(400).json({ message: 'Image file is required.' });
   }
 
-  const url = uploadedNewsFileUrl(uploadedImage);
+  const url = await uploadToCloudinaryOrLocal(uploadedImage, { folder: 'news' });
   return res.status(201).json({ url });
 }
 
@@ -279,6 +280,9 @@ export async function createNews(req, res, next) {
       return res.status(400).json({ message: 'Slug could not be generated.' });
     }
 
+    const imageFile = getSingleUploadedFile(req.files, 'image');
+    const imageUrl = imageFile ? await uploadToCloudinaryOrLocal(imageFile, { folder: 'news' }) : undefined;
+
     const base = buildNewsDocumentBase({ title, type, excerpt }, localized);
     const news = await News.create({
       title: base.title,
@@ -286,7 +290,7 @@ export async function createNews(req, res, next) {
       type: base.type || undefined,
       excerpt: base.excerpt,
       content: base.content,
-      imageUrl: getSingleUploadedFile(req.files, 'image') ? uploadedNewsFileUrl(getSingleUploadedFile(req.files, 'image')) : undefined,
+      imageUrl,
       contentFileUrl: base.contentFileUrl,
       contentFileName: base.contentFileName,
       translations: base.translations,
@@ -350,6 +354,9 @@ export async function updateNewsBySlug(req, res, next) {
       resolvedPublishedAt = date;
     }
 
+    const imageFile = getSingleUploadedFile(req.files, 'image');
+    const imageUrl = imageFile ? await uploadToCloudinaryOrLocal(imageFile, { folder: 'news' }) : existing.imageUrl;
+
     const base = buildNewsDocumentBase({ title: resolvedTitle, type, excerpt }, localized);
 
     const updatedNews = await News.findOneAndUpdate(
@@ -360,7 +367,7 @@ export async function updateNewsBySlug(req, res, next) {
         type: type !== undefined ? cleanString(type) : existing.type,
         excerpt: base.excerpt,
         content: base.content || existing.content || '',
-        imageUrl: getSingleUploadedFile(req.files, 'image') ? uploadedNewsFileUrl(getSingleUploadedFile(req.files, 'image')) : existing.imageUrl,
+        imageUrl,
         contentFileUrl: base.contentFileUrl || existing.contentFileUrl,
         contentFileName: base.contentFileName || existing.contentFileName,
         translations: base.translations,

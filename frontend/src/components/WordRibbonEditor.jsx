@@ -722,7 +722,11 @@ export default function WordRibbonEditor({ content, onChange, onUploadImage, pla
 
     // Only update internal editor content if the user is NOT actively typing inside it
     if (!editor.isFocused && content !== undefined && content !== editor.getHTML()) {
-      editor.commands.setContent(content || '', false);
+      queueMicrotask(() => {
+        if (!editor.isDestroyed && content !== undefined && content !== editor.getHTML()) {
+          editor.commands.setContent(content || '', false);
+        }
+      });
     }
   }, [content, editor]);
 
