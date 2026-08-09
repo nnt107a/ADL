@@ -63,7 +63,7 @@ export default function Header() {
     <header className="site-header" aria-label="Site header">
       <div className="container header-inner">
         <Link className="brand" to="/" onClick={closeMenu} aria-label="AD LEGAL home">
-          <img className="brand-logo" src="/adl-logo.png" alt={copy.header.brandAlt} />
+          <img className="brand-logo" src="/adl-logo.png" alt={copy.header.brandAlt} decoding="async" />
         </Link>
 
         <div className="header-nav-wrap">

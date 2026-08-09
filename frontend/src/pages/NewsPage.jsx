@@ -71,7 +71,7 @@ export default function NewsPage() {
                   </div>
                   {item.imageUrl ? (
                     <div className="insight-card-image">
-                      <img src={resolveImageUrl(item.imageUrl)} alt="" />
+                      <img src={resolveImageUrl(item.imageUrl)} alt="" loading="lazy" decoding="async" />
                     </div>
                   ) : null}
                   <h3>{item.title}</h3>

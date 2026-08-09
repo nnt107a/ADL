@@ -8,6 +8,7 @@ import useAdminSession from '../hooks/useAdminSession';
 import { useLocale } from '../context/LocaleContext';
 import { getServiceLabel, normalizeServiceSelections } from '../utils/serviceFilters';
 import { resolveImageUrl } from '../utils/imageUrl';
+import { pageBackdrops, pageHeaderThemes } from '../data/pageAssets';
 
 function formatPublishedAt(value) {
   if (!value) {
@@ -81,6 +82,12 @@ export default function InsightDetailPage() {
         kicker={page.kicker}
         summary={item?.publishedAt ? `${page.publishedPrefix} ${formatPublishedAt(item.publishedAt)}` : page.apiSummary}
         rightAlignedSummary={true}
+        featured
+        backdropImage={pageBackdrops.insight}
+        {...pageHeaderThemes.insight}
+        kickerColor='white'
+        titleColor='white'
+        summaryColor='white'
       >
         <div className="page-header-action page-header-action-detail">
           <Link className="page-header-back-link" to="/insight">

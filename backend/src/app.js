@@ -26,13 +26,28 @@ app.use(
 );
 app.use(express.json());
 
-// Static file hosting for uploaded news assets.
-app.use('/uploads', express.static(uploadsRoot));
+// Static file hosting for uploaded news and people assets with 30-day caching.
+app.use(
+  '/uploads',
+  express.static(uploadsRoot, {
+    maxAge: '30d',
+    etag: true,
+    lastModified: true,
+    setHeaders: (res) => {
+      res.setHeader('Cache-Control', 'public, max-age=2592000, immutable');
+    },
+  })
+);
 
 // Serve the built frontend (if present). This keeps the app deployable as a
 // single service where the frontend calls relative `/api/*` routes.
 if (hasFrontendBuild) {
-  app.use(express.static(frontendDistDir));
+  app.use(
+    express.static(frontendDistDir, {
+      maxAge: '1y',
+      immutable: true,
+    })
+  );
 }
 
 app.get('/', (_req, res) => {

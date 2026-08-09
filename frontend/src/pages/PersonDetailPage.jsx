@@ -38,7 +38,7 @@ export default function PersonDetailPage() {
       <section className="section section-light reveal">
         <div className="container person-profile">
           <aside className="person-sidebar">
-            <img className="person-photo-large" src={resolveImageUrl(person.photo)} alt={person.name} />
+            <img className="person-photo-large" src={resolveImageUrl(person.photo)} alt={person.name} loading="lazy" decoding="async" />
             <h2 className="person-sidebar-name">{person.name}</h2>
             <p className="person-sidebar-role">
               {person.title}

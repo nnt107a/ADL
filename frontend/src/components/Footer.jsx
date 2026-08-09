@@ -9,7 +9,7 @@ export default function Footer() {
     <footer className="site-footer">
       <div className="container footer-inner">
         <div className="footer-brand">
-          <img className="brand-logo brand-logo-footer" src="/adl-logo.png" alt={copy.header.brandAlt} />
+          <img className="brand-logo brand-logo-footer" src="/adl-logo.png" alt={copy.header.brandAlt} loading="lazy" decoding="async" />
         </div>
 
         <div className="footer-links">

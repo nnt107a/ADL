@@ -10,6 +10,8 @@ export default function PersonCard({ person }) {
                 src={person.photo}
                 alt={person.name}
                 className="person-photo"
+                loading="lazy"
+                decoding="async"
             />
 
             <h3>{person.name}</h3>

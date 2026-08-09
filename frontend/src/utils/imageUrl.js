@@ -1,7 +1,7 @@
 /**
  * Resolves and normalizes image URLs across the application.
  * Handles relative paths (/uploads/news/...), missing leading slashes,
- * data URLs, and external web links.
+ * data URLs, external web links, and VITE_API_URL for production.
  */
 export function resolveImageUrl(url) {
   if (!url || typeof url !== 'string') {
@@ -14,7 +14,7 @@ export function resolveImageUrl(url) {
     return '';
   }
 
-  // Direct protocol / data URLs
+  // Direct protocol / data URLs / blob URLs
   if (
     trimmed.startsWith('http://') ||
     trimmed.startsWith('https://') ||
@@ -24,19 +24,22 @@ export function resolveImageUrl(url) {
     return trimmed;
   }
 
+  const apiBase = (import.meta.env.VITE_API_URL || '').replace(/\/$/, '');
+
   // Upload paths
   if (trimmed.startsWith('/uploads')) {
-    return trimmed;
+    return apiBase ? `${apiBase}${trimmed}` : trimmed;
   }
 
   if (trimmed.startsWith('uploads/')) {
-    return `/${trimmed}`;
+    return apiBase ? `${apiBase}/${trimmed}` : `/${trimmed}`;
   }
 
-  // Local assets (e.g., /people/duong.png)
+  // Local static assets (e.g., /people/duong.png)
   if (trimmed.startsWith('/')) {
     return trimmed;
   }
 
   return `/${trimmed}`;
 }
+
