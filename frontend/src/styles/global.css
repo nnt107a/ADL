@@ -1250,6 +1250,25 @@ th {
   border-radius: 28px;
 }
 
+.content-card .content-label {
+  margin-top: 0;
+  margin-bottom: 1.25rem;
+  display: block;
+  font-size: 0.95rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--navy);
+}
+
+.about-copy p {
+  margin-bottom: 1.1rem;
+}
+
+.about-copy p:last-child {
+  margin-bottom: 0;
+}
+
 .content-card h3,
 .service-card h3,
 .person-card h3,

@@ -637,7 +637,7 @@ const en = {
     people: [
       {
         id: 'duong',
-        name: 'NGUYỄN NHẬT DƯƠNG',
+        name: 'NGUYEN NHAT DUONG',
         title: 'Managing Partner',
         photo: '/people/duong.png',
         biography: [
@@ -663,7 +663,7 @@ const en = {
       },
       {
         id: 'mai-anh',
-        name: 'BÙI MAI ANH',
+        name: 'BUI MAI ANH',
         title: 'Partner',
         photo: '/people/mai-anh.png',
         biography: [
@@ -683,7 +683,7 @@ const en = {
       },
       {
         id: 'loc',
-        name: 'NGUYỄN TIẾN LỘC',
+        name: 'NGUYEN TIEN LOC',
         title: 'Senior Partner',
         photo: '/people/loc.png',
         biography: [
@@ -706,7 +706,7 @@ const en = {
       },
       {
         id: 'minh',
-        name: 'NGUYỄN HOÀNG MINH',
+        name: 'NGUYEN HOANG MINH',
         title: 'Senior Counsel',
         photo: '/people/minh.png',
         biography: [
@@ -728,7 +728,7 @@ const en = {
       },
       {
         id: 'khoa',
-        name: 'TRỊNH MINH KHOA',
+        name: 'TRINH MINH KHOA',
         title: 'Senior Counsel',
         photo: '/people/khoa.png',
         biography: [
@@ -745,7 +745,7 @@ const en = {
       },
       {
         id: 'tan',
-        name: 'ĐOÀN NGỌC TÂN',
+        name: 'DOAN NGOC TAN',
         title: 'Senior Associate',
         photo: '/people/tan.png',
         biography: [
@@ -768,7 +768,7 @@ const en = {
       },
       {
         id: 'nhung',
-        name: 'LẠI THỊ PHƯƠNG NHUNG',
+        name: 'LAI THI PHUONG NHUNG',
         title: 'Associate',
         photo: '/people/nhung.png',
         biography: [
@@ -788,7 +788,7 @@ const en = {
       },
       {
         id: 'nhat-tan',
-        name: 'NGUYỄN NHẬT TÂN',
+        name: 'NGUYEN NHAT TAN',
         title: 'Software & Data Engineer',
         photo: '/people/nhat-tan.png',
         biography: [
@@ -1393,6 +1393,16 @@ vi.data.services = vi.data.services.length ? vi.data.services : en.data.services
 
 vi.data.people = vi.data.people.length ? vi.data.people : en.data.people.map((person, index) => ({
   ...person,
+  name: [
+    'NGUYỄN NHẬT DƯƠNG',
+    'BÙI MAI ANH',
+    'NGUYỄN TIẾN LỘC',
+    'NGUYỄN HOÀNG MINH',
+    'TRỊNH MINH KHOA',
+    'ĐOÀN NGỌC TÂN',
+    'LẠI THỊ PHƯƠNG NHUNG',
+    'NGUYỄN NHẬT TÂN',
+  ][index],
   title: [
     'Luật sư Điều hành',
     'Luật sư Thành viên',
@@ -2090,6 +2100,16 @@ cn.data.services = cn.data.services.length ? cn.data.services : en.data.services
 
 cn.data.people = cn.data.people.length ? cn.data.people : en.data.people.map((person, index) => ({
   ...person,
+  name: [
+    'NGUYỄN NHẬT DƯƠNG',
+    'BÙI MAI ANH',
+    'NGUYỄN TIẾN LỘC',
+    'NGUYỄN HOÀNG MINH',
+    'TRỊNH MINH KHOA',
+    'ĐOÀN NGỌC TÂN',
+    'LẠI THỊ PHƯƠNG NHUNG',
+    'NGUYỄN NHẬT TÂN',
+  ][index],
   title: [
     '管理合伙人',
     '合伙人',

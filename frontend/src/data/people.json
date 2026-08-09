@@ -1,7 +1,7 @@
 [
     {
         "id": "duong",
-        "name": "NGUYỄN NHẬT DƯƠNG",
+        "name": "NGUYEN NHAT DUONG",
         "title": "Managing Partner",
         "photo": "/people/duong.png",
 
@@ -35,7 +35,7 @@
     },
     {
         "id": "mai-anh",
-        "name": "BÙI MAI ANH",
+        "name": "BUI MAI ANH",
         "title": "Partner",
         "photo": "/people/mai-anh.png",
 
@@ -69,7 +69,7 @@
     },
     {
         "id": "loc",
-        "name": "NGUYỄN TIẾN LỘC",
+        "name": "NGUYEN TIEN LOC",
         "title": "Senior Partner",
         "photo": "/people/loc.png",
 
@@ -106,7 +106,7 @@
     },
     {
         "id": "minh",
-        "name": "NGUYỄN HOÀNG MINH",
+        "name": "NGUYEN HOANG MINH",
         "title": "Senior Counsel",
         "photo": "/people/minh.png",
 
@@ -142,7 +142,7 @@
     },
     {
         "id": "khoa",
-        "name": "TRỊNH MINH KHOA",
+        "name": "TRINH MINH KHOA",
         "title": "Senior Counsel",
         "photo": "/people/khoa.png",
 
@@ -176,7 +176,7 @@
     },
     {
         "id": "tan",
-        "name": "ĐOÀN NGỌC TÂN",
+        "name": "DOAN NGOC TAN",
         "title": "Senior Associate",
         "photo": "/people/tan.png",
 
@@ -213,7 +213,7 @@
     },
     {
         "id": "nhung",
-        "name": "LẠI THỊ PHƯƠNG NHUNG",
+        "name": "LAI THI PHUONG NHUNG",
         "title": "Associate",
         "photo": "/people/nhung.png",
 
@@ -247,7 +247,7 @@
     },
     {
         "id": "nhat-tan",
-        "name": "NGUYỄN NHẬT TÂN",
+        "name": "NGUYEN NHAT TAN",
         "title": "Software & Data Engineer",
         "photo": "/people/nhat-tan.png",
 
