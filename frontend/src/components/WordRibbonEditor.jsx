@@ -18,7 +18,7 @@ import { TableCell } from '@tiptap/extension-table-cell';
 import { TableHeader } from '@tiptap/extension-table-header';
 import { TaskList } from '@tiptap/extension-task-list';
 import { TaskItem } from '@tiptap/extension-task-item';
-import { resolveImageUrl } from '../utils/imageUrl';
+import { resolveHtmlContent, resolveImageUrl } from '../utils/imageUrl';
 
 const FONT_FAMILIES = [
   { label: 'Aptos (Body)', value: 'Aptos, sans-serif' },
@@ -1487,7 +1487,7 @@ export default function WordRibbonEditor({ content, onChange, onUploadImage, pla
               <p className="content-label">Full Article Live Preview</p>
               <div
                 className="news-content"
-                dangerouslySetInnerHTML={{ __html: editor.getHTML() }}
+                dangerouslySetInnerHTML={{ __html: resolveHtmlContent(editor.getHTML()) }}
               />
             </div>
           </div>

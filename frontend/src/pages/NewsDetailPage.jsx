@@ -6,7 +6,7 @@ import ErrorState from '../components/ErrorState';
 import useApiResource from '../hooks/useApiResource';
 import useAdminSession from '../hooks/useAdminSession';
 import { useLocale } from '../context/LocaleContext';
-import { resolveImageUrl } from '../utils/imageUrl';
+import { resolveHtmlContent, resolveImageUrl } from '../utils/imageUrl';
 
 function formatPublishedAt(value) {
   if (!value) {
@@ -154,7 +154,7 @@ export default function NewsDetailPage() {
 
               {item.content ? (
                 looksLikeHtml(item.content) ? (
-                  <div className="news-content" dangerouslySetInnerHTML={{ __html: item.content }} />
+                  <div className="news-content" dangerouslySetInnerHTML={{ __html: resolveHtmlContent(item.content) }} />
                 ) : (
                   renderContentWithImageToken(item.content, item.imageUrl)
                 )

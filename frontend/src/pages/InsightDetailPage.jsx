@@ -7,7 +7,7 @@ import useApiResource from '../hooks/useApiResource';
 import useAdminSession from '../hooks/useAdminSession';
 import { useLocale } from '../context/LocaleContext';
 import { getServiceLabel, normalizeServiceSelections } from '../utils/serviceFilters';
-import { resolveImageUrl } from '../utils/imageUrl';
+import { resolveHtmlContent, resolveImageUrl } from '../utils/imageUrl';
 import { pageBackdrops, pageHeaderThemes } from '../data/pageAssets';
 
 function formatPublishedAt(value) {
@@ -134,7 +134,7 @@ export default function InsightDetailPage() {
 
               <h1 className="news-detail-title">{item.title}</h1>
 
-              {item.content ? <div className="news-content" dangerouslySetInnerHTML={{ __html: item.content }} /> : null}
+              {item.content ? <div className="news-content" dangerouslySetInnerHTML={{ __html: resolveHtmlContent(item.content) }} /> : null}
             </article>
           </div>
         ) : null}
