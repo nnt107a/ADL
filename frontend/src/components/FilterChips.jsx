@@ -1,4 +1,5 @@
 import ArticleSearchBar from './ArticleSearchBar';
+import { useLocale } from '../context/LocaleContext';
 
 function normalizeFilterItem(item) {
   if (typeof item === 'string') {
@@ -22,13 +23,19 @@ export default function FilterChips({
   className = '',
   searchQuery = '',
   onSearchChange,
-  searchPlaceholder = 'Search...',
+  searchPlaceholder,
   resultCount,
+  resetLabel,
 }) {
+  const { copy } = useLocale();
   const normalizedItems = items.map(normalizeFilterItem).filter((item) => item.value);
   const selectedSet = new Set(selectedValues.map((value) => String(value).trim().toLowerCase()).filter(Boolean));
   const hasSelection = selectedSet.size > 0;
   const hasSearch = Boolean(searchQuery);
+
+  const resetText = resetLabel || copy?.ui?.resetFilters || 'Reset filters';
+  const placeholder = searchPlaceholder || copy?.pages?.knowledge?.searchPlaceholder || 'Search insights...';
+  const articleWord = resultCount === 1 ? (copy?.ui?.article || 'article') : (copy?.ui?.articles || 'articles');
 
   function toggle(value) {
     if (typeof onChange !== 'function') {
@@ -66,7 +73,7 @@ export default function FilterChips({
           <p className="content-label">{title}</p>
           {(hasSelection || hasSearch) && typeof resultCount === 'number' ? (
             <span className="filter-panel__result-badge">
-              {resultCount} {resultCount === 1 ? 'article' : 'articles'}
+              {resultCount} {articleWord}
             </span>
           ) : null}
         </div>
@@ -76,14 +83,14 @@ export default function FilterChips({
             <ArticleSearchBar
               value={searchQuery}
               onChange={onSearchChange}
-              placeholder={searchPlaceholder}
+              placeholder={placeholder}
               className="filter-panel__search"
             />
           ) : null}
 
           {hasSelection || hasSearch ? (
             <button type="button" className="filter-panel__clear" onClick={clearAll}>
-              Reset filters
+              {resetText}
             </button>
           ) : null}
         </div>

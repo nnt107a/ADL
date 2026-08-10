@@ -1,3 +1,5 @@
+import { useLocale } from '../context/LocaleContext';
+
 export default function ArticleSearchBar({
   value = '',
   onChange,
@@ -6,6 +8,20 @@ export default function ArticleSearchBar({
   totalCount,
   className = '',
 }) {
+  const { copy, locale } = useLocale();
+
+  let countText = '';
+  if (value && typeof resultCount === 'number' && typeof totalCount === 'number') {
+    const resWord = resultCount === 1 ? (copy?.ui?.result || 'result') : (copy?.ui?.results || 'results');
+    if (locale === 'vi') {
+      countText = `${resultCount} trong số ${totalCount} ${resWord}`;
+    } else if (locale === 'cn') {
+      countText = `显示 ${resultCount} / 共 ${totalCount} 条${resWord}`;
+    } else {
+      countText = `${resultCount} of ${totalCount} ${resWord}`;
+    }
+  }
+
   return (
     <div className={`article-search-bar ${className}`.trim()}>
       <div className="article-search-input-wrapper">
@@ -38,18 +54,14 @@ export default function ArticleSearchBar({
             type="button"
             className="article-search-clear"
             onClick={() => onChange('')}
-            aria-label="Clear search"
+            aria-label={copy?.ui?.clearSearch || 'Clear search'}
           >
             ✕
           </button>
         ) : null}
       </div>
 
-      {value && typeof resultCount === 'number' ? (
-        <p className="article-search-count">
-          {resultCount} of {totalCount} {totalCount === 1 ? 'result' : 'results'}
-        </p>
-      ) : null}
+      {countText ? <p className="article-search-count">{countText}</p> : null}
     </div>
   );
 }

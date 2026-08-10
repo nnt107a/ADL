@@ -1,4 +1,5 @@
 import { useMemo } from 'react';
+import { useLocale } from '../context/LocaleContext';
 
 /**
  * Floating Pill Pagination Bar component.
@@ -11,8 +12,11 @@ export default function Pagination({
   pageSize = 6,
   onPageChange,
   className = '',
-  itemLabel = 'articles',
+  itemLabel,
+  previousLabel,
+  nextLabel,
 }) {
+  const { copy, locale } = useLocale();
   const totalPages = useMemo(() => Math.max(1, Math.ceil(totalItems / pageSize)), [totalItems, pageSize]);
 
   if (totalPages <= 1) {
@@ -62,6 +66,17 @@ export default function Pagination({
     return result;
   }, [currentPage, totalPages]);
 
+  const prevText = previousLabel || copy?.ui?.previous || 'Previous';
+  const nextText = nextLabel || copy?.ui?.next || 'Next';
+  const resolvedItemLabel = itemLabel || copy?.ui?.articles || 'articles';
+
+  let summaryText = `Showing ${startItem}–${endItem} of ${totalItems} ${resolvedItemLabel}`;
+  if (locale === 'vi') {
+    summaryText = `Hiển thị ${startItem}–${endItem} trong số ${totalItems} ${resolvedItemLabel}`;
+  } else if (locale === 'cn') {
+    summaryText = `显示 ${startItem}–${endItem} / 共 ${totalItems} ${resolvedItemLabel}`;
+  }
+
   return (
     <nav className={`pagination-pill-bar ${className}`.trim()} aria-label="Page navigation">
       <div className="pagination-controls">
@@ -70,9 +85,9 @@ export default function Pagination({
           className="pagination-nav-btn pagination-prev"
           onClick={() => onPageChange(currentPage - 1)}
           disabled={currentPage <= 1}
-          aria-label="Previous page"
+          aria-label={prevText}
         >
-          <span className="pagination-chevron" aria-hidden="true">‹</span> Previous
+          <span className="pagination-chevron" aria-hidden="true">‹</span> {prevText}
         </button>
 
         <div className="pagination-numbers">
@@ -101,15 +116,13 @@ export default function Pagination({
           className="pagination-nav-btn pagination-next"
           onClick={() => onPageChange(currentPage + 1)}
           disabled={currentPage >= totalPages}
-          aria-label="Next page"
+          aria-label={nextText}
         >
-          Next <span className="pagination-chevron" aria-hidden="true">›</span>
+          {nextText} <span className="pagination-chevron" aria-hidden="true">›</span>
         </button>
       </div>
 
-      <div className="pagination-summary">
-        Showing {startItem}–{endItem} of {totalItems} {itemLabel}
-      </div>
+      <div className="pagination-summary">{summaryText}</div>
     </nav>
   );
 }
