@@ -4,14 +4,19 @@ import PageSEO from '../components/PageSEO';
 import { Link } from 'react-router-dom';
 import LoadingState from '../components/LoadingState';
 import ErrorState from '../components/ErrorState';
+import LazyImage from '../components/LazyImage';
+import ArticleSearchBar from '../components/ArticleSearchBar';
+import Pagination from '../components/Pagination';
+import FilterChips from '../components/FilterChips';
 import useApiResource from '../hooks/useApiResource';
 import useAdminSession from '../hooks/useAdminSession';
+import useArticleSearch from '../hooks/useArticleSearch';
 import { useLocale } from '../context/LocaleContext';
-import FilterChips from '../components/FilterChips';
-import LazyImage from '../components/LazyImage';
 import { pageBackdrops, pageHeaderThemes } from '../data/pageAssets';
 import { getServiceLabel, getServiceOptions, normalizeServiceSelections } from '../utils/serviceFilters';
 import { resolveImageUrl } from '../utils/imageUrl';
+
+const PAGE_SIZE = 6;
 
 function formatPublishedAt(value) {
   if (!value) {
@@ -36,6 +41,7 @@ export default function KnowledgePage() {
   const { copy, locale } = useLocale();
   const page = copy.pages.knowledge;
   const [selectedFilters, setSelectedFilters] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
   const { data: articles, loading, error } = useApiResource(`/api/insights?lang=${locale}`, {
     initialData: [],
   });
@@ -73,6 +79,35 @@ export default function KnowledgePage() {
       return articleFilters.some((filter) => selectedKeys.has(filter));
     });
   }, [articles, selectedFilters, copy.data.services]);
+
+  const { query, setQuery, results: searchResults } = useArticleSearch(filteredArticles);
+
+  const displayItems = searchResults;
+  const totalItems = displayItems.length;
+  const totalPages = Math.max(1, Math.ceil(totalItems / PAGE_SIZE));
+  const safePage = Math.min(currentPage, totalPages);
+  const paginatedItems = useMemo(
+    () => displayItems.slice((safePage - 1) * PAGE_SIZE, safePage * PAGE_SIZE),
+    [displayItems, safePage]
+  );
+
+  function handlePageChange(newPage) {
+    setCurrentPage(newPage);
+    const section = document.querySelector('.section.section-alt');
+    if (section) {
+      section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }
+
+  function handleSearch(value) {
+    setQuery(value);
+    setCurrentPage(1);
+  }
+
+  function handleFilterChange(newFilters) {
+    setSelectedFilters(newFilters);
+    setCurrentPage(1);
+  }
 
   return (
     <>
@@ -114,30 +149,45 @@ export default function KnowledgePage() {
                   title={page.filterTitle || 'Filter insights'}
                   items={filterOptions}
                   selectedValues={selectedFilters}
-                  onChange={setSelectedFilters}
+                  onChange={handleFilterChange}
                   allLabel={page.filterAll || 'All insights'}
                   emptyLabel={page.filterEmpty || 'No filters available yet'}
+                  searchQuery={query}
+                  onSearchChange={handleSearch}
+                  searchPlaceholder={page.searchPlaceholder || 'Search insights...'}
+                  resultCount={totalItems}
                 />
               </div>
 
-              {filteredArticles.length > 0 ? (
-                <div className="container cards-grid insights-grid">
-                  {filteredArticles.map((article) => (
-                    <article className="insight-card" key={article._id}>
-                      <div className="insight-meta">
-                        <time>{formatPublishedAt(article.publishedAt)}</time>
-                      </div>
-                      {article.imageUrl ? (
-                        <div className="insight-card-image">
-                          <LazyImage src={resolveImageUrl(article.imageUrl)} alt={article.title || ''} />
+              {paginatedItems.length > 0 ? (
+                <>
+                  <div className="container cards-grid insights-grid">
+                    {paginatedItems.map((article) => (
+                      <article className="insight-card" key={article._id}>
+                        <div className="insight-meta">
+                          <time>{formatPublishedAt(article.publishedAt)}</time>
                         </div>
-                      ) : null}
-                      <h3>{article.title}</h3>
-                      <p>{article.excerpt}</p>
-                      <Link to={`/insight/${article.slug}`}>{page.readMore}</Link>
-                    </article>
-                  ))}
-                </div>
+                        {article.imageUrl ? (
+                          <div className="insight-card-image">
+                            <LazyImage src={resolveImageUrl(article.imageUrl)} alt={article.title || ''} />
+                          </div>
+                        ) : null}
+                        <h3>{article.title}</h3>
+                        <p>{article.excerpt}</p>
+                        <Link to={`/insight/${article.slug}`}>{page.readMore}</Link>
+                      </article>
+                    ))}
+                  </div>
+
+                  <div className="container">
+                    <Pagination
+                      currentPage={safePage}
+                      totalItems={totalItems}
+                      pageSize={PAGE_SIZE}
+                      onPageChange={handlePageChange}
+                    />
+                  </div>
+                </>
               ) : (
                 <div className="container state-panel">
                   <p className="state-label">{page.noMatchTitle || 'No matching insights'}</p>

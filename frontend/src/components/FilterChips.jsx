@@ -1,3 +1,5 @@
+import ArticleSearchBar from './ArticleSearchBar';
+
 function normalizeFilterItem(item) {
   if (typeof item === 'string') {
     return { value: item, label: item, count: 0 };
@@ -18,10 +20,15 @@ export default function FilterChips({
   allLabel = 'All',
   emptyLabel = 'No filters available yet',
   className = '',
+  searchQuery = '',
+  onSearchChange,
+  searchPlaceholder = 'Search...',
+  resultCount,
 }) {
   const normalizedItems = items.map(normalizeFilterItem).filter((item) => item.value);
   const selectedSet = new Set(selectedValues.map((value) => String(value).trim().toLowerCase()).filter(Boolean));
   const hasSelection = selectedSet.size > 0;
+  const hasSearch = Boolean(searchQuery);
 
   function toggle(value) {
     if (typeof onChange !== 'function') {
@@ -47,19 +54,39 @@ export default function FilterChips({
     if (typeof onChange === 'function') {
       onChange([]);
     }
+    if (typeof onSearchChange === 'function') {
+      onSearchChange('');
+    }
   }
 
   return (
     <section className={`filter-panel ${className}`.trim()} aria-label={title}>
       <div className="filter-panel__header">
-        <div>
+        <div className="filter-panel__title-group">
           <p className="content-label">{title}</p>
+          {(hasSelection || hasSearch) && typeof resultCount === 'number' ? (
+            <span className="filter-panel__result-badge">
+              {resultCount} {resultCount === 1 ? 'article' : 'articles'}
+            </span>
+          ) : null}
         </div>
-        {hasSelection ? (
-          <button type="button" className="filter-panel__clear" onClick={clearAll}>
-            Clear
-          </button>
-        ) : null}
+
+        <div className="filter-panel__controls">
+          {typeof onSearchChange === 'function' ? (
+            <ArticleSearchBar
+              value={searchQuery}
+              onChange={onSearchChange}
+              placeholder={searchPlaceholder}
+              className="filter-panel__search"
+            />
+          ) : null}
+
+          {hasSelection || hasSearch ? (
+            <button type="button" className="filter-panel__clear" onClick={clearAll}>
+              Reset filters
+            </button>
+          ) : null}
+        </div>
       </div>
 
       {normalizedItems.length > 0 ? (
@@ -67,7 +94,7 @@ export default function FilterChips({
           <button
             type="button"
             className={!hasSelection ? 'filter-chip is-active' : 'filter-chip'}
-            onClick={clearAll}
+            onClick={() => typeof onChange === 'function' && onChange([])}
           >
             {allLabel}
           </button>
