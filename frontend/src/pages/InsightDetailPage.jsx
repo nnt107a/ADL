@@ -1,14 +1,15 @@
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import PageHeader from '../components/PageHeader';
 import PageSEO from '../components/PageSEO';
 import LoadingState from '../components/LoadingState';
 import ErrorState from '../components/ErrorState';
 import useApiResource from '../hooks/useApiResource';
 import useAdminSession from '../hooks/useAdminSession';
+import useLazyContentImages from '../hooks/useLazyContentImages';
 import { useLocale } from '../context/LocaleContext';
 import { getServiceLabel, normalizeServiceSelections } from '../utils/serviceFilters';
-import { resolveHtmlContent, resolveImageUrl } from '../utils/imageUrl';
+import { lazyLoadHtmlImages, resolveImageUrl } from '../utils/imageUrl';
 import { pageBackdrops, pageHeaderThemes } from '../data/pageAssets';
 
 function formatPublishedAt(value) {
@@ -41,6 +42,8 @@ export default function InsightDetailPage() {
     initialData: null,
     enabled: Boolean(slug),
   });
+  const contentRef = useRef(null);
+  useLazyContentImages(contentRef, item?.content);
   const serviceSelections = normalizeServiceSelections(item?.filters || [], copy.data.services);
 
   async function handleDelete() {
@@ -145,7 +148,7 @@ export default function InsightDetailPage() {
 
               <h1 className="news-detail-title">{item.title}</h1>
 
-              {item.content ? <div className="news-content" dangerouslySetInnerHTML={{ __html: resolveHtmlContent(item.content) }} /> : null}
+              {item.content ? <div ref={contentRef} className="news-content" dangerouslySetInnerHTML={{ __html: lazyLoadHtmlImages(item.content) }} /> : null}
             </article>
           </div>
         ) : null}

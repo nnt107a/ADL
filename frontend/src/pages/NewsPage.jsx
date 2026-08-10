@@ -6,6 +6,7 @@ import ErrorState from '../components/ErrorState';
 import useApiResource from '../hooks/useApiResource';
 import useAdminSession from '../hooks/useAdminSession';
 import { useLocale } from '../context/LocaleContext';
+import LazyImage from '../components/LazyImage';
 import { pageBackdrops, pageHeaderThemes } from '../data/pageAssets';
 import { resolveImageUrl } from '../utils/imageUrl';
 
@@ -78,7 +79,7 @@ export default function NewsPage() {
                   </div>
                   {item.imageUrl ? (
                     <div className="insight-card-image">
-                      <img src={resolveImageUrl(item.imageUrl)} alt="" loading="lazy" decoding="async" />
+                      <LazyImage src={resolveImageUrl(item.imageUrl)} alt={item.title || ''} />
                     </div>
                   ) : null}
                   <h3>{item.title}</h3>

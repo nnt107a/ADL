@@ -63,4 +63,28 @@ export function resolveHtmlContent(html) {
   });
 }
 
+/**
+ * Processes raw article HTML content to convert all <img src="..."> tags into lazy-loaded
+ * images with data-lazy-src attributes and placeholder SVGs.
+ */
+export function lazyLoadHtmlImages(html) {
+  if (!html || typeof html !== 'string') {
+    return '';
+  }
 
+  const transparentPixel = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1 1"%3E%3C/svg%3E';
+
+  return html.replace(/<img\s+([^>]*?)src=["']([^"']+)["']([^>]*?)>/gi, (match, before, src, after) => {
+    const resolvedSrc = resolveImageUrl(src);
+    // Preserves existing classes if any
+    const existingClassMatch = match.match(/class=["']([^"']+)["']/i);
+    let updatedBeforeAfter = `${before}${after}`;
+
+    if (existingClassMatch) {
+      updatedBeforeAfter = updatedBeforeAfter.replace(/class=["']([^"']+)["']/i, `class="$1 lazy-content-img"`);
+      return `<img ${updatedBeforeAfter} src="${transparentPixel}" data-lazy-src="${resolvedSrc}">`;
+    }
+
+    return `<img ${before}src="${transparentPixel}" data-lazy-src="${resolvedSrc}" class="lazy-content-img"${after}>`;
+  });
+}

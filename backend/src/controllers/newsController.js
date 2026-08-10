@@ -183,7 +183,7 @@ export async function listNews(req, res, next) {
   try {
     const locale = getArticleLocaleFromRequest(req);
     const items = await News.find()
-      .select('title slug type excerpt publishedAt imageUrl createdAt updatedAt contentFileUrl contentFileName translations')
+      .select('title slug type excerpt publishedAt imageUrl createdAt updatedAt contentFileUrl contentFileName translations.en.title translations.en.excerpt translations.vi.title translations.vi.excerpt translations.cn.title translations.cn.excerpt')
       .sort({ publishedAt: -1, createdAt: -1 })
       .lean();
 

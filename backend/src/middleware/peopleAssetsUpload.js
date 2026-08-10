@@ -46,7 +46,10 @@ function fileFilter(_req, file, cb) {
 const upload = multer({
   storage,
   fileFilter,
-  limits: { fileSize: 10 * 1024 * 1024 },
+  limits: {
+    fileSize: 10 * 1024 * 1024,
+    fieldSize: 10 * 1024 * 1024,
+  },
 });
 
 const uploadSingle = upload.single('image');
@@ -55,7 +58,15 @@ export default function maybeUploadPeopleImage(req, res, next) {
   const contentType = req.headers['content-type'] || '';
 
   if (contentType.includes('multipart/form-data')) {
-    return uploadSingle(req, res, next);
+    return uploadSingle(req, res, (err) => {
+      if (err) {
+        if (err instanceof multer.MulterError) {
+          return res.status(400).json({ message: `Upload error: ${err.message}` });
+        }
+        return next(err);
+      }
+      return next();
+    });
   }
 
   return next();

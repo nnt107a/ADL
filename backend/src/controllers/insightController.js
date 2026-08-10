@@ -207,7 +207,7 @@ export async function listInsights(req, res, next) {
   try {
     const locale = getArticleLocaleFromRequest(req);
     const items = await Insight.find()
-      .select('title slug type excerpt filters publishedAt imageUrl createdAt updatedAt content translations')
+      .select('title slug type excerpt filters publishedAt imageUrl createdAt updatedAt translations.en.title translations.en.excerpt translations.vi.title translations.vi.excerpt translations.cn.title translations.cn.excerpt')
       .sort({ publishedAt: -1, createdAt: -1 })
       .lean();
 

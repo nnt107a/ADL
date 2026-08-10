@@ -55,7 +55,10 @@ function fileFilter(req, file, cb) {
 const upload = multer({
   storage,
   fileFilter,
-  limits: { fileSize: 25 * 1024 * 1024 },
+  limits: {
+    fileSize: 25 * 1024 * 1024,
+    fieldSize: 50 * 1024 * 1024,
+  },
 });
 
 const uploadFields = upload.fields([
@@ -69,7 +72,25 @@ export default function maybeUploadNewsAssets(req, res, next) {
   const contentType = req.headers['content-type'] || '';
 
   if (contentType.includes('multipart/form-data')) {
-    return uploadFields(req, res, next);
+    return uploadFields(req, res, (err) => {
+      if (err) {
+        if (err instanceof multer.MulterError) {
+          if (err.code === 'LIMIT_FIELD_VALUE') {
+            return res.status(400).json({
+              message: 'Field content is too long. If pasting large articles with images, try uploading as a Word document (.docx) or reducing image sizes.',
+            });
+          }
+          if (err.code === 'LIMIT_FILE_SIZE') {
+            return res.status(400).json({
+              message: 'File size exceeds the 25MB limit.',
+            });
+          }
+          return res.status(400).json({ message: `Upload error: ${err.message}` });
+        }
+        return next(err);
+      }
+      return next();
+    });
   }
 
   return next();

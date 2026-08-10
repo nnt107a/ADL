@@ -1,4 +1,4 @@
-import { Fragment, useState } from 'react';
+import { Fragment, useRef, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import PageHeader from '../components/PageHeader';
 import PageSEO from '../components/PageSEO';
@@ -6,8 +6,9 @@ import LoadingState from '../components/LoadingState';
 import ErrorState from '../components/ErrorState';
 import useApiResource from '../hooks/useApiResource';
 import useAdminSession from '../hooks/useAdminSession';
+import useLazyContentImages from '../hooks/useLazyContentImages';
 import { useLocale } from '../context/LocaleContext';
-import { resolveHtmlContent, resolveImageUrl } from '../utils/imageUrl';
+import { lazyLoadHtmlImages, resolveImageUrl } from '../utils/imageUrl';
 
 function formatPublishedAt(value) {
   if (!value) {
@@ -76,6 +77,9 @@ export default function NewsDetailPage() {
     initialData: null,
     enabled: Boolean(slug),
   });
+
+  const contentRef = useRef(null);
+  useLazyContentImages(contentRef, item?.content);
 
   async function handleDelete() {
     if (!slug) {
@@ -164,7 +168,7 @@ export default function NewsDetailPage() {
 
               {item.content ? (
                 looksLikeHtml(item.content) ? (
-                  <div className="news-content" dangerouslySetInnerHTML={{ __html: resolveHtmlContent(item.content) }} />
+                  <div ref={contentRef} className="news-content" dangerouslySetInnerHTML={{ __html: lazyLoadHtmlImages(item.content) }} />
                 ) : (
                   renderContentWithImageToken(item.content, item.imageUrl)
                 )

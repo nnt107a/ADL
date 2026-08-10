@@ -8,6 +8,7 @@ import useApiResource from '../hooks/useApiResource';
 import useAdminSession from '../hooks/useAdminSession';
 import { useLocale } from '../context/LocaleContext';
 import FilterChips from '../components/FilterChips';
+import LazyImage from '../components/LazyImage';
 import { pageBackdrops, pageHeaderThemes } from '../data/pageAssets';
 import { getServiceLabel, getServiceOptions, normalizeServiceSelections } from '../utils/serviceFilters';
 import { resolveImageUrl } from '../utils/imageUrl';
@@ -128,7 +129,7 @@ export default function KnowledgePage() {
                       </div>
                       {article.imageUrl ? (
                         <div className="insight-card-image">
-                          <img src={resolveImageUrl(article.imageUrl)} alt="" loading="lazy" decoding="async" />
+                          <LazyImage src={resolveImageUrl(article.imageUrl)} alt={article.title || ''} />
                         </div>
                       ) : null}
                       <h3>{article.title}</h3>
