@@ -143,13 +143,19 @@ export default function NewsPage() {
                           <time>{formatPublishedAt(item.publishedAt)}</time>
                         </div>
                         {item.imageUrl ? (
-                          <div className="insight-card-image">
+                          <Link to={`/news/${item.slug}`} className="insight-card-image">
                             <LazyImage src={resolveImageUrl(item.imageUrl)} alt={item.title || ''} />
-                          </div>
+                          </Link>
                         ) : null}
-                        <h3>{item.title}</h3>
+                        <h3>
+                          <Link to={`/news/${item.slug}`} className="insight-card-title-link">
+                            {item.title}
+                          </Link>
+                        </h3>
                         <p>{item.excerpt}</p>
-                        <Link to={`/news/${item.slug}`}>{page.readMore || 'Read more'}</Link>
+                        <Link to={`/news/${item.slug}`} className="insight-card-readmore">
+                          {page.readMore || 'Read more'}
+                        </Link>
                       </article>
                     ))}
                   </div>

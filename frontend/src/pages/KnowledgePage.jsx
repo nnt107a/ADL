@@ -168,13 +168,19 @@ export default function KnowledgePage() {
                           <time>{formatPublishedAt(article.publishedAt)}</time>
                         </div>
                         {article.imageUrl ? (
-                          <div className="insight-card-image">
+                          <Link to={`/insight/${article.slug}`} className="insight-card-image">
                             <LazyImage src={resolveImageUrl(article.imageUrl)} alt={article.title || ''} />
-                          </div>
+                          </Link>
                         ) : null}
-                        <h3>{article.title}</h3>
+                        <h3>
+                          <Link to={`/insight/${article.slug}`} className="insight-card-title-link">
+                            {article.title}
+                          </Link>
+                        </h3>
                         <p>{article.excerpt}</p>
-                        <Link to={`/insight/${article.slug}`}>{page.readMore}</Link>
+                        <Link to={`/insight/${article.slug}`} className="insight-card-readmore">
+                          {page.readMore}
+                        </Link>
                       </article>
                     ))}
                   </div>
