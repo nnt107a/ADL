@@ -1,3 +1,4 @@
+import { useRef, useState, useEffect } from 'react';
 import { useLocale } from '../context/LocaleContext';
 
 export default function ArticleSearchBar({
@@ -9,6 +10,35 @@ export default function ArticleSearchBar({
   className = '',
 }) {
   const { copy, locale } = useLocale();
+  const [localValue, setLocalValue] = useState(value);
+  const isComposingRef = useRef(false);
+
+  useEffect(() => {
+    if (!isComposingRef.current) {
+      setLocalValue(value);
+    }
+  }, [value]);
+
+  function handleChange(e) {
+    const val = e.target.value;
+    setLocalValue(val);
+    if (!isComposingRef.current && typeof onChange === 'function') {
+      onChange(val);
+    }
+  }
+
+  function handleCompositionStart() {
+    isComposingRef.current = true;
+  }
+
+  function handleCompositionEnd(e) {
+    isComposingRef.current = false;
+    const val = e.target.value;
+    setLocalValue(val);
+    if (typeof onChange === 'function') {
+      onChange(val);
+    }
+  }
 
   let countText = '';
   if (value && typeof resultCount === 'number' && typeof totalCount === 'number') {
@@ -42,18 +72,25 @@ export default function ArticleSearchBar({
         <input
           type="search"
           className="article-search-input"
-          value={value}
-          onChange={(e) => onChange(e.target.value)}
+          value={localValue}
+          onChange={handleChange}
+          onCompositionStart={handleCompositionStart}
+          onCompositionEnd={handleCompositionEnd}
           placeholder={placeholder}
           aria-label={placeholder}
           autoComplete="off"
           spellCheck="false"
         />
-        {value ? (
+        {localValue ? (
           <button
             type="button"
             className="article-search-clear"
-            onClick={() => onChange('')}
+            onClick={() => {
+              setLocalValue('');
+              if (typeof onChange === 'function') {
+                onChange('');
+              }
+            }}
             aria-label={copy?.ui?.clearSearch || 'Clear search'}
           >
             ✕
@@ -65,3 +102,4 @@ export default function ArticleSearchBar({
     </div>
   );
 }
+

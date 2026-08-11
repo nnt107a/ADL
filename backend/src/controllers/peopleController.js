@@ -24,12 +24,14 @@ function normalizeExpertise(value) {
 
 export async function listPeople(_req, res, next) {
   try {
-    const people = await Person.find().sort({ featured: -1, order: 1, name: 1 });
+    res.setHeader('Cache-Control', 'public, max-age=60, s-maxage=300, stale-while-revalidate=600');
+    const people = await Person.find().sort({ featured: -1, order: 1, name: 1 }).lean();
     res.json(people);
   } catch (error) {
     next(error);
   }
 }
+
 
 export async function getPersonById(req, res, next) {
   try {

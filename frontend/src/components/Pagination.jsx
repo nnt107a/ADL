@@ -19,13 +19,6 @@ export default function Pagination({
   const { copy, locale } = useLocale();
   const totalPages = useMemo(() => Math.max(1, Math.ceil(totalItems / pageSize)), [totalItems, pageSize]);
 
-  if (totalPages <= 1) {
-    return null;
-  }
-
-  const startItem = (currentPage - 1) * pageSize + 1;
-  const endItem = Math.min(totalItems, currentPage * pageSize);
-
   const pages = useMemo(() => {
     const result = [];
     const maxVisible = 7;
@@ -65,6 +58,14 @@ export default function Pagination({
 
     return result;
   }, [currentPage, totalPages]);
+
+  if (totalPages <= 1) {
+    return null;
+  }
+
+  const startItem = (currentPage - 1) * pageSize + 1;
+  const endItem = Math.min(totalItems, currentPage * pageSize);
+
 
   const prevText = previousLabel || copy?.ui?.previous || 'Previous';
   const nextText = nextLabel || copy?.ui?.next || 'Next';

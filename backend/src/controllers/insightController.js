@@ -205,6 +205,7 @@ async function resolveLocalizedContentForInsight(req, existing = null) {
 
 export async function listInsights(req, res, next) {
   try {
+    res.setHeader('Cache-Control', 'public, max-age=60, s-maxage=300, stale-while-revalidate=600');
     const locale = getArticleLocaleFromRequest(req);
     const items = await Insight.find()
       .select('title slug type excerpt filters publishedAt imageUrl createdAt updatedAt translations.en.title translations.en.excerpt translations.vi.title translations.vi.excerpt translations.cn.title translations.cn.excerpt')
@@ -216,6 +217,7 @@ export async function listInsights(req, res, next) {
     next(error);
   }
 }
+
 
 export async function getInsightBySlug(req, res, next) {
   try {

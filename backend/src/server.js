@@ -4,19 +4,18 @@ import { connectDatabase } from './config/db.js';
 
 const port = Number(process.env.PORT || 4000);
 
-async function start() {
-  await connectDatabase();
-  app.listen(port, () => {
-    console.log(`ADL API listening on http://localhost:${port}`);
+function start() {
+  app.listen(port, '0.0.0.0', () => {
+    console.log(`ADL API listening on http://127.0.0.1:${port}`);
+  });
+
+  connectDatabase().catch((error) => {
+    console.error('Database connection warning:', error.message);
+    if (error.cause) {
+      console.error('Cause:', error.cause.message);
+    }
   });
 }
 
-start().catch((error) => {
-  console.error('Failed to start server:', error.message);
+start();
 
-  if (error.cause) {
-    console.error('Cause:', error.cause.message);
-  }
-
-  process.exit(1);
-});

@@ -1,8 +1,11 @@
 import { useEffect, useState } from 'react';
 
+const apiCache = new Map();
+
 export default function useApiResource(url, { initialData = null, enabled = true } = {}) {
-  const [data, setData] = useState(initialData);
-  const [loading, setLoading] = useState(Boolean(enabled));
+  const cached = apiCache.get(url);
+  const [data, setData] = useState(cached !== undefined ? cached : initialData);
+  const [loading, setLoading] = useState(Boolean(enabled) && cached === undefined);
   const [error, setError] = useState('');
 
   useEffect(() => {
@@ -14,7 +17,9 @@ export default function useApiResource(url, { initialData = null, enabled = true
 
     async function load() {
       try {
-        setLoading(true);
+        if (!apiCache.has(url)) {
+          setLoading(true);
+        }
         setError('');
 
         const response = await fetch(url, { signal: controller.signal });
@@ -26,6 +31,7 @@ export default function useApiResource(url, { initialData = null, enabled = true
         const payload = await response.json();
 
         if (!controller.signal.aborted) {
+          apiCache.set(url, payload);
           setData(payload);
         }
       } catch (fetchError) {
@@ -46,3 +52,4 @@ export default function useApiResource(url, { initialData = null, enabled = true
 
   return { data, loading, error };
 }
+

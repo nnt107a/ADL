@@ -181,6 +181,7 @@ function cleanString(value) {
 
 export async function listNews(req, res, next) {
   try {
+    res.setHeader('Cache-Control', 'public, max-age=60, s-maxage=300, stale-while-revalidate=600');
     const locale = getArticleLocaleFromRequest(req);
     const items = await News.find()
       .select('title slug type excerpt publishedAt imageUrl createdAt updatedAt contentFileUrl contentFileName translations.en.title translations.en.excerpt translations.vi.title translations.vi.excerpt translations.cn.title translations.cn.excerpt')
@@ -192,6 +193,7 @@ export async function listNews(req, res, next) {
     next(error);
   }
 }
+
 
 export async function getNewsBySlug(req, res, next) {
   try {

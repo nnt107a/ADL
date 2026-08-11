@@ -5,7 +5,11 @@ import { useMemo, useRef, useState } from 'react';
  * remove diacritics (Vietnamese tone marks, Chinese chars pass through as-is).
  */
 function normalize(str) {
-  return String(str || '')
+  if (str === null || str === undefined) {
+    return '';
+  }
+
+  return String(str)
     .toLowerCase()
     .normalize('NFD')
     .replace(/[\u0300-\u036f]/g, '')
@@ -26,60 +30,67 @@ function normalize(str) {
  * @param {{ debounceMs?: number }} options
  * @returns {{ query: string, setQuery: Function, results: Array }}
  */
-export default function useArticleSearch(articles, { debounceMs = 150 } = {}) {
+export default function useArticleSearch(articles = [], { debounceMs = 150 } = {}) {
+  const safeArticles = Array.isArray(articles) ? articles : [];
   const [query, setQuery] = useState('');
   const [debouncedQuery, setDebouncedQuery] = useState('');
   const timerRef = useRef(null);
 
   function handleQueryChange(newQuery) {
-    setQuery(newQuery);
+    const nextQuery = String(newQuery ?? '');
+    setQuery(nextQuery);
 
     if (timerRef.current) {
       clearTimeout(timerRef.current);
     }
 
     timerRef.current = setTimeout(() => {
-      setDebouncedQuery(newQuery);
+      setDebouncedQuery(nextQuery);
     }, debounceMs);
   }
 
   // Pre-compute normalized searchable text for every article (memoized on articles array ref)
   const searchIndex = useMemo(() => {
-    return articles.map((article) => {
+    return safeArticles.map((article) => {
+      if (!article) {
+        return { article, searchableText: '' };
+      }
+
       const fields = [
-        article.title,
-        article.excerpt,
-        article.translations?.en?.title,
-        article.translations?.en?.excerpt,
-        article.translations?.vi?.title,
-        article.translations?.vi?.excerpt,
-        article.translations?.cn?.title,
-        article.translations?.cn?.excerpt,
+        typeof article.title === 'string' ? article.title : '',
+        typeof article.excerpt === 'string' ? article.excerpt : '',
+        typeof article.translations?.en?.title === 'string' ? article.translations.en.title : '',
+        typeof article.translations?.en?.excerpt === 'string' ? article.translations.en.excerpt : '',
+        typeof article.translations?.vi?.title === 'string' ? article.translations.vi.title : '',
+        typeof article.translations?.vi?.excerpt === 'string' ? article.translations.vi.excerpt : '',
+        typeof article.translations?.cn?.title === 'string' ? article.translations.cn.title : '',
+        typeof article.translations?.cn?.excerpt === 'string' ? article.translations.cn.excerpt : '',
       ];
 
       const searchableText = normalize(fields.filter(Boolean).join(' '));
       return { article, searchableText };
     });
-  }, [articles]);
+  }, [safeArticles]);
 
   const results = useMemo(() => {
     const normalizedQuery = normalize(debouncedQuery);
 
     if (!normalizedQuery) {
-      return articles;
+      return safeArticles;
     }
 
     // Split query into individual tokens for AND-matching
     const tokens = normalizedQuery.split(/\s+/).filter(Boolean);
 
     if (tokens.length === 0) {
-      return articles;
+      return safeArticles;
     }
 
     return searchIndex
-      .filter(({ searchableText }) => tokens.every((token) => searchableText.includes(token)))
+      .filter(({ article, searchableText }) => article && tokens.every((token) => searchableText.includes(token)))
       .map(({ article }) => article);
-  }, [articles, debouncedQuery, searchIndex]);
+  }, [safeArticles, debouncedQuery, searchIndex]);
 
   return { query, setQuery: handleQueryChange, results };
 }
+
