@@ -1,3 +1,4 @@
+import compression from 'compression';
 import cors from 'cors';
 import express from 'express';
 import fs from 'fs';
@@ -19,6 +20,9 @@ const backendRoot = path.resolve(__dirname, '..');
 const frontendDistDir = path.join(backendRoot, 'public');
 const frontendIndexFile = path.join(frontendDistDir, 'index.html');
 const hasFrontendBuild = fs.existsSync(frontendIndexFile);
+
+// Compress all text/JSON/CSS/JS HTTP responses
+app.use(compression());
 
 app.use(
   cors({

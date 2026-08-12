@@ -17,23 +17,23 @@ export const homePartnerLogos = [
   { src: encodeAssetPath('/partner_logo/logo D&H.png'), alt: 'Partner logo D&H' },
   { src: encodeAssetPath('/partner_logo/logo ecvn.png'), alt: 'Partner logo ECVN' },
   { src: encodeAssetPath('/partner_logo/logo front.png'), alt: 'Partner logo Front' },
-  { src: encodeAssetPath('/partner_logo/logo global.jpg'), alt: 'Partner logo Global' },
+  { src: encodeAssetPath('/partner_logo/logo global.webp'), alt: 'Partner logo Global' },
   { src: encodeAssetPath('/partner_logo/logo immeta.png'), alt: 'Partner logo Immeta' },
   { src: encodeAssetPath('/partner_logo/logo intec.png'), alt: 'Partner logo Intec' },
   { src: encodeAssetPath('/partner_logo/logo neoen.png'), alt: 'Partner logo Neoen' },
-  { src: encodeAssetPath('/partner_logo/logo quang vinh.jpg'), alt: 'Partner logo Quang Vinh' },
+  { src: encodeAssetPath('/partner_logo/logo quang vinh.webp'), alt: 'Partner logo Quang Vinh' },
   { src: encodeAssetPath('/partner_logo/logo sml.png'), alt: 'Partner logo SML' },
 ];
 
 export const pageBackdrops = {
-  about: encodeAssetPath('/page_bg/Trang About us.jpg'),
-  services: encodeAssetPath('/page_bg/Trang Our Services.jpg'),
-  people: encodeAssetPath('/page_bg/Trang Our People.jpg'),
-  insight: encodeAssetPath('/page_bg/Trang Insight.jpg'),
-  news: encodeAssetPath('/page_bg/Trang News.jpg'),
-  contact: encodeAssetPath('/page_bg/Trang Contact.jpg'),
-  mission: encodeAssetPath('/page_bg/Lantern.png'),
-  vision: encodeAssetPath('/page_bg/Lantern.png'),
+  about: encodeAssetPath('/page_bg/Trang About us.webp'),
+  services: encodeAssetPath('/page_bg/Trang Our Services.webp'),
+  people: encodeAssetPath('/page_bg/Trang Our People.webp'),
+  insight: encodeAssetPath('/page_bg/Trang Insight.webp'),
+  news: encodeAssetPath('/page_bg/Trang News.webp'),
+  contact: encodeAssetPath('/page_bg/Trang Contact.webp'),
+  mission: encodeAssetPath('/page_bg/Lantern.webp'),
+  vision: encodeAssetPath('/page_bg/Lantern.webp'),
 };
 
 export const pageHeaderThemes = {
@@ -48,16 +48,16 @@ export const pageHeaderThemes = {
 };
 
 export const serviceBackdrops = {
-  'foreign-investment': encodeAssetPath('/page_bg/Trang Intellectual Property.jpg'),
-  'mergers-acquisitions-restructuring': encodeAssetPath('/page_bg/Trang Intellectual Property.jpg'),
-  'capital-markets-finance-banking': encodeAssetPath('/page_bg/Trang Intellectual Property.jpg'),
-  'real-estate-construction': encodeAssetPath('/page_bg/Trang Intellectual Property.jpg'),
-  tax: encodeAssetPath('/page_bg/Trang Intellectual Property.jpg'),
-  'employment-labor': encodeAssetPath('/page_bg/Trang Intellectual Property.jpg'),
-  'corporate-governance-retainer': encodeAssetPath('/page_bg/Trang Intellectual Property.jpg'),
-  'intellectual-property': encodeAssetPath('/page_bg/Trang Intellectual Property.jpg'),
-  'personal-data-protection': encodeAssetPath('/page_bg/Trang Intellectual Property.jpg'),
-  'dispute-resolution': encodeAssetPath('/page_bg/Trang Intellectual Property.jpg'),
+  'foreign-investment': encodeAssetPath('/page_bg/Trang Intellectual Property.webp'),
+  'mergers-acquisitions-restructuring': encodeAssetPath('/page_bg/Trang Intellectual Property.webp'),
+  'capital-markets-finance-banking': encodeAssetPath('/page_bg/Trang Intellectual Property.webp'),
+  'real-estate-construction': encodeAssetPath('/page_bg/Trang Intellectual Property.webp'),
+  tax: encodeAssetPath('/page_bg/Trang Intellectual Property.webp'),
+  'employment-labor': encodeAssetPath('/page_bg/Trang Intellectual Property.webp'),
+  'corporate-governance-retainer': encodeAssetPath('/page_bg/Trang Intellectual Property.webp'),
+  'intellectual-property': encodeAssetPath('/page_bg/Trang Intellectual Property.webp'),
+  'personal-data-protection': encodeAssetPath('/page_bg/Trang Intellectual Property.webp'),
+  'dispute-resolution': encodeAssetPath('/page_bg/Trang Intellectual Property.webp'),
 };
 
 export const serviceHeaderThemes = {

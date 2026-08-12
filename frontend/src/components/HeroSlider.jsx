@@ -35,7 +35,8 @@ export default function HeroSlider({ slides }) {
         playsInline
         aria-hidden="true"
         tabIndex={-1}
-        preload="auto"
+        preload="metadata"
+        poster="/bg_poster.webp"
       >
         <source src="/Enhancer-HD-bg_vid.mp4" type="video/mp4" />
       </video>

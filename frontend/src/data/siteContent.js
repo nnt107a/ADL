@@ -702,7 +702,7 @@ const en = {
         id: 'duong',
         name: 'NGUYEN NHAT DUONG',
         title: 'Managing Partner',
-        photo: '/people/duong.png',
+        photo: '/people/duong.webp',
         biography: [
           'Mr. Duong has extensive experience advising clients on foreign investment, mergers and acquisitions, international trade, corporate governance, and personal data protection. Before founding AD Legal, he served as in-house counsel for multinational companies in the tourism, real estate, and construction industries, including HIS WORLD and Hoa Binh Construction Group. These roles provided him with broad practical experience in navigating legal issues arising from day-to-day business operations and corporate governance.',
           "He subsequently joined one of Vietnam's leading law firms as a Senior Associate, where he advised on numerous high-value commercial transactions and represented clients in complex commercial disputes before the courts and arbitral tribunals. In addition to his practice, Mr. Duong is actively involved in delivering training and sharing legal insights with businesses, particularly in the fields of employment law and personal data protection.",
@@ -728,7 +728,7 @@ const en = {
         id: 'mai-anh',
         name: 'BUI MAI ANH',
         title: 'Partner',
-        photo: '/people/mai-anh.png',
+        photo: '/people/mai-anh.webp',
         biography: [
           'Ms. Mai Anh has extensive experience advising clients in the construction and real estate sectors. She previously led construction contract matters for leading law firms, contractors, and developers in Vietnam, including CNC Counsel, Hoa Binh Construction Group, Kim Oanh Group, and Novaland Group, where she gained significant hands-on experience in addressing legal issues arising throughout project implementation.',
           'Focusing on construction and infrastructure matters, Ms. Mai Anh has provided comprehensive legal support to clients, including the review and negotiation of construction contracts, international sale of goods transactions, contract administration and performance, project finance matters, and the management of legal risks throughout project execution. In addition to her advisory work, she has represented clients in a number of complex construction and real estate disputes before the Vietnam International Arbitration Centre (VIAC).',
@@ -748,7 +748,7 @@ const en = {
         id: 'loc',
         name: 'NGUYEN TIEN LOC',
         title: 'Senior Partner',
-        photo: '/people/loc.png',
+        photo: '/people/loc.webp',
         biography: [
           'Mr. Loc has nearly 15 years of experience serving as in-house legal counsel within public institutions, including television broadcasters and hospitals. Throughout his career, he has advised on and handled a broad range of legal matters in the technology, media and telecommunications (TMT), advertising, healthcare, intellectual property, and employment sectors.',
           'Drawing on his extensive experience in the public sector, Mr. Loc possesses a deep understanding of regulatory frameworks, operational processes within government bodies, and practical experience in working with regulatory authorities at various levels. At AD Legal, in addition to providing legal advisory services, he is actively involved in designing and delivering internal compliance training programs for organizations with stringent governance and compliance requirements.',
@@ -771,7 +771,7 @@ const en = {
         id: 'minh',
         name: 'NGUYEN HOANG MINH',
         title: 'Senior Counsel',
-        photo: '/people/minh.png',
+        photo: '/people/minh.webp',
         biography: [
           'Mr. Minh has over 15 years of experience in finance, accounting, and taxation, having held senior positions as Chief Accountant and Chief Financial Officer at multinational corporations operating in the logistics, tourism, and financial services sectors, including Vinatrans, HIS WORLD, and Welcome.',
           'Leveraging his extensive expertise and practical business perspective, Mr. Minh has successfully advised clients on a wide range of complex tax matters, financial due diligence, and the design of flexible and efficient financial structures for mergers and acquisitions and corporate restructuring transactions. His involvement enables AD Legal to deliver a true one-stop service model, seamlessly integrating legal and financial expertise to provide comprehensive solutions that address the diverse advisory and operational needs of corporate clients.',
@@ -793,7 +793,7 @@ const en = {
         id: 'khoa',
         name: 'TRINH MINH KHOA',
         title: 'Senior Counsel',
-        photo: '/people/khoa.png',
+        photo: '/people/khoa.webp',
         biography: [
           'Mr. Khoa has over 15 years of experience in finance, accounting, and taxation, having held senior positions as Chief Accountant and Chief Financial Officer at multinational corporations operating in the e-commerce, tourism, and manufacturing sectors, including VinCommerce, HIS WORLD, and AK Food. His hands-on experience in financial management within large-scale enterprises has provided him with a comprehensive understanding of business operations, risk management, and financial compliance.',
           "At AD Legal, Mr. Khoa works closely with the firm's lawyers on complex international commercial transactions, effectively integrating legal, tax, and financial-accounting perspectives to ensure the feasibility and efficiency of transaction structures. He also plays a key role in advising corporate clients on tax matters, assisting with sophisticated tax issues and developing sustainable compliance solutions.",
@@ -810,7 +810,7 @@ const en = {
         id: 'tan',
         name: 'DOAN NGOC TAN',
         title: 'Senior Associate',
-        photo: '/people/tan.png',
+        photo: '/people/tan.webp',
         biography: [
           'Mr. Tan possesses extensive experience in legal, business management, and financial matters. Throughout his career, he has held a range of professional positions in legal advisory, securities brokerage, investment banking, and corporate financial services at multinational corporations and leading financial institutions in Vietnam, including HIS WORLD, SSI Securities, OCBS Securities, and KAFI Securities.',
           'His combination of legal expertise and practical experience in finance and investment enables him to provide comprehensive advice to clients on corporate restructuring, capital raising transactions (including bond issuances and equity offerings), as well as financial model analysis and review to assess project feasibility and risks. Over the course of his career, Mr. Tan has advised on and directly executed numerous successful bond issuance transactions with an aggregate value amounting to tens of trillions of Vietnamese dong.',
@@ -833,7 +833,7 @@ const en = {
         id: 'nhung',
         name: 'LAI THI PHUONG NHUNG',
         title: 'Associate',
-        photo: '/people/nhung.png',
+        photo: '/people/nhung.webp',
         biography: [
           'Ms. Nhung has over seven years of experience working at leading law firms and reputable real estate developers in Vietnam. Throughout her career, she has advised on and reviewed numerous high-value commercial contracts, particularly those relating to corporate investment and business activities. She has also represented clients in handling intellectual property matters and obtaining various licenses and approvals required for business operations.',
           "In addition to her advisory practice, Ms. Nhung has extensive experience representing clients in complex commercial and civil disputes before Vietnamese courts. Combining both advisory and litigation experience, she approaches each matter from a comprehensive and practical perspective, with a strong focus on effectively protecting clients' legitimate rights and interests in every case.",
@@ -853,7 +853,7 @@ const en = {
         id: 'nhat-tan',
         name: 'NGUYEN NHAT TAN',
         title: 'Software & Data Engineer',
-        photo: '/people/nhat-tan.png',
+        photo: '/people/nhat-tan.webp',
         biography: [
           'Mr. Tan is a technology specialist with deep expertise in software development and data management, with extensive experience in advising and implementing technology solutions to support corporate governance and business operations. He has assisted numerous companies in establishing and enhancing their data protection programs, including designing data governance frameworks, conducting risk assessments, and implementing technical measures to ensure compliance with applicable data protection requirements.',
           "In addition, Mr. Tan has been involved in advising on and developing customized enterprise management software tailored to clients' specific operational needs. Combining strong technical capabilities with a deep understanding of business processes, he delivers practical technology solutions that help organizations enhance operational efficiency, strengthen governance, and effectively manage risks.",
