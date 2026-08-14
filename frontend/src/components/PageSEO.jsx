@@ -98,6 +98,9 @@ export default function PageSEO({
       <meta name="description" content={resolvedDescription} />
       {keywordString ? <meta name="keywords" content={keywordString} /> : null}
       <link rel="canonical" href={resolvedUrl} />
+      <link rel="icon" type="image/png" href="/adl-logo.png" />
+      <link rel="shortcut icon" type="image/png" href="/adl-logo.png" />
+      <link rel="apple-touch-icon" href="/adl-logo.png" />
 
       {/* Open Graph */}
       <meta property="og:type" content={type} />
