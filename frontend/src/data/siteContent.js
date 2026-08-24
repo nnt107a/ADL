@@ -717,6 +717,7 @@ const en = {
         education: [
           'LL.B. in International Commercial Law, University of Economics and Law (UEL)',
           'Admitted to the Bar in Vietnam',
+          'Certified Data Protection Officer (VnDPO), National Cyber Security Association (NCA)',
         ],
         languages: ['Vietnamese', 'English'],
         contact: {
@@ -1582,7 +1583,7 @@ vi.data.people = vi.data.people.length ? vi.data.people : en.data.people.map((pe
     ['Bảo vệ DLCN', 'Giải pháp công nghệ', 'Chuyển đổi số'],
   ][index],
   education: [
-    ['Cử nhân Luật Thương mại quốc tế - Đại học Kinh tế - Luật', 'Chứng chỉ hành nghề Luật sư'],
+    ['Cử nhân Luật Thương mại quốc tế - Đại học Kinh tế - Luật', 'Chứng chỉ hành nghề Luật sư', 'Chứng chỉ Chuyên gia Bảo vệ DLCN (VnDPO) - Hiệp hội An ninh mạng Quốc gia'],
     ['Cử nhân Luật Thương mại quốc tế - Đại học Kinh tế - Luật', 'Chứng chỉ hành nghề Luật sư'],
     ['Cử nhân Luật Kinh doanh - Đại học Kinh tế - Luật', 'Khóa đào tạo Luật sư (BTP)', 'Thạc sĩ Luật Kinh tế - Đại học Kinh tế - Luật', 'Chứng chỉ xác lập quyền SHTT đối với kiểu dáng công nghiệp', 'Chứng chỉ nghiệp vụ sư phạm cho Giảng viên Đại học'],
     ['Cử nhân Kế toán - Đại học kinh tế TP. HCM', 'Chứng chỉ Kế toán trưởng', 'Chứng chỉ Báo cáo tài chính quốc tế IFRS', 'Chứng chỉ CMA'],
@@ -2345,7 +2346,7 @@ cn.data.people = cn.data.people.length ? cn.data.people : en.data.people.map((pe
     ['个人数据保护', '技术解决方案', '数字化转型'],
   ][index],
   education: [
-    ['国际商业法法学学士，经济法律大学 (UEL)', '获准在越南担任执业律师'],
+    ['国际商业法法学学士，经济法律大学 (UEL)', '获准在越南担任执业律师', '个人数据保护官 (VnDPO) 认证证书，越南国家网络安全协会'],
     ['国际商业法法学学士，经济法律大学 (UEL)', '获准在越南担任执业律师'],
     ['经济法法学学士，经济法律大学 (UEL)', '律师培训课程，越南司法学院', '经济法法学硕士，经济法律大学 (UEL)', '工业品外观设计注册实务证书', '高校教师教学技能证书'],
     ['会计学学士，胡志明市经济大学', '注册首席会计师', '国际财务报告准则 (IFRS) 证书', '注册管理会计师 (CMA)'],
