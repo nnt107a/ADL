@@ -28,7 +28,7 @@ export default function PageSEO({
 }) {
   const resolvedTitle = title
     ? `${title} | ${SITE_NAME}`
-    : `${SITE_NAME} — Legal, Finance & Advisory`;
+    : `${SITE_NAME} - Law, Finance & More`;
   const resolvedDescription =
     description ||
     'AD Legal is a multi-disciplinary legal and financial advisory firm in Vietnam, providing integrated legal, tax, and finance solutions to businesses.';
