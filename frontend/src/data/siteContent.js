@@ -625,6 +625,12 @@ const en = {
           'Prepared and standardized comprehensive contract templates for businesses engaged in goods trading, contract manufacturing, and service provision.',
           'Represented multiple corporate clients in negotiating and resolving disputes involving shareholders, business partners, and customers.',
         ],
+        brochure: {
+          textBefore: 'Please find more information about AD Legal’s Legal Retainer Services ',
+          linkText: 'here',
+          textAfter: '.',
+          url: '/data/D%E1%BB%8Bch%20V%E1%BB%A5%20T%C6%B0%20V%E1%BA%A5n%20Ph%C3%A1p%20L%C3%BD%20Th%C6%B0%E1%BB%9Dng%20Xuy%C3%AAn_EN.pdf',
+        },
       },
       {
         id: 'intellectual-property',
@@ -1514,6 +1520,23 @@ vi.data.services = vi.data.services.length ? vi.data.services : en.data.services
       'Đại diện cho nhiều doanh nghiệp trong việc thi hành án tại TP. HCM, Đà Nẵng, Đồng Nai, thành công thu hồi nhiều khoản công nợ kéo dài trong nhiều năm.',
     ],
   ][index],
+  brochure: [
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    {
+      textBefore: 'Vui lòng xem thêm thông tin về Dịch vụ tư vấn thường xuyên của AD Legal ',
+      linkText: 'tại đây',
+      textAfter: '.',
+      url: '/data/D%E1%BB%8Bch%20V%E1%BB%A5%20T%C6%B0%20V%E1%BA%A5n%20Ph%C3%A1p%20L%C3%BD%20Th%C6%B0%E1%BB%9Dng%20Xuy%C3%AAn_VN.pdf',
+    },
+    null,
+    null,
+    null,
+  ][index],
 }));
 
 vi.data.people = vi.data.people.length ? vi.data.people : en.data.people.map((person, index) => ({
@@ -2276,6 +2299,23 @@ cn.data.services = cn.data.services.length ? cn.data.services : en.data.services
       '成功代表胡志明市一家电子贸易公司在越南国际仲裁中心（VIAC）与中国商业伙伴的仲裁程序中胜诉。',
       '代表多家公司客户在胡志明市、岘港和同奈办理判决执行程序，成功追回拖欠多年的坏账。',
     ],
+  ][index],
+  brochure: [
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    {
+      textBefore: '您可',
+      linkText: '在此',
+      textAfter: '查看有关 AD Legal 常年法律顾问服务的更多信息。',
+      url: '/data/D%E1%BB%8Bch%20V%E1%BB%A5%20T%C6%B0%20V%E1%BA%A5n%20Ph%C3%A1p%20L%C3%BD%20Th%C6%B0%E1%BB%9Dng%20Xuy%C3%AAn_CN.pdf',
+    },
+    null,
+    null,
+    null,
   ][index],
 }));
 

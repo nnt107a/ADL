@@ -66,6 +66,20 @@ export default function CapabilityDetailPage() {
                 <li key={project}>{project}</li>
               ))}
             </ul>
+            {service.brochure ? (
+              <p className="brochure-link-line service-brochure-line">
+                {service.brochure.textBefore}
+                <a
+                  href={service.brochure.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="brochure-inline-link"
+                >
+                  {service.brochure.linkText}
+                </a>
+                {service.brochure.textAfter || ''}
+              </p>
+            ) : null}
           </section>
         </div>
       </section>

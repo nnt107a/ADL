@@ -181,7 +181,13 @@
       "Provided ongoing legal compliance and retainer services for numerous large-scale enterprises, including foreign-invested manufacturing companies located in industrial parks across Dong Nai, Ho Chi Minh City, and Da Nang.",
       "Prepared and standardized comprehensive contract templates for businesses engaged in goods trading, contract manufacturing, and service provision.",
       "Represented multiple corporate clients in negotiating and resolving disputes involving shareholders, business partners, and customers."
-    ]
+    ],
+    "brochure": {
+      "textBefore": "Please find more information about AD Legal’s Legal Retainer Services ",
+      "linkText": "here",
+      "textAfter": ".",
+      "url": "/data/D%E1%BB%8Bch%20V%E1%BB%A5%20T%C6%B0%20V%E1%BA%A5n%20Ph%C3%A1p%20L%C3%BD%20Th%C6%B0%E1%BB%9Dng%20Xuy%C3%AAn_EN.pdf"
+    }
   },
 
   {

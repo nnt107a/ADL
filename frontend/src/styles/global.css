@@ -1203,6 +1203,12 @@ th {
   color: var(--ink);
 }
 
+.service-brochure-line {
+  margin-top: 1.5rem;
+  font-size: 1.02rem;
+  line-height: 1.6;
+}
+
 .brochure-inline-link {
   color: var(--accent);
   font-weight: 700;
